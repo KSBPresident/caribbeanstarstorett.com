@@ -1,0 +1,1 @@
+export function SiteHeader(){return <header className="site-header"><a className="brand" href="/">CARIBBEAN STAR STORE <span>TT</span></a><nav><a href="/marketplace">Marketplace</a><a href="/sell">Sell</a><a href="/build-a-buy">Build-A-Buy</a><a href="/sign-in">Sign In</a></nav></header>}
