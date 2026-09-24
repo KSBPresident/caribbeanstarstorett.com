@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { signUp } from "./actions";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
+import { getOriginalStoreUrl } from "../../lib/wordpress-store";
 
 type PageProps = {
   searchParams: Promise<{ error?: string; notice?: string }>;
@@ -29,7 +30,8 @@ export default async function SignUpPage({ searchParams }: PageProps) {
         <section className="identity-auth-card">
           <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
           <h1>Create your account</h1>
-          <p>Use one secure account to shop, sell, and take part in Caribbean Star Store.</p>
+          <p>Use your Caribbean Star Store account for marketplace features. Purchases and order history remain managed by the existing WooCommerce store.</p>
+          <p className="identity-switch">Already shopping in the original store? <a href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a></p>
           {!isSupabaseConfigured() && (
             <p className="identity-message" role="status">
               Account services are not configured yet. The site owner needs to add the Supabase URL and publishable key to Vercel.
