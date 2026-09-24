@@ -1,2 +1,53 @@
-import Link from "next/link";import {SiteHeader} from "../../components/site-header";import {ProductCard} from "../../components/product-card";import {categories,products} from "../../lib/store-data";
-export default function Marketplace(){return <><SiteHeader/><main className="market-layout"><aside className="category-sidebar"><b>All Categories</b>{categories.map(c=><Link href="/marketplace" key={c.name}>{c.icon} {c.name}</Link>)}<Link href="/marketplace">◌ More</Link></aside><section className="listing-area"><div className="breadcrumbs">Home › Electronics › Smartphones</div><div className="listing-head"><div><h1>Smartphone</h1><p>214 products found</p></div><div className="sort">Sort by: <b>Popularity</b> ▾ &nbsp; ▦ ▤</div></div><div className="product-grid listing-grid">{products.slice(0,6).map(p=><ProductCard product={p} key={p.slug}/>)}</div></section></main></>}
+import Link from "next/link";
+import { SiteHeader } from "../../components/site-header";
+import { ProductCard } from "../../components/product-card";
+import { categories } from "../../lib/store-data";
+import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
+
+type PageProps = {
+  searchParams: Promise<{ q?: string; category?: string }>;
+};
+
+export default async function Marketplace({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const query = params.q?.trim() || "";
+  const category = params.category?.trim() || "";
+  const catalog = await getStoreProducts({ search: query || undefined, category: category || undefined });
+  const products = catalog.products;
+  const heading = category || "All products";
+
+  return (
+    <>
+      <SiteHeader />
+      <main className="market-layout">
+        <aside className="category-sidebar">
+          <b>Product categories</b>
+          <Link href="/marketplace">All products</Link>
+          {categories.map((item) => <Link href={`/marketplace?category=${encodeURIComponent(item.name)}`} key={item.name}>{item.icon} {item.name}</Link>)}
+        </aside>
+        <section className="listing-area">
+          <div className="breadcrumbs"><Link href="/">Home</Link> › Marketplace</div>
+          <div className="listing-head">
+            <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "The live store could not be reached." : catalog.status === "not-found" && category ? "This category is not available in the original store." : `${products.length} published ${products.length === 1 ? "product" : "products"}`}</p></div>
+            <form className="catalog-search" action="/marketplace" role="search">
+              {category && <input type="hidden" name="category" value={category} />}
+              <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
+              <input id="marketplace-query" name="q" defaultValue={query} placeholder="Search products" />
+              <button className="identity-submit" type="submit">Search</button>
+            </form>
+          </div>
+          {products.length ? (
+            <div className="product-grid listing-grid">{products.map((product) => <ProductCard product={product} key={product.slug} />)}</div>
+          ) : (
+            <div className="catalog-empty">
+              <p>{catalog.status === "unavailable" ? "The product catalog is temporarily unavailable. You can continue to the existing Caribbean Star Store website." : catalog.status === "not-found" && category ? "This category is not available in the original store." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
+              {catalog.status === "unavailable" && (
+                <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
+              )}
+            </div>
+          )}
+        </section>
+      </main>
+    </>
+  );
+}

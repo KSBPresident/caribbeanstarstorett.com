@@ -1,2 +1,48 @@
-import {notFound} from "next/navigation";import {SiteHeader} from "../../../components/site-header";import {products,money} from "../../../lib/store-data";
-export default async function ProductDetail({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const product=products.find(item=>item.slug===slug);if(!product)notFound();return <><SiteHeader/><main className="product-detail"><div className="breadcrumbs">Home › {product.category} › {product.name}</div><section className="detail-main"><div className="gallery"><div className="thumbs">{[1,2,3,4].map(n=><img key={n} src={product.image} alt=""/>)}</div><div className="main-product-image"><img src={product.image} alt={product.name}/></div></div><div className="detail-info"><h1>{product.name}</h1><div className="rating">★ <b>{product.rating}</b> ({product.reviews} reviews)</div><strong className="detail-price">{money(product.price)}</strong><p className="stock">● In Stock</p><div className="seller-box"><b>Sold by: {product.seller}</b><small>✓ Verified Store</small></div><ul className="delivery-list"><li>Free delivery (T&T)</li><li>7-10 day delivery</li><li>1-year warranty</li><li>30-day return policy</li></ul><div className="quantity"><button>−</button><span>1</span><button>+</button><button className="blue-btn">Add to Cart</button></div><button className="buy-now">Buy Now</button></div></section><section className="detail-tabs"><b>Description</b><span>Specifications</span><span>Reviews</span><div><p>{product.description}</p><ul><li>Premium display</li><li>High-performance processor</li><li>Advanced camera system</li><li>Fast storage</li></ul></div></section></main></>}
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { SiteHeader } from "../../../components/site-header";
+import { money } from "../../../lib/store-data";
+import { getOriginalStoreUrl, getStoreProductBySlug } from "../../../lib/wordpress-store";
+
+export default async function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const result = await getStoreProductBySlug(slug);
+  const product = result.product;
+  if (!product && result.status === "not-found") notFound();
+
+  return (
+    <>
+      <SiteHeader />
+      <main className="product-detail">
+        {product ? (
+          <>
+            <div className="breadcrumbs"><Link href="/">Home</Link> › {product.category} › {product.name}</div>
+            <section className="detail-main">
+              <div className="main-product-image"><img src={product.image} alt={product.name} /></div>
+              <div className="detail-info">
+                <h1>{product.name}</h1>
+                {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <p className="catalog-meta">No customer reviews yet</p>}
+                <strong className="detail-price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
+                <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available in the original store" : "Availability is shown by the original store"}</p>
+                <div className="seller-box"><b>Caribbean Star Store product listing</b><small>Product information and checkout are managed by the original store.</small></div>
+                <p className="catalog-meta">Check the original listing for current delivery, warranty, and return details.</p>
+                <a className="buy-now" href={product.permalink}>View product and continue to checkout</a>
+              </div>
+            </section>
+            <section className="detail-tabs"><b>Product details</b><div><p>{product.description || "See the original store listing for product details."}</p></div></section>
+          </>
+        ) : (
+          <section className="identity-panel catalog-unavailable">
+            <span className="identity-eyebrow">STORE CONNECTION</span>
+            <h1>Product details are temporarily unavailable</h1>
+            <p>The original store catalog could not be reached. Open this product on the existing WooCommerce site, or try browsing the marketplace again later.</p>
+            <div className="cart-empty-actions">
+              <a className="identity-submit" href={`${getOriginalStoreUrl()}/product/${encodeURIComponent(slug)}/`} target="_blank" rel="noopener noreferrer">Open product in the existing store</a>
+              <Link className="identity-secondary" href="/marketplace">Back to products</Link>
+            </div>
+          </section>
+        )}
+      </main>
+    </>
+  );
+}
