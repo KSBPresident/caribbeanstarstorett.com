@@ -49,6 +49,7 @@ If the live catalog is unavailable, the application should link shoppers to the 
 - The Opportunities call-to-action links to `/build-a-buy?category=jobs`; the form reads and validates that category. The protected form's selected option still needs a signed-in walkthrough.
 - The WooCommerce Store API product collection currently returns HTTP 403 from Cloudflare. The preview logs confirm the marketplace falls back to a link to the existing store; live product browsing through this app remains blocked.
 - The latest deployment's runtime log checks showed successful public page responses and expected anonymous sign-in redirects. Earlier missing-Supabase-configuration errors were recorded on a different, older deployment; they were not present in the latest deployment log sample.
+- The repository contains eight Supabase feature/policy migrations but no foundational schema/bootstrap migration. A fresh Supabase project cannot be provisioned from repository migrations alone; recover and track the baseline schema before a fresh environment or production handoff.
 - The Supabase platform-operations migration is recorded as applied in the original implementation. The Supabase security advisor previously reported two SECURITY DEFINER moderation RPCs callable by the authenticated role; the functions check the trusted platform-admin claim before writing. Review the grants and checks before production.
 - The requested WordPress Coming Soon page was not published because remote WordPress REST writes were blocked by Cloudflare.
 
