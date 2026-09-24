@@ -4,16 +4,17 @@ import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { updatePassword } from "./actions";
+import { safeNextPath } from "../../lib/auth/return-path";
 
-type PageProps = { searchParams: Promise<{ error?: string; notice?: string }> };
+type PageProps = { searchParams: Promise<{ error?: string; notice?: string; next?: string }> };
 
 export default async function UpdatePasswordPage({ searchParams }: PageProps) {
-  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
+  const params = await searchParams;
+  const nextPath = safeNextPath(params.next);
+  if (!isSupabaseConfigured()) redirect(`/sign-in?notice=setup&next=${encodeURIComponent(nextPath)}`);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/forgot-password?notice=expired");
-
-  const params = await searchParams;
+  if (!user) redirect(`/forgot-password?notice=expired&next=${encodeURIComponent(nextPath)}`);
   const notice = params.notice === "updated" ? "Your password has been updated." : null;
   const error = params.error === "invalid"
     ? "Choose a password of at least 8 characters and enter it the same way twice."
@@ -33,12 +34,13 @@ export default async function UpdatePasswordPage({ searchParams }: PageProps) {
           {error && <p className="identity-message identity-error" role="alert">{error}</p>}
           {!notice && (
             <form action={updatePassword} className="identity-form">
+              <input type="hidden" name="next" value={nextPath} />
               <label>New password<input name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></label>
               <label>Confirm new password<input name="confirmPassword" type="password" autoComplete="new-password" minLength={8} maxLength={128} required /></label>
               <button className="identity-submit" type="submit">Update password</button>
             </form>
           )}
-          <p className="identity-switch"><Link href={notice ? "/dashboard" : "/sign-in"}>{notice ? "Continue to your account" : "Back to sign in"}</Link></p>
+          <p className="identity-switch"><Link href={notice ? nextPath : `/sign-in?next=${encodeURIComponent(nextPath)}`}>{notice ? "Continue" : "Back to sign in"}</Link></p>
         </section>
       </main>
     </>
