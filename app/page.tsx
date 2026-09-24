@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { ProductCard } from "../components/product-card";
 import { categories } from "../lib/store-data";
-import { getStoreProducts } from "../lib/wordpress-store";
+import { getOriginalStoreUrl, getStoreProducts } from "../lib/wordpress-store";
 
 export default async function Home() {
   const catalog = await getStoreProducts();
@@ -37,7 +37,12 @@ export default async function Home() {
           {catalog.products.length ? (
             <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
           ) : (
-            <p className="catalog-empty">{catalog.status === "unavailable" ? "The live store catalog could not be reached just now. Please try again shortly." : "There are no published products in the store catalog yet."}</p>
+            <div className="catalog-empty">
+              <p>{catalog.status === "unavailable" ? "The live store catalog could not be reached just now. You can continue to the existing Caribbean Star Store website." : "There are no published products in the store catalog yet."}</p>
+              {catalog.status === "unavailable" && (
+                <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
+              )}
+            </div>
           )}
         </section>
       </main>
