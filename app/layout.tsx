@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { SiteFooter } from "../components/site-footer";
 import "./globals.css";
+import "./site-footer.css";
 
 export const metadata: Metadata = {
   title: "Caribbean Star Store TT",
@@ -14,7 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }
