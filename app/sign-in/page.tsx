@@ -1,5 +1,6 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/client";
