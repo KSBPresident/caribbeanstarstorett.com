@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
-import { removeOrganizationMember, updateOrganizationMemberRole, saveOrganizationPublicProfile } from "./actions";
+import { removeOrganizationMember, updateOrganizationMemberRole, saveOrganizationPublicProfile, createOrganizationMarketplaceListing, setOrganizationMarketplaceListingVisibility } from "./actions";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -89,7 +89,11 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
   const memberRole = roles.find((role) => role.name === "member");
   const assignableRoles = canManageRoles ? roles : roles.filter((role) => role.name === "member");
 
-  const message = query.notice === "role-updated"
+  const message = query.notice === "marketplace-listing-saved"
+    ? "Your job or property listing was saved."
+    : query.error === "marketplace-listing"
+      ? "Check the listing details and include a public contact email."
+      : query.notice === "role-updated"
     ? "Member access was updated."
     : query.notice === "member-removed"
       ? "The member was removed from this workspace."
@@ -174,11 +178,69 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                       <strong>{item.title}</strong>
                       <em>{item.is_published ? "Published" : "Draft"}</em>
                     </div>
-                    {item.is_published && <Link href={`/opportunities/${item.slug}`}>View listing →</Link>}
+                    <div className="workspace-marketplace-actions">
+                      {item.is_published && <Link href={`/opportunities/${item.slug}`}>View listing →</Link>}
+                      {canManageOrganization && (
+                        <form action={setOrganizationMarketplaceListingVisibility}>
+                          <input type="hidden" name="organizationId" value={organization.id} />
+                          <input type="hidden" name="organizationSlug" value={organization.slug} />
+                          <input type="hidden" name="listingId" value={item.id} />
+                          <input type="hidden" name="visibility" value={item.is_published ? "draft" : "published"} />
+                          <button type="submit" className="identity-secondary">{item.is_published ? "Unpublish" : "Publish"}</button>
+                        </form>
+                      )}
+                    </div>
                   </article>
                 ))}
               </div>
             ) : <p className="organization-empty">No job or property listings in this workspace yet.</p>}
+            {canManageOrganization && (
+              <div className="workspace-new-listing">
+                <h3>Post a job opening</h3>
+                <p className="catalog-meta">New listings start as drafts. Add a public contact email before publishing.</p>
+                <form action={createOrganizationMarketplaceListing} className="identity-form">
+                  <input type="hidden" name="organizationId" value={organization.id} />
+                  <input type="hidden" name="organizationSlug" value={organization.slug} />
+                  <input type="hidden" name="listingType" value="jobs" />
+                  <input type="hidden" name="visibility" value="draft" />
+                  <label>Job title<input name="title" minLength={4} maxLength={140} required /></label>
+                  <label>Listing address<input name="listingSlug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /><small>Lowercase letters, numbers, and hyphens.</small></label>
+                  <label>Job description<textarea name="description" minLength={40} maxLength={3000} rows={5} required /></label>
+                  <div className="seller-form-row">
+                    <label>Area or region<input name="location" minLength={2} maxLength={120} required /></label>
+                    <label>Employment type<select name="employmentType"><option value="">Not specified</option><option value="full-time">Full-time</option><option value="part-time">Part-time</option><option value="contract">Contract</option><option value="temporary">Temporary</option><option value="internship">Internship</option></select></label>
+                  </div>
+                  <label>Salary details<input name="salaryDetails" maxLength={120} /></label>
+                  <label>Public contact email<input name="contactEmail" type="email" maxLength={254} required /></label>
+                  <div className="seller-form-row">
+                    <label>Phone (optional)<input name="phone" type="tel" maxLength={40} /></label>
+                    <label>Website (optional)<input name="website" type="url" maxLength={300} /></label>
+                  </div>
+                  <button className="identity-submit" type="submit">Save job as draft</button>
+                </form>
+                <h3>Post a property listing</h3>
+                <form action={createOrganizationMarketplaceListing} className="identity-form">
+                  <input type="hidden" name="organizationId" value={organization.id} />
+                  <input type="hidden" name="organizationSlug" value={organization.slug} />
+                  <input type="hidden" name="listingType" value="real-estate" />
+                  <input type="hidden" name="visibility" value="draft" />
+                  <label>Property title<input name="title" minLength={4} maxLength={140} required /></label>
+                  <label>Listing address<input name="listingSlug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /><small>Lowercase letters, numbers, and hyphens.</small></label>
+                  <label>Property description<textarea name="description" minLength={40} maxLength={3000} rows={5} required /></label>
+                  <div className="seller-form-row">
+                    <label>Area or region<input name="location" minLength={2} maxLength={120} required /></label>
+                    <label>Property type<select name="propertyType"><option value="">Not specified</option><option value="house">House</option><option value="apartment">Apartment</option><option value="commercial">Commercial</option><option value="land">Land</option><option value="room">Room</option><option value="other">Other</option></select></label>
+                  </div>
+                  <label>Price details<input name="propertyPrice" maxLength={120} /></label>
+                  <label>Public contact email<input name="contactEmail" type="email" maxLength={254} required /></label>
+                  <div className="seller-form-row">
+                    <label>Phone (optional)<input name="phone" type="tel" maxLength={40} /></label>
+                    <label>Website (optional)<input name="website" type="url" maxLength={300} /></label>
+                  </div>
+                  <button className="identity-submit" type="submit">Save property as draft</button>
+                </form>
+              </div>
+            )}
           </section>
 
           <section className="identity-panel">
