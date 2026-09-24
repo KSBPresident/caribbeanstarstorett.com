@@ -1,20 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isSupabaseConfigured, supabasePublishableKey, supabaseUrl } from "./configured";
 
 export async function updateSession(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  const hasSupabaseConfig =
-    Boolean(supabaseUrl && supabaseKey) &&
-    supabaseKey !== "replace-with-supabase-publishable-key";
-
-  // Keep public storefront pages available until Supabase auth is configured.
-  if (!hasSupabaseConfig) {
-    return NextResponse.next({ request });
-  }
+  if (!isSupabaseConfigured()) return NextResponse.next({ request });
 
   let supabaseResponse = NextResponse.next({ request });
-  const supabase = createServerClient(supabaseUrl!, supabaseKey!, {
+  const supabase = createServerClient(supabaseUrl, supabasePublishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
