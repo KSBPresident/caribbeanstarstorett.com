@@ -10,11 +10,9 @@ type PageProps = {
 export default async function SignInPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const notice =
-    params.notice === "setup"
-      ? "Account services are not configured yet. The site owner needs to add the Supabase URL and publishable key to Vercel."
-      : params.notice === "signin"
-        ? "Please sign in to continue."
-        : null;
+    params.notice === "signin"
+      ? "Please sign in to continue."
+      : null;
   const error =
     params.error === "credentials"
       ? "We couldn’t sign you in with those details. Check your email and password."

@@ -69,3 +69,12 @@
 .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:900px){.workspace-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.workspace-member{align-items:flex-start;flex-direction:column}.workspace-member-controls{width:100%;flex-wrap:wrap}.workspace-role-form{flex:1;min-width:100%}.workspace-role-form select{flex:1}.organization-card-actions{align-items:end}.workspace-section-heading{align-items:flex-start;flex-direction:column}}
+
+.workspace-audit-panel{grid-column:1/-1}
+.workspace-audit-list{display:grid;margin-top:16px}
+.workspace-audit-row{display:flex;gap:11px;padding:13px 2px;border-top:1px solid #edf0f4}
+.workspace-audit-dot{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#edf6ff;color:#0877df;font-size:22px;line-height:1;flex:none}
+.workspace-audit-row strong,.workspace-audit-row span{display:block}
+.workspace-audit-row strong{font-size:12px;text-transform:capitalize}
+.workspace-audit-row div>span{margin-top:5px;color:#687587;font-size:10px}
+@media(max-width:760px){.workspace-audit-panel{grid-column:auto}}

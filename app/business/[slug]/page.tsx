@@ -51,6 +51,14 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
   const permissionKeys = new Set((ownPermissions || []).map((permission) => permission.key));
   const canManageMembers = permissionKeys.has("member.manage");
   const canManageRoles = permissionKeys.has("role.manage");
+  const canReadAudit = permissionKeys.has("audit.read");
+  const { data: auditEntries } = canReadAudit
+    ? await supabase.from("audit_log")
+        .select("actor_user_id, action, resource_type, resource_id, created_at")
+        .eq("organization_id", organization.id)
+        .order("created_at", { ascending: false })
+        .limit(25)
+    : { data: [] };
   const roleIds = roles.map((role) => role.id);
   const { data: allRoleLinks } = roleIds.length
     ? await supabase.from("role_permissions").select("role_id, permission_id").in("role_id", roleIds)
@@ -150,6 +158,31 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
               <p className="organization-empty">You can view workspace access, but your role cannot manage members.</p>
             )}
           </section>
+
+          {canReadAudit && (
+            <section className="identity-panel workspace-audit-panel">
+              <div className="workspace-section-heading">
+                <div><span className="identity-eyebrow">TRUST AND ACCOUNTABILITY</span><h2>Recent activity</h2></div>
+                <span className="workspace-count">Last 25 events</span>
+              </div>
+              <p>Changes to this workspace and its member access are recorded here.</p>
+              {auditEntries?.length ? (
+                <div className="workspace-audit-list">
+                  {auditEntries.map((entry, index) => (
+                    <article className="workspace-audit-row" key={`${entry.created_at}-${index}`}>
+                      <span className="workspace-audit-dot" aria-hidden="true">•</span>
+                      <div>
+                        <strong>{entry.action.replaceAll(".", " ").replaceAll("_", " ")}</strong>
+                        <span>{entry.actor_user_id ? (entry.actor_user_id === user.id ? "You" : `Account · ${entry.actor_user_id.slice(-6)}`) : "System"} · {new Date(entry.created_at).toLocaleString("en-TT", { dateStyle: "medium", timeStyle: "short" })}</span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="organization-empty">No workspace activity has been recorded yet.</p>
+              )}
+            </section>
+          )}
 
           <section className="identity-panel">
             <span className="identity-eyebrow">ROLE GUIDE</span>
