@@ -15,6 +15,7 @@ export function SiteFooter() {
           <section className="site-footer-group">
             <h2>Explore</h2>
             <nav aria-label="Explore marketplace">
+              <Link href="/how-it-works">How it works</Link>
               <Link href="/marketplace">Products</Link>
               <Link href="/businesses">Businesses &amp; services</Link>
               <Link href="/opportunities">Jobs &amp; real estate</Link>
