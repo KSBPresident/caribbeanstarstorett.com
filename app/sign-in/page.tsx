@@ -49,6 +49,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
             </label>
             <button className="identity-submit" type="submit">Sign in</button>
           </form>
+          <p className="identity-switch"><Link href="/forgot-password">Forgot your password?</Link></p>
           <p className="identity-switch">New to the marketplace? <Link href="/sign-up">Create an account</Link></p>
         </section>
       </main>
