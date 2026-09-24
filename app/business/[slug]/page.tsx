@@ -33,7 +33,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
     .maybeSingle();
   if (!ownMembership) redirect("/business?error=workspace");
 
-  const [memberResult, roleResult, ownRolePermissionResult, publicProfileResult, marketplaceListingsResult] = await Promise.all([
+  const [memberResult, roleResult, ownRolePermissionResult, publicProfileResult] = await Promise.all([
     supabase.from("organization_members")
       .select("user_id, role_id, status, created_at")
       .eq("organization_id", organization.id)
@@ -44,14 +44,8 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
       .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url, is_published")
       .eq("organization_id", organization.id)
       .maybeSingle(),
-    supabase.from("organization_marketplace_listings")
-      .select("id, slug, listing_type, title, location, is_published, created_at")
-      .eq("organization_id", organization.id)
-      .order("created_at", { ascending: false })
-      .limit(50),
   ]);
   const publicProfile = publicProfileResult.data;
-  const marketplaceListings = marketplaceListingsResult.data || [];
   const memberships = memberResult.data || [];
   const roles = roleResult.data || [];
   const roleLinks = ownRolePermissionResult.data || [];
@@ -97,12 +91,8 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
         ? "You don’t have permission to make that change, or the member has already left."
         : query.error === "self"
           ? "Use an organization owner to change your own access."
-          : query.notice === "marketplace-listing-saved"
-            ? "Your job or real-estate listing was saved."
-            : query.error === "marketplace-listing"
-              ? "Check listing details, use a unique address, add at least 40 description characters, and include at least one contact method."
-              : query.notice === "listing-saved"
-                ? "Your business profile was saved."
+          : query.notice === "listing-saved"
+        ? "Your business profile was saved."
         : query.error === "listing-invalid"
           ? "Check the profile details and include at least one public contact method."
           : query.error === "listing-save"
@@ -161,64 +151,6 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
             ) : (
               <p className="organization-empty">An organization owner manages this public profile. You can view the directory at <Link className="identity-inline-link" href="/businesses">Businesses →</Link></p>
             )}
-          </section>
-
-          <section className="identity-panel workspace-listing-panel">
-            <span className="identity-eyebrow">FRONT OS · JOBS &amp; REAL ESTATE</span>
-            <h2>Marketplace listings</h2>
-            <p>Publish job openings and property listings for the Caribbean marketplace. Drafts stay inside this organization’s workspace.</p>
-            {marketplaceListings.length ? (
-              <div className="workspace-marketplace-list">
-                {marketplaceListings.map((item) => (
-                  <article className="workspace-marketplace-item" key={item.id}>
-                    <div className="workspace-marketplace-info">
-                      <span>{item.listing_type === "jobs" ? "Job" : "Real estate"} · {item.location}</span>
-                      <strong>{item.title}</strong>
-                      <em>{item.is_published ? "Published" : "Draft"}</em>
-                    </div>
-                    <div className="workspace-marketplace-actions">
-                      {item.is_published && <Link href={`/opportunities/${item.slug}`}>View listing</Link>}
-                      {canManageOrganization && <form action={setOrganizationMarketplaceListingVisibility}>
-                        <input type="hidden" name="organizationId" value={organization.id} />
-                        <input type="hidden" name="organizationSlug" value={organization.slug} />
-                        <input type="hidden" name="listingId" value={item.id} />
-                        <input type="hidden" name="visibility" value={item.is_published ? "draft" : "published"} />
-                        <button className="identity-secondary" type="submit">{item.is_published ? "Unpublish" : "Publish"}</button>
-                      </form>}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : <p className="organization-empty">No job or property listings in this workspace yet.</p>}
-            {canManageOrganization ? (
-              <form action={createOrganizationMarketplaceListing} className="identity-form workspace-new-listing">
-                <input type="hidden" name="organizationId" value={organization.id} />
-                <input type="hidden" name="organizationSlug" value={organization.slug} />
-                <div className="seller-form-row">
-                  <label>Listing type<select name="listingType" defaultValue="jobs"><option value="jobs">Job opening</option><option value="real-estate">Real estate</option></select></label>
-                  <label>Listing address<input name="listingSlug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} placeholder="your-listing-name" required /><small>Lowercase letters, numbers, and hyphens.</small></label>
-                </div>
-                <label>Title<input name="title" minLength={4} maxLength={140} required /></label>
-                <label>Description<textarea name="description" minLength={40} maxLength={3000} rows={5} required /></label>
-                <div className="seller-form-row">
-                  <label>Location<input name="location" minLength={2} maxLength={120} placeholder="Town, region" required /></label>
-                  <label>Employment type (jobs)<select name="employmentType" defaultValue=""><option value="">Not applicable</option><option value="full-time">Full-time</option><option value="part-time">Part-time</option><option value="contract">Contract</option><option value="temporary">Temporary</option><option value="internship">Internship</option></select></label>
-                </div>
-                <div className="seller-form-row">
-                  <label>Salary or compensation details (jobs)<input name="salaryDetails" maxLength={120} /></label>
-                  <label>Property type<select name="propertyType" defaultValue=""><option value="">Not applicable</option><option value="house">House</option><option value="apartment">Apartment</option><option value="commercial">Commercial</option><option value="land">Land</option><option value="room">Room</option><option value="other">Other</option></select></label>
-                </div>
-                <label>Price details (real estate)<input name="propertyPrice" maxLength={120} placeholder="Optional" /></label>
-                <div className="seller-form-row">
-                  <label>Public contact email<input name="contactEmail" type="email" maxLength={254} /></label>
-                  <label>Public phone<input name="phone" type="tel" maxLength={40} /></label>
-                </div>
-                <label>Website (optional)<input name="website" type="url" placeholder="https://example.com" maxLength={300} /></label>
-                <label>Visibility<select name="visibility" defaultValue="draft"><option value="draft">Save as draft</option><option value="published">Publish publicly</option></select></label>
-                <p className="catalog-meta">At least one public contact method is required. Published contact information and listing details are visible to everyone.</p>
-                <button className="identity-submit" type="submit">Save listing</button>
-              </form>
-            ) : <p className="organization-empty">An organization owner manages marketplace listings.</p>}
           </section>
 
           <section className="identity-panel">
