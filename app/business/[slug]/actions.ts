@@ -220,3 +220,65 @@ export async function setOrganizationMarketplaceListingVisibility(formData: Form
     .maybeSingle();
   redirect(error || !data ? `${base}?error=marketplace-listing` : `${base}?notice=marketplace-listing-saved`);
 }
+
+export async function updateOrganizationMarketplaceListing(formData: FormData) {
+  const organizationId = String(formData.get("organizationId") || "");
+  const organizationSlug = String(formData.get("organizationSlug") || "");
+  const listingId = String(formData.get("listingId") || "");
+  const base = returnTo(organizationSlug);
+  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
+  if (![organizationId, listingId].every((value) => uuidPattern.test(value))) {
+    redirect(`${base}?error=marketplace-listing`);
+  }
+
+  const slug = String(formData.get("listingSlug") || "").trim().toLowerCase();
+  const title = String(formData.get("title") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const location = String(formData.get("location") || "").trim();
+  const employmentType = String(formData.get("employmentType") || "");
+  const salaryDetails = String(formData.get("salaryDetails") || "").trim();
+  const propertyType = String(formData.get("propertyType") || "");
+  const propertyPrice = String(formData.get("propertyPrice") || "").trim();
+  const contactEmail = String(formData.get("contactEmail") || "").trim().toLowerCase();
+  const phone = String(formData.get("phone") || "").trim();
+  const websiteInput = String(formData.get("website") || "").trim();
+  const website = secureWebsite(websiteInput);
+
+  if (
+    !slugPattern.test(slug) || slug.length > 80 ||
+    title.length < 4 || title.length > 140 ||
+    description.length < 40 || description.length > 3000 ||
+    location.length < 2 || location.length > 120 ||
+    (employmentType && !employmentTypes.has(employmentType)) ||
+    (propertyType && !propertyTypes.has(propertyType)) ||
+    salaryDetails.length > 120 || propertyPrice.length > 120 || phone.length > 40 ||
+    (contactEmail && (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contactEmail) || contactEmail.length > 254)) ||
+    (websiteInput && !website) || (!contactEmail && !phone && !website)
+  ) redirect(`${base}?error=marketplace-listing`);
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in?notice=signin");
+  const { data: existing } = await supabase.from("organization_marketplace_listings")
+    .select("listing_type")
+    .eq("id", listingId)
+    .eq("organization_id", organizationId)
+    .maybeSingle();
+  if (!existing) redirect(`${base}?error=marketplace-listing`);
+
+  const isJob = existing.listing_type === "jobs";
+  const { data, error } = await supabase.from("organization_marketplace_listings").update({
+    slug,
+    title,
+    description,
+    location,
+    employment_type: isJob ? employmentType || null : null,
+    salary_details: isJob ? salaryDetails || null : null,
+    property_type: isJob ? null : propertyType || null,
+    property_price: isJob ? null : propertyPrice || null,
+    contact_email: contactEmail || null,
+    phone: phone || null,
+    website_url: website,
+  }).eq("id", listingId).eq("organization_id", organizationId).select("id").maybeSingle();
+  redirect(error || !data ? `${base}?error=marketplace-listing` : `${base}?notice=marketplace-listing-saved`);
+}
