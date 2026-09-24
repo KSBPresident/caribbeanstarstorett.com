@@ -127,3 +127,96 @@ export async function saveOrganizationPublicProfile(formData: FormData) {
 
   redirect(error ? `${base}?error=listing-save` : `${base}?notice=listing-saved`);
 }
+
+const listingTypes = new Set(["jobs", "real-estate"]);
+const employmentTypes = new Set(["full-time", "part-time", "contract", "temporary", "internship"]);
+const propertyTypes = new Set(["house", "apartment", "commercial", "land", "room", "other"]);
+
+export async function createOrganizationMarketplaceListing(formData: FormData) {
+  const organizationId = String(formData.get("organizationId") || "");
+  const organizationSlug = String(formData.get("organizationSlug") || "");
+  const base = returnTo(organizationSlug);
+  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
+  if (!uuidPattern.test(organizationId)) redirect(`${base}?error=marketplace-listing`);
+
+  const listingType = String(formData.get("listingType") || "");
+  const slug = String(formData.get("listingSlug") || "").trim().toLowerCase();
+  const title = String(formData.get("title") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const location = String(formData.get("location") || "").trim();
+  const employmentType = String(formData.get("employmentType") || "");
+  const salaryDetails = String(formData.get("salaryDetails") || "").trim();
+  const propertyType = String(formData.get("propertyType") || "");
+  const propertyPrice = String(formData.get("propertyPrice") || "").trim();
+  const contactEmail = String(formData.get("contactEmail") || "").trim().toLowerCase();
+  const phone = String(formData.get("phone") || "").trim();
+  const websiteInput = String(formData.get("website") || "").trim();
+  const website = secureWebsite(websiteInput);
+  const isPublished = String(formData.get("visibility") || "draft") === "published";
+
+  if (
+    !listingTypes.has(listingType) || !slugPattern.test(slug) || slug.length > 80 ||
+    title.length < 4 || title.length > 140 ||
+    description.length < 40 || description.length > 3000 ||
+    location.length < 2 || location.length > 120 ||
+    (listingType === "jobs" && employmentType && !employmentTypes.has(employmentType)) ||
+    (listingType === "real-estate" && propertyType && !propertyTypes.has(propertyType)) ||
+    salaryDetails.length > 120 || propertyPrice.length > 120 || phone.length > 40 ||
+    (contactEmail && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail) || contactEmail.length > 254)) ||
+    (websiteInput && !website) ||
+    (!contactEmail && !phone && !website) ||
+    (listingType === "jobs" && propertyPrice) ||
+    (listingType === "real-estate" && salaryDetails)
+  ) redirect(`${base}?error=marketplace-listing`);
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in?notice=signin");
+
+  const { data: organization } = await supabase.from("organizations")
+    .select("name").eq("id", organizationId).maybeSingle();
+  if (!organization) redirect(`${base}?error=marketplace-listing`);
+
+  const { error } = await supabase.from("organization_marketplace_listings").insert({
+    organization_id: organizationId,
+    organization_name: organization.name,
+    slug,
+    listing_type: listingType,
+    title,
+    description,
+    location,
+    employment_type: listingType === "jobs" ? employmentType || null : null,
+    salary_details: listingType === "jobs" ? salaryDetails || null : null,
+    property_type: listingType === "real-estate" ? propertyType || null : null,
+    property_price: listingType === "real-estate" ? propertyPrice || null : null,
+    contact_email: contactEmail || null,
+    phone: phone || null,
+    website_url: website,
+    is_published: isPublished,
+  });
+
+  redirect(error ? `${base}?error=marketplace-listing` : `${base}?notice=marketplace-listing-saved`);
+}
+
+export async function setOrganizationMarketplaceListingVisibility(formData: FormData) {
+  const organizationId = String(formData.get("organizationId") || "");
+  const organizationSlug = String(formData.get("organizationSlug") || "");
+  const listingId = String(formData.get("listingId") || "");
+  const base = returnTo(organizationSlug);
+  const isPublished = String(formData.get("visibility") || "") === "published";
+
+  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
+  if (![organizationId, listingId].every((value) => uuidPattern.test(value))) {
+    redirect(`${base}?error=marketplace-listing`);
+  }
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in?notice=signin");
+  const { data, error } = await supabase.from("organization_marketplace_listings")
+    .update({ is_published: isPublished })
+    .eq("id", listingId)
+    .eq("organization_id", organizationId)
+    .select("id")
+    .maybeSingle();
+  redirect(error || !data ? `${base}?error=marketplace-listing` : `${base}?notice=marketplace-listing-saved`);
+}
