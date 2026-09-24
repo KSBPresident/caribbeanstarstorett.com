@@ -33,7 +33,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
     .maybeSingle();
   if (!ownMembership) redirect("/business?error=workspace");
 
-  const [memberResult, roleResult, ownRolePermissionResult, publicProfileResult] = await Promise.all([
+  const [memberResult, roleResult, ownRolePermissionResult, publicProfileResult, marketplaceListingsResult] = await Promise.all([
     supabase.from("organization_members")
       .select("user_id, role_id, status, created_at")
       .eq("organization_id", organization.id)
@@ -44,8 +44,14 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
       .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url, is_published")
       .eq("organization_id", organization.id)
       .maybeSingle(),
+    supabase.from("organization_marketplace_listings")
+      .select("id, slug, listing_type, title, location, is_published, created_at")
+      .eq("organization_id", organization.id)
+      .order("created_at", { ascending: false })
+      .limit(50),
   ]);
   const publicProfile = publicProfileResult.data;
+  const marketplaceListings = marketplaceListingsResult.data || [];
   const memberships = memberResult.data || [];
   const roles = roleResult.data || [];
   const roleLinks = ownRolePermissionResult.data || [];
@@ -151,6 +157,28 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
             ) : (
               <p className="organization-empty">An organization owner manages this public profile. You can view the directory at <Link className="identity-inline-link" href="/businesses">Businesses →</Link></p>
             )}
+          </section>
+
+          <section className="identity-panel">
+            <div className="workspace-section-heading">
+              <div><span className="identity-eyebrow">FRONT OS · JOBS &amp; REAL ESTATE</span><h2>Marketplace listings</h2></div>
+              <span className="workspace-count">{marketplaceListings.length} {marketplaceListings.length === 1 ? "listing" : "listings"}</span>
+            </div>
+            <p>Job openings and property listings managed by this organization.</p>
+            {marketplaceListings.length ? (
+              <div className="workspace-marketplace-list">
+                {marketplaceListings.map((item) => (
+                  <article className="workspace-marketplace-item" key={item.id}>
+                    <div className="workspace-marketplace-info">
+                      <span>{item.listing_type === "jobs" ? "Job" : "Real estate"} · {item.location}</span>
+                      <strong>{item.title}</strong>
+                      <em>{item.is_published ? "Published" : "Draft"}</em>
+                    </div>
+                    {item.is_published && <Link href={`/opportunities/${item.slug}`}>View listing →</Link>}
+                  </article>
+                ))}
+              </div>
+            ) : <p className="organization-empty">No job or property listings in this workspace yet.</p>}
           </section>
 
           <section className="identity-panel">
