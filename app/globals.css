@@ -221,3 +221,29 @@
 .workspace-listing-current a{color:#0877df;font-size:10px;font-weight:800}
 @media(max-width:850px){.directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.directory-contact-layout{grid-template-columns:1fr}}
 @media(max-width:560px){.directory-grid{grid-template-columns:1fr}.directory-hero-actions{flex-direction:column}.directory-hero-actions>*{width:100%}.directory-detail-hero{flex-direction:column}.directory-results-heading{align-items:flex-start;flex-direction:column}.workspace-listing-panel .seller-form-row{grid-template-columns:1fr;gap:12px}}
+
+
+.workspace-new-listing{margin-top:20px;padding-top:18px;border-top:1px solid #edf0f4}
+.workspace-marketplace-list{display:grid;gap:8px;margin:15px 0}
+.workspace-marketplace-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px;border:1px solid #e2e8f0;border-radius:9px;background:#fbfcfe}
+.workspace-marketplace-info{display:grid;gap:5px}
+.workspace-marketplace-info>span{color:#687587;font-size:9px;text-transform:capitalize}
+.workspace-marketplace-info strong{font-size:12px}
+.workspace-marketplace-info em{color:#18549a;font-size:9px;font-style:normal;font-weight:800}
+.workspace-marketplace-actions{display:flex;align-items:center;gap:10px}
+.workspace-marketplace-actions>a{color:#0877df;font-size:10px;font-weight:800;white-space:nowrap}
+.workspace-marketplace-actions .identity-secondary{padding:8px 10px;font-size:10px}
+.opportunities-page{max-width:1320px}
+.opportunity-card>p{min-height:82px}
+.opportunity-publisher{margin:0 0 8px;color:#687587;font-size:10px;font-weight:700}
+.opportunity-price{display:block;margin:8px 0;color:#172033;font-size:13px}
+.opportunity-card .directory-card-link{display:inline-block;margin-top:6px}
+.opportunity-detail-page{max-width:1160px}
+.opportunity-detail-hero{display:flex;align-items:center;gap:18px;padding:28px;border-radius:16px;background:linear-gradient(120deg,#092d50,#0d6193);color:#fff}
+.opportunity-type-mark{width:58px;height:58px;display:grid;place-items:center;border-radius:16px;background:#ffffff;color:#18549a;font-size:28px;font-weight:900;flex:none}
+.opportunity-detail-hero .identity-eyebrow{color:#9bd9ff}
+.opportunity-detail-hero h1{margin:8px 0;font-size:clamp(28px,4vw,42px)}
+.opportunity-detail-hero p{margin:0;color:#dcecf7;font-size:12px}
+.opportunity-detail-layout{grid-template-columns:minmax(0,1fr) 320px}
+.opportunity-detail-layout .identity-details{max-width:650px}
+@media(max-width:760px){.workspace-marketplace-item{align-items:flex-start;flex-direction:column}.workspace-marketplace-actions{width:100%;justify-content:space-between}}
