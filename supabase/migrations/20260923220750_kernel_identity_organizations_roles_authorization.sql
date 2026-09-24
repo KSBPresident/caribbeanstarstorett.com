@@ -76,6 +76,18 @@ alter table public.organization_members enable row level security;
 alter table public.role_permissions enable row level security;
 alter table public.audit_log enable row level security;
 
+-- Keep the Data API surface explicit and narrow. RLS policies below provide the
+-- row-level checks; these grants only expose operations the application uses.
+revoke all on table public.profiles, public.organizations, public.roles, public.permissions,
+  public.organization_members, public.role_permissions, public.audit_log
+  from public, anon, authenticated;
+
+grant select, insert, update on table public.profiles to authenticated;
+grant select, insert on table public.organizations to authenticated;
+grant select on table public.roles, public.permissions, public.role_permissions to authenticated;
+grant select, insert, update, delete on table public.organization_members to authenticated;
+grant select on table public.audit_log to authenticated;
+
 create policy "profiles_select_own" on public.profiles for select to authenticated using ((select auth.uid()) = user_id);
 create policy "profiles_insert_own" on public.profiles for insert to authenticated with check ((select auth.uid()) = user_id);
 create policy "profiles_update_own" on public.profiles for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
