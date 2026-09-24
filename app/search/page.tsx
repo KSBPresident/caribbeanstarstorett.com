@@ -122,11 +122,11 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
               </section>
             )}
 
-            {!products.length && !businesses.length && !opportunities.length && !catalog?.status.includes("unavailable") && !businessResult?.error && !listingResult?.error && (
+            {!products.length && !businesses.length && !opportunities.length && !businessResult?.error && !listingResult?.error && (
               <section className="directory-empty">
                 <span aria-hidden="true">✦</span>
-                <h2>No matches for “{query}”</h2>
-                <p>Try a different word or browse the marketplace sections.</p>
+                <h2>{catalog?.status === "unavailable" ? "No matching public listings yet" : `No matches for “${query}”`}</h2>
+                <p>{catalog?.status === "unavailable" ? "No published businesses, services, jobs, or real-estate listings matched. Product search is temporarily unavailable above." : "Try a different word or browse the marketplace sections."}</p>
                 <div className="directory-hero-actions"><Link className="identity-submit" href="/marketplace">Browse products</Link><Link className="directory-secondary" href="/businesses">Explore businesses</Link><Link className="directory-secondary" href="/opportunities">View opportunities</Link></div>
               </section>
             )}
