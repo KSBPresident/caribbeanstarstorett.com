@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
+import { getOriginalStoreUrl } from "../../lib/wordpress-store";
 import { updateProfile } from "./actions";
 
 type PageProps = {
@@ -105,6 +106,11 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           <section className="identity-panel identity-wide account-workspace-link">
             <div><span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span><h2>Your organizations</h2><p>Manage business and community workspaces, member access, and account roles.</p></div>
             <Link className="identity-submit" href="/business">Open your workspaces →</Link>
+          </section>
+
+          <section className="identity-panel identity-wide account-workspace-link">
+            <div><span className="identity-eyebrow">ORIGINAL STORE · WOOCOMMERCE</span><h2>Purchases and order history</h2><p>Orders and checkout from the existing store stay in WooCommerce. Open the original store to sign in and manage your purchases.</p></div>
+            <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store →</a>
           </section>
         </div>
       </main>
