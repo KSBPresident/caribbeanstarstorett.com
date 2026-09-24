@@ -43,8 +43,8 @@ If the live catalog is unavailable, the application should link shoppers to the 
 
 ## Current status and launch gates (2026-09-24)
 
-- Current feature-branch commit: `b0423bda1202ebcc2b0adfec9fd4931b57cc24ff` (`Keep buyer category after request validation errors`).
-- Vercel deployment `dpl_E7vFFPqkmVwYrjt87PCUJzUcLCqm` is READY. Preview: https://caribbeanstarstorett-k99tnbfqm-caribbeanstarstore.vercel.app
+- The application behavior was last changed in commit `b0423bda1202ebcc2b0adfec9fd4931b57cc24ff` (`Keep buyer category after request validation errors`); the latest branch commit documents its status.
+- The Vercel branch preview is READY and available at https://caribbeanstarstorett-com-git-middle-o-4ee650-caribbeanstarstore.vercel.app
 - The homepage, sign-up, sign-in, marketplace, and opportunities pages returned HTTP 200 in preview checks. The seller, organization, buyer-request, account, and admin pages redirect anonymous visitors to sign-in.
 - The Opportunities call-to-action links to `/build-a-buy?category=jobs`; the form reads and validates that category. The protected form's selected option still needs a signed-in walkthrough.
 - The WooCommerce Store API product collection currently returns HTTP 403 from Cloudflare. The preview logs confirm the marketplace falls back to a link to the existing store; live product browsing through this app remains blocked.
