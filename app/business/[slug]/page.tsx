@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
-import { removeOrganizationMember, updateOrganizationMemberRole, saveOrganizationPublicProfile, createOrganizationMarketplaceListing, setOrganizationMarketplaceListingVisibility } from "./actions";
+import { removeOrganizationMember, updateOrganizationMemberRole, saveOrganizationPublicProfile, createOrganizationMarketplaceListing, setOrganizationMarketplaceListingVisibility, updateOrganizationMarketplaceListing } from "./actions";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -45,7 +45,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
       .eq("organization_id", organization.id)
       .maybeSingle(),
     supabase.from("organization_marketplace_listings")
-      .select("id, slug, listing_type, title, location, is_published, created_at")
+      .select("id, slug, listing_type, title, description, location, employment_type, salary_details, property_type, property_price, contact_email, phone, website_url, is_published, created_at")
       .eq("organization_id", organization.id)
       .order("created_at", { ascending: false })
       .limit(50),
@@ -180,6 +180,37 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                     </div>
                     <div className="workspace-marketplace-actions">
                       {item.is_published && <Link href={`/opportunities/${item.slug}`}>View listing →</Link>}
+                      {canManageOrganization && (
+                        <details className="workspace-listing-edit">
+                          <summary>Edit listing details</summary>
+                          <form action={updateOrganizationMarketplaceListing} className="identity-form">
+                            <input type="hidden" name="organizationId" value={organization.id} />
+                            <input type="hidden" name="organizationSlug" value={organization.slug} />
+                            <input type="hidden" name="listingId" value={item.id} />
+                            <label>Listing address<input name="listingSlug" defaultValue={item.slug} pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /></label>
+                            <label>Title<input name="title" defaultValue={item.title} minLength={4} maxLength={140} required /></label>
+                            <label>Description<textarea name="description" defaultValue={item.description} minLength={40} maxLength={3000} rows={5} required /></label>
+                            <label>Area or region<input name="location" defaultValue={item.location} minLength={2} maxLength={120} required /></label>
+                            {item.listing_type === "jobs" ? (
+                              <div className="seller-form-row">
+                                <label>Employment type<select name="employmentType" defaultValue={item.employment_type || ""}><option value="">Not specified</option><option value="full-time">Full-time</option><option value="part-time">Part-time</option><option value="contract">Contract</option><option value="temporary">Temporary</option><option value="internship">Internship</option></select></label>
+                                <label>Salary details<input name="salaryDetails" defaultValue={item.salary_details || ""} maxLength={120} /></label>
+                              </div>
+                            ) : (
+                              <div className="seller-form-row">
+                                <label>Property type<select name="propertyType" defaultValue={item.property_type || ""}><option value="">Not specified</option><option value="house">House</option><option value="apartment">Apartment</option><option value="commercial">Commercial</option><option value="land">Land</option><option value="room">Room</option><option value="other">Other</option></select></label>
+                                <label>Price details<input name="propertyPrice" defaultValue={item.property_price || ""} maxLength={120} /></label>
+                              </div>
+                            )}
+                            <label>Public contact email<input name="contactEmail" type="email" defaultValue={item.contact_email || ""} maxLength={254} /></label>
+                            <div className="seller-form-row">
+                              <label>Phone<input name="phone" type="tel" defaultValue={item.phone || ""} maxLength={40} /></label>
+                              <label>Website<input name="website" type="url" defaultValue={item.website_url || ""} maxLength={300} /></label>
+                            </div>
+                            <button type="submit" className="identity-submit">Save listing changes</button>
+                          </form>
+                        </details>
+                      )}
                       {canManageOrganization && (
                         <form action={setOrganizationMarketplaceListingVisibility}>
                           <input type="hidden" name="organizationId" value={organization.id} />
