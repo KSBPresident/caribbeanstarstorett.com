@@ -28,3 +28,14 @@
 .identity-details dd{margin:0;font-size:12px;font-weight:700;overflow-wrap:anywhere}
 .identity-note{padding:12px;background:#f4f7fa;border-radius:7px}
 @media(max-width:700px){.identity-auth-card{padding:24px}.identity-dashboard-grid{grid-template-columns:1fr}.identity-wide{grid-column:auto}.identity-heading{align-items:flex-start;flex-direction:column}}
+
+.organization-layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr);gap:16px}
+.organization-layout .identity-panel{align-self:start}
+.organization-layout select{width:100%;border:1px solid #cfd8e3;border-radius:7px;padding:12px;background:#fff;font:inherit}
+.organization-list{display:grid;gap:10px;margin-top:16px}
+.organization-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px;border:1px solid #e2e8f0;border-radius:9px;background:#f9fbfd}
+.organization-card h3{margin:0 0 5px;font-size:14px}
+.organization-card p{margin:0;color:#687587;font-size:11px;text-transform:capitalize;overflow-wrap:anywhere}
+.organization-role{padding:6px 10px;border-radius:20px;background:#eaf4ff;color:#18549a;font-size:10px;font-weight:800;text-transform:capitalize}
+.organization-empty{margin-top:18px;padding:18px;border-radius:8px;background:#f5f7fa;color:#687587;font-size:12px}
+@media(max-width:760px){.organization-layout{grid-template-columns:1fr}}
