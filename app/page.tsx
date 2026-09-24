@@ -1,1 +1,46 @@
-import Link from "next/link";import {SiteHeader} from "../components/site-header";import {ProductCard} from "../components/product-card";import {categories,products} from "../lib/store-data";export default function Home(){return <><SiteHeader/><main><section className="home-hero"><div className="hero-overlay"><span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span><h1>The Caribbean's<br/>Digital Marketplace</h1><p>Buy · Sell · Work · Grow Together</p><div className="hero-search"><input placeholder="Search for products, services, businesses..."/><button>Search</button></div></div></section><section className="quick-grid">{[["🛒","Products","Shop millions of items"],["♧","Services","Find trusted providers"],["▦","Businesses","Support local & regional"],["♙","Jobs","Find work or hire"],["⌂","Real Estate","Buy, rent, invest"],["✦","More","Explore all categories"]].map(x=><Link href="/marketplace" className="quick-card" key={x[1]}><span>{x[0]}</span><b>{x[1]}</b><small>{x[2]}</small></Link>)}</section><section className="store-section"><div className="section-title"><div><span>DISCOVER</span><h2>Featured Categories</h2></div><Link href="/marketplace">View all →</Link></div><div className="category-grid">{categories.map(c=><Link href="/marketplace" className="category-card" key={c.name}><img src={c.image} alt=""/><div><b>{c.name}</b></div></Link>)}</div></section><section className="store-section"><div className="section-title"><div><span>POPULAR NOW</span><h2>Trending products</h2></div><Link href="/marketplace">View all →</Link></div><div className="product-grid">{products.slice(0,4).map(p=><ProductCard product={p} key={p.slug}/>)}</div></section></main></>}
+import Link from "next/link";
+import { SiteHeader } from "../components/site-header";
+import { ProductCard } from "../components/product-card";
+import { categories } from "../lib/store-data";
+import { getStoreProducts } from "../lib/wordpress-store";
+
+export default async function Home() {
+  const catalog = await getStoreProducts();
+  return (
+    <>
+      <SiteHeader />
+      <main>
+        <section className="home-hero">
+          <div className="hero-overlay">
+            <span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span>
+            <h1>The Caribbean&apos;s<br />Digital Marketplace</h1>
+            <p>Buy · Sell · Work · Grow Together</p>
+            <form className="hero-search" role="search" action="/marketplace">
+              <input name="q" placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
+              <button type="submit">Search</button>
+            </form>
+          </div>
+        </section>
+        <section className="quick-grid">
+          {[["🛒","Products","Shop the live store catalog","/marketplace"],["♧","Services","Find local services","/marketplace?category=services"],["▦","Businesses","Support local & regional","/marketplace?category=businesses"],["♙","Jobs","Find work or hire","/marketplace?category=jobs"],["⌂","Real Estate","Buy, rent, invest","/marketplace?category=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
+            <Link href={href} className="quick-card" key={label}><span>{icon}</span><b>{label}</b><small>{description}</small></Link>
+          ))}
+        </section>
+        <section className="store-section">
+          <div className="section-title"><div><span>DISCOVER</span><h2>Featured Categories</h2></div><Link href="/marketplace">View all →</Link></div>
+          <div className="category-grid">
+            {categories.map((category) => <Link href={`/marketplace?category=${encodeURIComponent(category.name)}`} className="category-card" key={category.name}><img src={category.image} alt="" /><div><b>{category.name}</b></div></Link>)}
+          </div>
+        </section>
+        <section className="store-section">
+          <div className="section-title"><div><span>FROM THE LIVE STORE</span><h2>Available products</h2></div><Link href="/marketplace">View all →</Link></div>
+          {catalog.products.length ? (
+            <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
+          ) : (
+            <p className="catalog-empty">{catalog.status === "unavailable" ? "The live store catalog could not be reached just now. Please try again shortly." : "There are no published products in the store catalog yet."}</p>
+          )}
+        </section>
+      </main>
+    </>
+  );
+}
