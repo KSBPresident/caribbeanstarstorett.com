@@ -1,7 +1,8 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { SiteHeader } from "../../components/site-header";
 
-const cardStyle = {
+const cardStyle: CSSProperties = {
   padding: "22px",
   border: "1px solid #e2e8f0",
   borderRadius: "14px",
@@ -9,7 +10,7 @@ const cardStyle = {
   boxShadow: "0 8px 24px #12304b08",
 };
 
-const linkStyle = {
+const linkStyle: CSSProperties = {
   display: "inline-block",
   marginTop: "10px",
   color: "#0877df",
