@@ -8,8 +8,8 @@ export async function updateSession(request: NextRequest) {
     Boolean(supabaseUrl && supabaseKey) &&
     supabaseKey !== "replace-with-supabase-publishable-key";
 
-  // Let the visual preview load before preview authentication credentials are configured.
-  if (process.env.VERCEL_ENV === "preview" && !hasSupabaseConfig) {
+  // Keep public storefront pages available until Supabase auth is configured.
+  if (!hasSupabaseConfig) {
     return NextResponse.next({ request });
   }
 
