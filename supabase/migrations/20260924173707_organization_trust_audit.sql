@@ -51,18 +51,12 @@ BEGIN
     organization_id_value := OLD.organization_id;
     member_user_id := OLD.user_id;
     action_value := 'organization.member.removed';
-    details := jsonb_build_object(
-      'old_role_id', OLD.role_id,
-      'old_status', OLD.status
-    );
+    details := jsonb_build_object('old_role_id', OLD.role_id, 'old_status', OLD.status);
   ELSIF TG_OP = 'INSERT' THEN
     organization_id_value := NEW.organization_id;
     member_user_id := NEW.user_id;
     action_value := 'organization.member.added';
-    details := jsonb_build_object(
-      'new_role_id', NEW.role_id,
-      'new_status', NEW.status
-    );
+    details := jsonb_build_object('new_role_id', NEW.role_id, 'new_status', NEW.status);
   ELSE
     organization_id_value := NEW.organization_id;
     member_user_id := NEW.user_id;

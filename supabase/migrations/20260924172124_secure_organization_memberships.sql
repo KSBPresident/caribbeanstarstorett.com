@@ -1,10 +1,6 @@
 -- Secure organization membership and automatically grant the creator the owner role.
 
-CREATE SCHEMA IF NOT EXISTS private;
-REVOKE ALL ON SCHEMA private FROM PUBLIC, anon, authenticated;
-GRANT USAGE ON SCHEMA private TO authenticated;
-
-CREATE OR REPLACE FUNCTION private.has_organization_permission(
+CREATE OR REPLACE FUNCTION public.has_organization_permission(
   p_organization_id uuid,
   p_permission_key text
 )
@@ -26,8 +22,8 @@ AS $function$
   );
 $function$;
 
-REVOKE ALL ON FUNCTION private.has_organization_permission(uuid, text) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION private.has_organization_permission(uuid, text) TO authenticated;
+REVOKE ALL ON FUNCTION public.has_organization_permission(uuid, text) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.has_organization_permission(uuid, text) TO authenticated;
 
 CREATE OR REPLACE FUNCTION public.assign_organization_creator_owner()
 RETURNS trigger
@@ -154,7 +150,7 @@ FOR SELECT
 TO authenticated
 USING (
   user_id = (SELECT auth.uid())
-  OR private.has_organization_permission(organization_id, 'organization.read')
+  OR public.has_organization_permission(organization_id, 'organization.read')
 );
 
 CREATE POLICY organization_members_insert_manager
@@ -162,10 +158,10 @@ ON public.organization_members
 FOR INSERT
 TO authenticated
 WITH CHECK (
-  private.has_organization_permission(organization_id, 'member.manage')
+  public.has_organization_permission(organization_id, 'member.manage')
   AND (
     role_id = (SELECT r.id FROM public.roles AS r WHERE r.name = 'member' LIMIT 1)
-    OR private.has_organization_permission(organization_id, 'role.manage')
+    OR public.has_organization_permission(organization_id, 'role.manage')
   )
 );
 
@@ -174,13 +170,13 @@ ON public.organization_members
 FOR UPDATE
 TO authenticated
 USING (
-  private.has_organization_permission(organization_id, 'member.manage')
+  public.has_organization_permission(organization_id, 'member.manage')
 )
 WITH CHECK (
-  private.has_organization_permission(organization_id, 'member.manage')
+  public.has_organization_permission(organization_id, 'member.manage')
   AND (
     role_id = (SELECT r.id FROM public.roles AS r WHERE r.name = 'member' LIMIT 1)
-    OR private.has_organization_permission(organization_id, 'role.manage')
+    OR public.has_organization_permission(organization_id, 'role.manage')
   )
 );
 
@@ -189,5 +185,6 @@ ON public.organization_members
 FOR DELETE
 TO authenticated
 USING (
-  private.has_organization_permission(organization_id, 'member.manage')
+  public.has_organization_permission(organization_id, 'member.manage')
 );
+
