@@ -15,7 +15,7 @@ export default async function Home() {
             <span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span>
             <h1>The Caribbean&apos;s<br />Digital Marketplace</h1>
             <p>Buy · Sell · Work · Grow Together</p>
-            <form className="hero-search" role="search" action="/marketplace">
+            <form className="hero-search" role="search" action="/search">
               <input name="q" placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
               <button type="submit">Search</button>
             </form>
