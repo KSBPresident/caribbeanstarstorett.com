@@ -99,3 +99,20 @@
 .exec-setup-panel p{max-width:620px;margin:0 auto;color:#687587;font-size:13px;line-height:1.7}
 .exec-setup-icon{width:54px;height:54px;margin:auto;display:grid;place-items:center;border-radius:50%;background:#eaf4ff;color:#0877df;font-size:23px}
 .exec-setup-panel .cart-empty-actions{flex-wrap:wrap}
+
+.build-request-grid{display:grid;grid-template-columns:minmax(300px,.9fr) minmax(0,1.1fr);gap:16px;align-items:start}
+.build-request-grid .identity-panel>p{margin-bottom:12px}
+.build-request-grid textarea{width:100%;resize:vertical;border:1px solid #cfd8e3;border-radius:7px;padding:12px;font:inherit;font-weight:400;outline-color:#0877df}
+.purchase-request-list{display:grid;gap:10px;margin-top:16px}
+.purchase-request-card{padding:15px;border:1px solid #e2e8f0;border-radius:10px;background:#fbfcfe}
+.purchase-request-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.request-status{padding:5px 8px;border-radius:14px;background:#eaf4ff;color:#18549a;font-size:9px;font-weight:900;text-transform:capitalize}
+.request-status-cancelled{background:#f1f5f9;color:#687587}
+.request-status-completed,.request-status-matched{background:#e9f8ef;color:#14743d}
+.purchase-request-card h3{margin:12px 0 4px;font-size:15px}
+.purchase-request-card>p{color:#526071;font-size:12px;line-height:1.55;white-space:pre-wrap}
+.purchase-request-card .request-category{margin:0;color:#0877df;font-size:10px;font-weight:800}
+.request-budget{display:block;font-size:12px}
+.request-cancel-form{margin-top:10px}
+.build-request-grid .identity-note{margin-top:16px;color:#687587;font-size:11px;line-height:1.6}
+@media(max-width:760px){.build-request-grid{grid-template-columns:1fr}}
