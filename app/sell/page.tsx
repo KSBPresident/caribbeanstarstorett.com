@@ -23,10 +23,20 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
 
   const { data } = await supabase
     .from("seller_applications")
-    .select("id, seller_name, category_key, status, created_at")
+    .select("id, seller_name, category_key, status, created_at, organization_id")
     .eq("applicant_user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(10);
+
+  const organizationIds = [...new Set((data || [])
+    .map((application) => application.organization_id)
+    .filter((id): id is string => Boolean(id)))];
+  const workspaceResult = organizationIds.length
+    ? await supabase.from("organizations").select("id, slug").in("id", organizationIds)
+    : { data: [] };
+  const workspaceSlugs = new Map(
+    (workspaceResult.data || []).map((workspace) => [workspace.id, workspace.slug]),
+  );
 
   const message = params.notice === "submitted"
     ? "Your seller application has been submitted."
@@ -44,7 +54,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
           <div>
             <span className="identity-eyebrow">SELL ON CARIBBEAN STAR STORE</span>
             <h1>Bring your business to the Caribbean marketplace.</h1>
-            <p>Tell us what you want to offer. Your application stays connected to your account while seller tools are prepared.</p>
+            <p>Tell us what you want to offer. After approval, your account gets a private workspace to manage its public profile and listings.</p>
           </div>
           <div className="seller-steps" aria-label="Seller onboarding steps">
             <div><span>1</span><b>Apply</b><small>Share your details</small></div>
@@ -82,18 +92,30 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               <h2>Application status</h2>
               {data?.length ? (
                 <div className="seller-app-list">
-                  {data.map((application) => (
-                    <article className="seller-app-card" key={application.id}>
-                      <div className="seller-app-heading"><strong>{application.seller_name}</strong><span className={`seller-status seller-status-${application.status}`}>{statusCopy[application.status] || "Submitted"}</span></div>
-                      <p>{application.category_key.replaceAll("-", " ")} · Submitted {new Date(application.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</p>
-                    </article>
-                  ))}
+                  {data.map((application) => {
+                    const workspaceSlug = application.organization_id
+                      ? workspaceSlugs.get(application.organization_id)
+                      : null;
+
+                    return (
+                      <article className="seller-app-card" key={application.id}>
+                        <div className="seller-app-heading"><strong>{application.seller_name}</strong><span className={`seller-status seller-status-${application.status}`}>{statusCopy[application.status] || "Submitted"}</span></div>
+                        <p>{application.category_key.replaceAll("-", " ")} · Submitted {new Date(application.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</p>
+                        {workspaceSlug && (
+                          <>
+                            <p className="catalog-meta">Your private workspace is ready. It stays private until you publish a business profile.</p>
+                            <Link className="directory-card-link" href={`/business/${workspaceSlug}`}>Open your workspace →</Link>
+                          </>
+                        )}
+                      </article>
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="organization-empty">Your seller applications will appear here.</p>
               )}
             </section>
-            <section className="seller-note"><strong>What happens next?</strong><p>We’ll review your details and contact you about next steps. Product publishing and payments will be enabled when the store connection is ready.</p><Link href="/business">View business workspaces →</Link></section>
+            <section className="seller-note"><strong>What happens next?</strong><p>We’ll review your details and contact you about next steps. If approved, you can set up a private workspace, then publish your business profile when you’re ready. Product publishing and payments will be enabled when the store connection is ready.</p><Link href="/business">View business workspaces →</Link></section>
           </aside>
         </div>
       </main>
