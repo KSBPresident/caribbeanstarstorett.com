@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
+import { signInUrl } from "../../../lib/auth/return-path";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
 import { removeOrganizationMember, updateOrganizationMemberRole, saveOrganizationPublicProfile, createOrganizationMarketplaceListing, setOrganizationMarketplaceListingVisibility, updateOrganizationMarketplaceListing } from "./actions";
 
@@ -15,7 +16,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
   const [{ slug }, query] = await Promise.all([params, searchParams]);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in?notice=signin");
+  if (!user) redirect(signInUrl(`/business/${encodeURIComponent(slug)}`));
 
   const { data: organization } = await supabase
     .from("organizations")

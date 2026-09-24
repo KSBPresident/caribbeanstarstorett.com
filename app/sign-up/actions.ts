@@ -4,18 +4,22 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
+import { safeNextPath } from "../../lib/auth/return-path";
 
-async function confirmationRedirectUrl() {
+async function confirmationRedirectUrl(nextPath: string) {
   const requestHeaders = await headers();
   const host =
     requestHeaders.get("x-forwarded-host") || requestHeaders.get("host");
   const protocol = requestHeaders.get("x-forwarded-proto") || "https";
   const origin = host ? protocol + "://" + host : "https://caribbeanstarstorett.com";
 
-  return origin + "/auth/callback?next=%2Fdashboard";
+  const callback = new URL("/auth/callback", origin);
+  callback.searchParams.set("next", nextPath);
+  return callback.toString();
 }
 
 export async function signUp(formData: FormData) {
+  const nextPath = safeNextPath(formData.get("next"));
   if (!isSupabaseConfigured()) {
     redirect("/sign-up?notice=setup");
   }
@@ -30,7 +34,7 @@ export async function signUp(formData: FormData) {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     password.length < 8
   ) {
-    redirect("/sign-up?error=invalid");
+    redirect(`/sign-up?error=invalid&next=${encodeURIComponent(nextPath)}`);
   }
 
   const supabase = await createClient();
@@ -39,12 +43,12 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       data: { display_name: displayName },
-      emailRedirectTo: await confirmationRedirectUrl(),
+      emailRedirectTo: await confirmationRedirectUrl(nextPath),
     },
   });
 
   if (error) {
-    redirect("/sign-up?error=signup");
+    redirect(`/sign-up?error=signup&next=${encodeURIComponent(nextPath)}`);
   }
 
   if (data.session && data.user) {
@@ -52,7 +56,7 @@ export async function signUp(formData: FormData) {
       { user_id: data.user.id, display_name: displayName },
       { onConflict: "user_id" },
     );
-    redirect("/dashboard");
+    redirect(nextPath);
   }
 
   redirect("/sign-up?notice=confirm");

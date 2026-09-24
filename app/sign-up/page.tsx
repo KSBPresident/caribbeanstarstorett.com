@@ -3,13 +3,15 @@ import { SiteHeader } from "../../components/site-header";
 import { signUp } from "./actions";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { getOriginalStoreUrl } from "../../lib/wordpress-store";
+import { safeNextPath } from "../../lib/auth/return-path";
 
 type PageProps = {
-  searchParams: Promise<{ error?: string; notice?: string }>;
+  searchParams: Promise<{ error?: string; notice?: string; next?: string }>;
 };
 
 export default async function SignUpPage({ searchParams }: PageProps) {
   const params = await searchParams;
+  const nextPath = safeNextPath(params.next);
   const notice =
     params.notice === "setup"
       ? "Account services are not configured yet. The site owner needs to add the Supabase URL and publishable key to Vercel."
@@ -40,6 +42,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
           {notice && <p className="identity-message" role="status">{notice}</p>}
           {error && <p className="identity-message identity-error" role="alert">{error}</p>}
           <form action={signUp} className="identity-form">
+            <input type="hidden" name="next" value={nextPath} />
             <label>
               Name
               <input name="displayName" autoComplete="name" required minLength={2} maxLength={60} />
@@ -54,7 +57,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
             </label>
             <button className="identity-submit" type="submit">Create account</button>
           </form>
-          <p className="identity-switch">Already have an account? <Link href="/sign-in">Sign in</Link></p>
+          <p className="identity-switch">Already have an account? <Link href={`/sign-in?next=${encodeURIComponent(nextPath)}`}>Sign in</Link></p>
         </section>
       </main>
     </>

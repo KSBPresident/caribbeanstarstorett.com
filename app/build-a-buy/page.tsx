@@ -4,6 +4,7 @@ import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { cancelPurchaseRequest, createPurchaseRequest } from "./actions";
+import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string; category?: string }> };
 
@@ -21,7 +22,9 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const [params, supabase] = await Promise.all([searchParams, createClient()]);
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in?notice=signin");
+  const requestedCategory = params.category && categoryKeys.has(params.category) ? params.category : null;
+  const nextPath = requestedCategory ? `/build-a-buy?category=${encodeURIComponent(requestedCategory)}` : "/build-a-buy";
+  if (!user) redirect(signInUrl(nextPath));
 
   const selectedCategory = params.category && categoryKeys.has(params.category)
     ? params.category

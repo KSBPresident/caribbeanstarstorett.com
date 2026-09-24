@@ -4,6 +4,7 @@ import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { submitSellerApplication } from "./actions";
+import { signInUrl } from "../../lib/auth/return-path";
 
 type SearchParams = Promise<{ error?: string; notice?: string }>;
 
@@ -19,7 +20,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
   const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in?notice=signin");
+  if (!user) redirect(signInUrl("/sell"));
 
   const { data } = await supabase
     .from("seller_applications")

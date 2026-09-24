@@ -4,6 +4,7 @@ import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { createOrganization } from "./actions";
+import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = {
   searchParams: Promise<{ error?: string; notice?: string }>;
@@ -17,7 +18,7 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    redirect("/sign-in?notice=signin");
+    redirect(signInUrl("/business"));
   }
 
   const [{ data: memberships }, params] = await Promise.all([

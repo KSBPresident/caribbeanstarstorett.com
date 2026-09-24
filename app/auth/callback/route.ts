@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
-
-function safeNextPath(value: string | null) {
-  return value && value.startsWith("/") && !value.startsWith("//")
-    ? value
-    : "/dashboard";
-}
+import { safeNextPath } from "../../../lib/auth/return-path";
 
 export async function GET(request: NextRequest) {
   if (!isSupabaseConfigured()) {

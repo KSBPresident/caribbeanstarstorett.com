@@ -4,6 +4,7 @@ import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { reviewSellerApplication, updatePurchaseRequestStatus } from "./actions";
+import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string }> };
 
@@ -15,7 +16,7 @@ export default async function Admin({ searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in?notice=signin");
+  if (!user) redirect(signInUrl("/admin"));
 
   if (user.app_metadata?.platform_role !== "admin") {
     return (

@@ -5,6 +5,7 @@ import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { getOriginalStoreUrl } from "../../lib/wordpress-store";
 import { updateProfile } from "./actions";
+import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = {
   searchParams: Promise<{ error?: string; notice?: string }>;
@@ -15,7 +16,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in?notice=signin");
+  if (!user) redirect(signInUrl("/dashboard"));
 
   const [profileResult, params, workspaceCount, requestResult, sellerResult] = await Promise.all([
     supabase.from("profiles").select("display_name, avatar_url").eq("user_id", user.id).maybeSingle(),

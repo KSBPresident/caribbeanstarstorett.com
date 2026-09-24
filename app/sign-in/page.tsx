@@ -3,13 +3,15 @@ import { SiteHeader } from "../../components/site-header";
 import { signIn } from "./actions";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { getOriginalStoreUrl } from "../../lib/wordpress-store";
+import { safeNextPath } from "../../lib/auth/return-path";
 
 type PageProps = {
-  searchParams: Promise<{ error?: string; notice?: string }>;
+  searchParams: Promise<{ error?: string; notice?: string; next?: string }>;
 };
 
 export default async function SignInPage({ searchParams }: PageProps) {
   const params = await searchParams;
+  const nextPath = safeNextPath(params.next);
   const notice =
     params.notice === "signin"
       ? "Please sign in to continue."
@@ -39,6 +41,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
           {notice && <p className="identity-message" role="status">{notice}</p>}
           {error && <p className="identity-message identity-error" role="alert">{error}</p>}
           <form action={signIn} className="identity-form">
+            <input type="hidden" name="next" value={nextPath} />
             <label>
               Email
               <input name="email" type="email" autoComplete="email" required />
@@ -50,7 +53,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
             <button className="identity-submit" type="submit">Sign in</button>
           </form>
           <p className="identity-switch"><Link href="/forgot-password">Forgot your password?</Link></p>
-          <p className="identity-switch">New to the marketplace? <Link href="/sign-up">Create an account</Link></p>
+          <p className="identity-switch">New to the marketplace? <Link href={`/sign-up?next=${encodeURIComponent(nextPath)}`}>Create an account</Link></p>
         </section>
       </main>
     </>
