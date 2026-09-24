@@ -1,2 +1,32 @@
-import {SiteHeader} from "../../components/site-header";import {DashboardSidebar} from "../../components/dashboard-sidebar";
-export default function Admin(){return <><SiteHeader/><main className="dashboard-layout"><DashboardSidebar type="admin"/><section className="dashboard-content"><div className="dash-top"><div><span className="eyebrow">EXECUTIVE OS</span><h1>Platform Overview</h1><p>Caribbean Star Store</p></div><span className="status-online">● System Health Operational</span></div><div className="stats-grid">{[["Total Users","1,248"],["Active Merchants","166"],["Total Orders","2,403"],["GMV","TT$1,246,920"]].map(x=><div className="stat-card" key={x[0]}><span>{x[0]}</span><b>{x[1]}</b></div>)}</div><div className="dashboard-panel"><div className="panel-head"><h2>Recent Activity</h2><a href="#">View all →</a></div>{["New merchant registration · Caribbean Foods Ltd.","Payment captured · #CCS-10045","Shipment update · #CCS-10044","Listing approved · #CCS-10042"].map((x,i)=><div className="order-row" key={x}><span>{x}</span><em>{i===1?"Success":i===3?"Review":"Pending"}</em><small>Apr 30, 2026</small></div>)}</div></section></main></>}
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { SiteHeader } from "../../components/site-header";
+import { createClient } from "../../lib/supabase/server";
+import { isSupabaseConfigured } from "../../lib/supabase/configured";
+
+export default async function Admin() {
+  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in?notice=signin");
+
+  return (
+    <>
+      <SiteHeader />
+      <main className="identity-page">
+        <header className="identity-heading">
+          <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Caribbean Star Store TT</p></div>
+        </header>
+        <section className="identity-panel exec-setup-panel">
+          <span className="exec-setup-icon" aria-hidden="true">✦</span>
+          <h2>Platform controls are being connected</h2>
+          <p>This account is signed in, but the site does not yet have a platform-wide administrator role or a live executive data source. Workspace roles do not grant platform-wide access, so this area stays closed until those controls are provisioned.</p>
+          <div className="cart-empty-actions">
+            <Link className="identity-submit" href="/business">Open workspaces</Link>
+            <Link className="identity-secondary" href="/dashboard">Account settings</Link>
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}
