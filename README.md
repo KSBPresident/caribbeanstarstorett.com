@@ -32,6 +32,7 @@ The `middle-os-identity-phase-1` branch and draft PR #5 contain:
 - Public marketplace search across WooCommerce products and published Supabase records
 - A platform operations dashboard protected by the server-controlled `app_metadata.platform_role=admin` claim
 - Job category handoff from the Opportunities page to the Build-A-Buy form
+- Public getting-started guide for shoppers, buyers, sellers, and business organizations
 
 The Vercel Preview is for development and review. PR #5 is still a draft; the feature branch has not been merged into `main`. An older open PR #3 also targets `main`; its branch has diverged and changes overlap with PR #5, so the owner should choose an integration path before merging either pull request.
 
