@@ -31,6 +31,7 @@ The `middle-os-identity-phase-1` branch and draft PR #5 contain:
 - Public business profiles and organization-owned job and real-estate listings
 - Public marketplace search across WooCommerce products and published Supabase records
 - A platform operations dashboard protected by the server-controlled `app_metadata.platform_role=admin` claim
+- Job category handoff from the Opportunities page to the Build-A-Buy form
 
 The Vercel Preview is for development and review. PR #5 is still a draft; the feature branch has not been merged into `main`.
 
@@ -42,17 +43,20 @@ If the live catalog is unavailable, the application should link shoppers to the 
 
 ## Current status and launch gates (2026-09-24)
 
-- The current feature-branch Vercel Preview is READY. The homepage and marketplace route return successfully.
-- The WooCommerce product-categories Store API request currently receives a Cloudflare 403 challenge. The Next.js marketplace therefore cannot show live products from the existing store.
-- The connected Supabase project has the identity, organization, marketplace, and platform-operations migrations. No Auth users or live seller/business/opportunity records have been created, so authenticated owner and seller flows still need a real owner-led walkthrough.
-- The Supabase advisor reports two SECURITY DEFINER moderation RPCs callable by the authenticated role. Both functions check the server-controlled platform-admin claim inside the function before changing records. Review those grants and checks before production.
-- A separate request to publish a WordPress Coming Soon page was not completed; remote WordPress REST writes were blocked by Cloudflare.
+- Current feature-branch commit: `b0423bda1202ebcc2b0adfec9fd4931b57cc24ff` (`Keep buyer category after request validation errors`).
+- Vercel deployment `dpl_E7vFFPqkmVwYrjt87PCUJzUcLCqm` is READY. Preview: https://caribbeanstarstorett-k99tnbfqm-caribbeanstarstore.vercel.app
+- The homepage, sign-up, sign-in, marketplace, and opportunities pages returned HTTP 200 in preview checks. The seller, organization, buyer-request, account, and admin pages redirect anonymous visitors to sign-in.
+- The Opportunities call-to-action links to `/build-a-buy?category=jobs`; the form reads and validates that category. The protected form's selected option still needs a signed-in walkthrough.
+- The WooCommerce Store API product collection currently returns HTTP 403 from Cloudflare. The preview logs confirm the marketplace falls back to a link to the existing store; live product browsing through this app remains blocked.
+- The latest deployment's runtime log checks showed successful public page responses and expected anonymous sign-in redirects. Earlier missing-Supabase-configuration errors were recorded on a different, older deployment; they were not present in the latest deployment log sample.
+- The Supabase platform-operations migration is recorded as applied in the original implementation. The Supabase security advisor previously reported two SECURITY DEFINER moderation RPCs callable by the authenticated role; the functions check the trusted platform-admin claim before writing. Review the grants and checks before production.
+- The requested WordPress Coming Soon page was not published because remote WordPress REST writes were blocked by Cloudflare.
 
 Before launch:
 
 1. Have the site owner decide whether Cloudflare should permit read-only access to the WooCommerce Store API for the marketplace app. Until then, keep the existing-store handoff.
-2. Have the owner register the first trusted platform account and provision its platform-admin claim through a secure administrative process. Never grant platform access from editable profile metadata.
-3. Walk through registration, buyer request submission, seller application, organization/listing management, and admin moderation with owner-approved accounts and real approved content.
+2. Have the owner create and confirm an account, then walk through profile editing, a buyer request and cancellation, seller application submission, and organization and listing management with owner-approved test data.
+3. Provision the first trusted platform administrator through a secure administrative process, then verify admin access and moderation with that account. Never grant platform access from editable profile metadata.
 4. Review the Supabase security advisor finding and confirm the moderation RPC permissions and audit behavior.
 5. Keep WordPress production, WooCommerce settings, DNS, and deployment settings unchanged unless the site owner explicitly authorizes a specific change.
 
