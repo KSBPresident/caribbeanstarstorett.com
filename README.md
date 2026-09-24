@@ -43,7 +43,7 @@ If the live catalog is unavailable, the application should link shoppers to the 
 
 ## Current status and launch gates (2026-09-24)
 
-- The application behavior was last changed in commit `b0423bda1202ebcc2b0adfec9fd4931b57cc24ff` (`Keep buyer category after request validation errors`); the latest branch commit documents its status.
+- Recent application fixes preserve the selected job category in Build-A-Buy requests and validate contact emails correctly when editing organization marketplace listings (`319bae49e11d9c52293ab2d1d2133110ae30ddde`).
 - The Vercel branch preview is READY and available at https://caribbeanstarstorett-com-git-middle-o-4ee650-caribbeanstarstore.vercel.app
 - The homepage, sign-up, sign-in, marketplace, and opportunities pages returned HTTP 200 in preview checks. The seller, organization, buyer-request, account, and admin pages redirect anonymous visitors to sign-in.
 - The Opportunities call-to-action links to `/build-a-buy?category=jobs`; the form reads and validates that category. The protected form's selected option still needs a signed-in walkthrough.
