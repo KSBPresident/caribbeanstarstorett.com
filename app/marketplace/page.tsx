@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
 import { categories } from "../../lib/store-data";
-import { getStoreProducts } from "../../lib/wordpress-store";
+import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
 
 type PageProps = {
   searchParams: Promise<{ q?: string; category?: string }>;
@@ -41,7 +41,12 @@ export default async function Marketplace({ searchParams }: PageProps) {
           {products.length ? (
             <div className="product-grid listing-grid">{products.map((product) => <ProductCard product={product} key={product.slug} />)}</div>
           ) : (
-            <p className="catalog-empty">{catalog.status === "unavailable" ? "The product catalog is temporarily unavailable. Please try again later." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
+            <div className="catalog-empty">
+              <p>{catalog.status === "unavailable" ? "The product catalog is temporarily unavailable. You can continue to the existing Caribbean Star Store website." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
+              {catalog.status === "unavailable" && (
+                <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
+              )}
+            </div>
           )}
         </section>
       </main>
