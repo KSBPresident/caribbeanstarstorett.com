@@ -22,6 +22,16 @@ type StoreApiProduct = {
 const baseUrl = (process.env.WORDPRESS_BASE_URL || "https://caribbeanstarstorett.com").replace(/\/$/, "");
 const apiPath = (process.env.WORDPRESS_STORE_API_PATH || "/wp-json/wc/store/v1").replace(/\/$/, "");
 
+function logStoreApiFailure(operation: string, details: { status?: number; error?: unknown }) {
+  console.warn("[wordpress-store] public Store API request failed", {
+    operation,
+    ...(details.status ? { httpStatus: details.status } : {}),
+    ...(details.error
+      ? { errorType: details.error instanceof Error ? details.error.name : "unknown" }
+      : {}),
+  });
+}
+
 export function getOriginalStoreUrl() {
   return baseUrl;
 }
@@ -85,8 +95,14 @@ async function getStoreCategorySlug(name: string): Promise<{ slug: string | null
       next: { revalidate: 60 },
       signal: AbortSignal.timeout(8_000),
     });
-    if (response.status === 404) return { slug: null, status: "not-found" };
-    if (!response.ok) return { slug: null, status: "unavailable" };
+    if (response.status === 404) {
+      logStoreApiFailure("product-categories", { status: response.status });
+      return { slug: null, status: "not-found" };
+    }
+    if (!response.ok) {
+      logStoreApiFailure("product-categories", { status: response.status });
+      return { slug: null, status: "unavailable" };
+    }
     const data = await response.json();
     if (!Array.isArray(data)) return { slug: null, status: "unavailable" };
     const requested = normalizeCategory(name);
@@ -96,7 +112,8 @@ async function getStoreCategorySlug(name: string): Promise<{ slug: string | null
     return match?.slug
       ? { slug: match.slug, status: "available" }
       : { slug: null, status: "not-found" };
-  } catch {
+  } catch (error) {
+    logStoreApiFailure("product-categories", { error });
     return { slug: null, status: "unavailable" };
   }
 }
@@ -108,10 +125,17 @@ async function requestProducts(path: string): Promise<{ response: Response | nul
       next: { revalidate: 60 },
       signal: AbortSignal.timeout(8_000),
     });
-    if (response.status === 404) return { response, status: "not-found" };
-    if (!response.ok) return { response: null, status: "unavailable" };
+    if (response.status === 404) {
+      if (path.startsWith("?")) logStoreApiFailure("product-collection", { status: response.status });
+      return { response, status: "not-found" };
+    }
+    if (!response.ok) {
+      logStoreApiFailure(path.startsWith("?") ? "product-collection" : "product-detail", { status: response.status });
+      return { response: null, status: "unavailable" };
+    }
     return { response, status: "available" };
-  } catch {
+  } catch (error) {
+    logStoreApiFailure(path.startsWith("?") ? "product-collection" : "product-detail", { error });
     return { response: null, status: "unavailable" };
   }
 }
@@ -128,13 +152,17 @@ export async function getStoreProducts(options: { search?: string; category?: st
   if (!response) return { products: [] as Product[], status };
   try {
     const data = await response.json();
-    if (!Array.isArray(data)) return { products: [] as Product[], status: "unavailable" as const };
+    if (!Array.isArray(data)) {
+      logStoreApiFailure("product-collection", { error: new TypeError("Unexpected response shape") });
+      return { products: [] as Product[], status: "unavailable" as const };
+    }
     const products = data.flatMap((item: StoreApiProduct) => {
       const product = mapProduct(item);
       return product ? [product] : [];
     });
     return { products, status: "available" as const };
-  } catch {
+  } catch (error) {
+    logStoreApiFailure("product-collection-json", { error });
     return { products: [] as Product[], status: "unavailable" as const };
   }
 }
@@ -149,7 +177,8 @@ export async function getStoreProductBySlug(slug: string): Promise<{ product: Pr
     const data = await response.json();
     if (!data || typeof data !== "object" || Array.isArray(data)) return { product: null, status: "not-found" };
     return { product: mapProduct(data as StoreApiProduct), status: "available" };
-  } catch {
+  } catch (error) {
+    logStoreApiFailure("product-detail-json", { error });
     return { product: null, status: "unavailable" };
   }
 }
