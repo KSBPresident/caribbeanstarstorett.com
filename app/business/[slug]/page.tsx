@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
-import { removeOrganizationMember, updateOrganizationMemberRole } from "./actions";
+import { removeOrganizationMember, updateOrganizationMemberRole, saveOrganizationPublicProfile } from "./actions";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -33,14 +33,19 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
     .maybeSingle();
   if (!ownMembership) redirect("/business?error=workspace");
 
-  const [memberResult, roleResult, ownRolePermissionResult] = await Promise.all([
+  const [memberResult, roleResult, ownRolePermissionResult, publicProfileResult] = await Promise.all([
     supabase.from("organization_members")
       .select("user_id, role_id, status, created_at")
       .eq("organization_id", organization.id)
       .order("created_at", { ascending: true }),
     supabase.from("roles").select("id, name, description").order("name"),
     supabase.from("role_permissions").select("permission_id").eq("role_id", ownMembership.role_id),
+    supabase.from("organization_public_profiles")
+      .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url, is_published")
+      .eq("organization_id", organization.id)
+      .maybeSingle(),
   ]);
+  const publicProfile = publicProfileResult.data;
   const memberships = memberResult.data || [];
   const roles = roleResult.data || [];
   const roleLinks = ownRolePermissionResult.data || [];
@@ -49,6 +54,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
     ? await supabase.from("permissions").select("key").in("id", permissionIds)
     : { data: [] };
   const permissionKeys = new Set((ownPermissions || []).map((permission) => permission.key));
+  const canManageOrganization = permissionKeys.has("organization.manage");
   const canManageMembers = permissionKeys.has("member.manage");
   const canManageRoles = permissionKeys.has("role.manage");
   const canReadAudit = permissionKeys.has("audit.read");
@@ -85,9 +91,15 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
         ? "You don’t have permission to make that change, or the member has already left."
         : query.error === "self"
           ? "Use an organization owner to change your own access."
-          : query.error === "invalid"
-            ? "That member or role could not be identified."
-            : null;
+          : query.notice === "listing-saved"
+        ? "Your business profile was saved."
+        : query.error === "listing-invalid"
+          ? "Check the profile details and include at least one public contact method."
+          : query.error === "listing-save"
+            ? "We couldn’t save that profile. The listing address may already be in use."
+            : query.error === "invalid"
+              ? "That member or role could not be identified."
+              : null;
 
   return (
     <>
@@ -106,6 +118,41 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
         {message && <p className={query.error ? "identity-message identity-error" : "identity-message"} role={query.error ? "alert" : "status"}>{message}</p>}
 
         <div className="workspace-grid">
+          <section className="identity-panel workspace-listing-panel">
+            <span className="identity-eyebrow">FRONT OS · BUSINESS DIRECTORY</span>
+            <h2>Public business profile</h2>
+            <p>Share an organization profile in the public directory. Only published profiles are visible to visitors.</p>
+            {publicProfile && (
+              <div className="workspace-listing-current">
+                <div><strong>{publicProfile.is_published ? "Published" : "Saved as draft"}</strong><p>{publicProfile.is_published ? "Visitors can find your profile in the directory." : "Only workspace members can see this draft."}</p></div>
+                {publicProfile.is_published && <Link href={`/businesses/${publicProfile.slug}`}>View public profile →</Link>}
+              </div>
+            )}
+            {canManageOrganization ? (
+              <form action={saveOrganizationPublicProfile} className="identity-form">
+                <input type="hidden" name="organizationId" value={organization.id} />
+                <input type="hidden" name="organizationSlug" value={organization.slug} />
+                <label>Public business name<input name="displayName" defaultValue={publicProfile?.display_name || organization.name} minLength={2} maxLength={100} required /></label>
+                <label>Directory address<input name="listingSlug" defaultValue={publicProfile?.slug || organization.slug} pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /><small>Use lowercase letters, numbers, and hyphens.</small></label>
+                <div className="seller-form-row">
+                  <label>Category<select name="category" defaultValue={publicProfile?.category_key || "other"}><option value="food">Food &amp; groceries</option><option value="home">Home &amp; living</option><option value="retail">Retail</option><option value="professional">Professional services</option><option value="transport">Transport</option><option value="beauty">Beauty &amp; wellness</option><option value="community">Community</option><option value="other">Other</option></select></label>
+                  <label>Area or region<input name="region" defaultValue={publicProfile?.region || "Trinidad and Tobago"} minLength={2} maxLength={80} required /></label>
+                </div>
+                <label>About the business<textarea name="summary" defaultValue={publicProfile?.summary || ""} minLength={40} maxLength={1200} rows={5} required /></label>
+                <div className="seller-form-row">
+                  <label>Public contact email<input name="contactEmail" type="email" defaultValue={publicProfile?.contact_email || ""} maxLength={254} /></label>
+                  <label>Public phone<input name="phone" type="tel" defaultValue={publicProfile?.phone || ""} maxLength={40} /></label>
+                </div>
+                <label>Website<input name="website" type="url" defaultValue={publicProfile?.website_url || ""} placeholder="https://example.com" maxLength={300} /></label>
+                <label>Visibility<select name="visibility" defaultValue={publicProfile?.is_published ? "published" : "draft"}><option value="draft">Save as draft</option><option value="published">Publish in directory</option></select></label>
+                <p className="catalog-meta">Add at least one public contact method: email, phone, or website. Published details will be visible to everyone.</p>
+                <button className="identity-submit" type="submit">Save business profile</button>
+              </form>
+            ) : (
+              <p className="organization-empty">An organization owner manages this public profile. You can view the directory at <Link className="identity-inline-link" href="/businesses">Businesses →</Link></p>
+            )}
+          </section>
+
           <section className="identity-panel">
             <div className="workspace-section-heading">
               <div><span className="identity-eyebrow">WORKSPACE ACCESS</span><h2>Members</h2></div>

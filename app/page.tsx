@@ -22,7 +22,7 @@ export default async function Home() {
           </div>
         </section>
         <section className="quick-grid">
-          {[["🛒","Products","Shop the live store catalog","/marketplace"],["♧","Services","Find local services","/marketplace?category=services"],["▦","Businesses","Support local & regional","/marketplace?category=businesses"],["♙","Jobs","Find work or hire","/marketplace?category=jobs"],["⌂","Real Estate","Buy, rent, invest","/marketplace?category=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
+          {[["🛒","Products","Shop the live store catalog","/marketplace"],["♧","Services","Find local services","/marketplace?category=services"],["▦","Businesses","Support local & regional","/businesses"],["♙","Jobs","Find work or hire","/marketplace?category=jobs"],["⌂","Real Estate","Buy, rent, invest","/marketplace?category=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
             <Link href={href} className="quick-card" key={label}><span>{icon}</span><b>{label}</b><small>{description}</small></Link>
           ))}
         </section>
