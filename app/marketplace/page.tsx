@@ -12,10 +12,8 @@ export default async function Marketplace({ searchParams }: PageProps) {
   const params = await searchParams;
   const query = params.q?.trim() || "";
   const category = params.category?.trim() || "";
-  const catalog = await getStoreProducts({ search: query || undefined });
-  const products = category
-    ? catalog.products.filter((product) => product.category.toLowerCase().includes(category.toLowerCase()))
-    : catalog.products;
+  const catalog = await getStoreProducts({ search: query || undefined, category: category || undefined });
+  const products = catalog.products;
   const heading = category || "All products";
 
   return (
@@ -30,7 +28,7 @@ export default async function Marketplace({ searchParams }: PageProps) {
         <section className="listing-area">
           <div className="breadcrumbs"><Link href="/">Home</Link> › Marketplace</div>
           <div className="listing-head">
-            <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "The live store could not be reached." : `${products.length} published ${products.length === 1 ? "product" : "products"}`}</p></div>
+            <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "The live store could not be reached." : catalog.status === "not-found" && category ? "This category is not available in the original store." : `${products.length} published ${products.length === 1 ? "product" : "products"}`}</p></div>
             <form className="catalog-search" action="/marketplace" role="search">
               {category && <input type="hidden" name="category" value={category} />}
               <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
@@ -42,7 +40,7 @@ export default async function Marketplace({ searchParams }: PageProps) {
             <div className="product-grid listing-grid">{products.map((product) => <ProductCard product={product} key={product.slug} />)}</div>
           ) : (
             <div className="catalog-empty">
-              <p>{catalog.status === "unavailable" ? "The product catalog is temporarily unavailable. You can continue to the existing Caribbean Star Store website." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
+              <p>{catalog.status === "unavailable" ? "The product catalog is temporarily unavailable. You can continue to the existing Caribbean Star Store website." : catalog.status === "not-found" && category ? "This category is not available in the original store." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
               {catalog.status === "unavailable" && (
                 <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
               )}
