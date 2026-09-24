@@ -39,3 +39,33 @@
 .organization-role{padding:6px 10px;border-radius:20px;background:#eaf4ff;color:#18549a;font-size:10px;font-weight:800;text-transform:capitalize}
 .organization-empty{margin-top:18px;padding:18px;border-radius:8px;background:#f5f7fa;color:#687587;font-size:12px}
 @media(max-width:760px){.organization-layout{grid-template-columns:1fr}}
+
+.organization-card-actions{display:grid;justify-items:end;gap:8px;flex:none}
+.organization-card h3 a:hover,.workspace-back a:hover,.organization-open-link:hover{text-decoration:underline}
+.organization-open-link{color:#0877df;font-size:11px;font-weight:800}
+.workspace-back{margin:0 0 18px;font-size:12px;font-weight:800;color:#18549a}
+.workspace-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:16px;align-items:start}
+.workspace-section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.workspace-section-heading h2{margin-top:6px}
+.workspace-count{padding:7px 10px;border-radius:20px;background:#f1f5f9;color:#526071;font-size:11px;font-weight:800}
+.workspace-members{display:grid;gap:10px;margin-top:18px}
+.workspace-member{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px;border:1px solid #e2e8f0;border-radius:10px;background:#fbfcfe}
+.workspace-member-person{display:flex;align-items:center;gap:11px;min-width:0}
+.workspace-avatar{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#eaf4ff;color:#18549a;font-size:18px;font-weight:900;flex:none}
+.workspace-member-person strong,.workspace-member-person span{display:block}
+.workspace-member-person strong{font-size:12px}
+.workspace-member-person div>span{margin-top:5px;color:#687587;font-size:10px}
+.workspace-member-controls{display:flex;align-items:center;gap:10px}
+.workspace-role-form{display:flex;align-items:center;gap:7px}
+.workspace-role-form select{border:1px solid #cfd8e3;border-radius:7px;background:#fff;padding:8px;font:inherit;font-size:11px;text-transform:capitalize}
+.workspace-role-form .identity-secondary{padding:8px 10px;font-size:10px}
+.workspace-remove{border:0;background:transparent;color:#a43a32;padding:8px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.role-guide{display:grid;gap:10px;margin-top:16px}
+.role-guide-card{padding:14px;border:1px solid #e2e8f0;border-radius:9px;background:#f9fbfd}
+.role-guide-card h3{margin:0 0 4px;font-size:13px;text-transform:capitalize}
+.role-guide-card p{margin:0;color:#687587;font-size:11px}
+.role-guide-card ul{display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:12px 0 0;list-style:none}
+.role-guide-card li{padding:5px 7px;border-radius:5px;background:#eaf4ff;color:#18549a;font-size:9px;text-transform:capitalize}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:900px){.workspace-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.workspace-member{align-items:flex-start;flex-direction:column}.workspace-member-controls{width:100%;flex-wrap:wrap}.workspace-role-form{flex:1;min-width:100%}.workspace-role-form select{flex:1}.organization-card-actions{align-items:end}.workspace-section-heading{align-items:flex-start;flex-direction:column}}

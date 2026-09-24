@@ -83,9 +83,9 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide">
-            <h2>Next: organizations and roles</h2>
-            <p>Seller and business workspaces will appear here once organization membership and authorization are connected.</p>
-            <Link className="identity-inline-link" href="/marketplace">Continue browsing the marketplace →</Link>
+            <h2>Your organizations</h2>
+            <p>Manage business and community workspaces, member access, and account roles.</p>
+            <Link className="identity-inline-link" href="/business">Open your workspaces →</Link>
           </section>
         </div>
       </main>

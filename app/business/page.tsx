@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
@@ -82,7 +83,7 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
         <div className="organization-layout">
           <section className="identity-panel">
             <h2>Create an organization</h2>
-            <p>Creating a workspace makes you its first owner. You can invite people when member management is available.</p>
+            <p>Creating a workspace makes you its first owner. Open a workspace to review members and manage access.</p>
             <form action={createOrganization} className="identity-form">
               <label>
                 Organization name
@@ -108,10 +109,10 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
                 {workspaces.map((organization) => (
                   <article className="organization-card" key={organization.id}>
                     <div>
-                      <h3>{organization.name}</h3>
+                      <h3><Link href={`/business/${organization.slug}`}>{organization.name}</Link></h3>
                       <p>{organization.organization_type} · /{organization.slug}</p>
                     </div>
-                    <span className="organization-role">{organization.roleName}</span>
+                    <div className="organization-card-actions"><span className="organization-role">{organization.roleName}</span><Link className="organization-open-link" href={`/business/${organization.slug}`}>Open workspace →</Link></div>
                   </article>
                 ))}
               </div>
