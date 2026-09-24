@@ -29,3 +29,6 @@ The repository now contains the Next.js application foundation and integration a
 - Authorization must use database/application controls, not user-editable metadata.
 
 Existing WordPress site: https://caribbeanstarstorett.com
+
+
+<!-- deployment verification -->
