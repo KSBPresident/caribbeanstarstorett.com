@@ -162,7 +162,7 @@ export async function createOrganizationMarketplaceListing(formData: FormData) {
     (listingType === "jobs" && employmentType && !employmentTypes.has(employmentType)) ||
     (listingType === "real-estate" && propertyType && !propertyTypes.has(propertyType)) ||
     salaryDetails.length > 120 || propertyPrice.length > 120 || phone.length > 40 ||
-    (contactEmail && (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contactEmail) || contactEmail.length > 254)) ||
+    (contactEmail && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail) || contactEmail.length > 254)) ||
     (websiteInput && !website) ||
     (!contactEmail && !phone && !website) ||
     (listingType === "jobs" && propertyPrice) ||

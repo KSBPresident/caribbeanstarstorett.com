@@ -10,17 +10,16 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
   const requestedType = params.type || "";
   const type = requestedType === "jobs" || requestedType === "real-estate" ? requestedType : "";
   const supabase = await createClient();
-  let listingQuery = supabase.from("organization_marketplace_listings")
+  const { data, error } = await supabase.from("organization_marketplace_listings")
     .select("slug, organization_name, listing_type, title, description, location, employment_type, salary_details, property_type, property_price, updated_at")
     .eq("is_published", true)
     .order("updated_at", { ascending: false })
     .limit(100);
-  if (type) listingQuery = listingQuery.eq("listing_type", type);
-  const { data, error } = await listingQuery;
 
   const listings = (data || []).filter((item) => {
+    const matchesType = !type || item.listing_type === type;
     const haystack = `${item.title} ${item.description} ${item.organization_name} ${item.location}`.toLowerCase();
-    return !query || haystack.includes(query.toLowerCase());
+    return matchesType && (!query || haystack.includes(query.toLowerCase()));
   });
 
   return (
