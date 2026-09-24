@@ -102,6 +102,11 @@ BEGIN
   END IF;
 
   IF owner_is_leaving THEN
+    PERFORM 1
+      FROM public.organizations AS o
+     WHERE o.id = OLD.organization_id
+     FOR UPDATE;
+
     SELECT count(*)
       INTO remaining_owners
       FROM public.organization_members AS om
