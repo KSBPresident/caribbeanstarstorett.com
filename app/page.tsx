@@ -19,6 +19,7 @@ export default async function Home() {
               <input name="q" placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
               <button type="submit">Search</button>
             </form>
+            <Link href="/how-it-works" className="identity-submit" style={{ display: "inline-block", marginTop: 14 }}>New here? See how it works →</Link>
           </div>
         </section>
         <section className="quick-grid">
