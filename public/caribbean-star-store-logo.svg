@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title">
+  <title id="title">Caribbean Star Store — Connecting The Community</title>
+  <defs>
+    <path id="topArc" d="M 26 119 A 94 94 0 0 1 214 119"/>
+    <path id="bottomArc" d="M 26 123 A 94 94 0 0 0 214 123"/>
+    <linearGradient id="rainbow" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ee167f"/>
+      <stop offset=".2" stop-color="#8b36c9"/>
+      <stop offset=".42" stop-color="#168cd2"/>
+      <stop offset=".62" stop-color="#00a99c"/>
+      <stop offset=".8" stop-color="#ffd12e"/>
+      <stop offset="1" stop-color="#ef4939"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4d324"/>
+      <stop offset=".38" stop-color="#e73382"/>
+      <stop offset=".7" stop-color="#2b90d0"/>
+      <stop offset="1" stop-color="#21ac8c"/>
+    </linearGradient>
+  </defs>
+  <text fill="#17151a" font-family="Segoe Script, Brush Script MT, cursive" font-size="17" font-style="italic" font-weight="600" letter-spacing=".1">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">Caribbean Star Store</textPath>
+  </text>
+  <text fill="#17151a" font-family="Segoe Script, Brush Script MT, cursive" font-size="15" font-style="italic" font-weight="600" letter-spacing=".1">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">Connecting The Community</textPath>
+  </text>
+  <g opacity=".94">
+    <circle cx="59" cy="103" r="5" fill="#e8177d"/><circle cx="72" cy="84" r="4" fill="#f1cf2f"/>
+    <circle cx="91" cy="72" r="4" fill="#158cd1"/><circle cx="148" cy="70" r="5" fill="#ef4939"/>
+    <circle cx="169" cy="82" r="4" fill="#a23bc5"/><circle cx="181" cy="101" r="5" fill="#10a98c"/>
+    <circle cx="62" cy="137" r="4" fill="#118fd0"/><circle cx="176" cy="141" r="5" fill="#ffd32e"/>
+    <circle cx="81" cy="162" r="5" fill="#ef167f"/><circle cx="158" cy="163" r="4" fill="#159aaf"/>
+  </g>
+  <path d="M120 67 133 94 163 91 143 113 153 143 120 128 89 146 97 114 75 94 106 92Z" fill="url(#rainbow)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="m120 67 13 27-13 14-17-16Z" fill="#f5d432" opacity=".92"/>
+  <path d="m133 94 30-3-20 22h-23Z" fill="#e72b75" opacity=".9"/>
+  <path d="m143 113 10 30-33-15v-15Z" fill="#16a9a0" opacity=".9"/>
+  <path d="m120 128-31 18 8-32 23-3Z" fill="#178dd1" opacity=".9"/>
+  <path d="m97 114-22-20 31-2 14 13Z" fill="#9b3fc3" opacity=".9"/>
+  <path d="m106 92 14-25v41Z" fill="#f05a35" opacity=".9"/>
+  <path d="M116 102 128 99 136 110 127 122 114 119 108 110Z" fill="url(#core)" stroke="#fff" stroke-width="2"/>
+</svg>
