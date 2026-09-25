@@ -30,7 +30,7 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
     ? params.category
     : "multi-item";
 
-  const { data: requests } = await supabase
+  const { data: requests, error: requestsError } = await supabase
     .from("purchase_requests")
     .select("id,title,details,category_key,budget_amount,currency,status,created_at")
     .eq("requester_user_id", user.id)
@@ -75,8 +75,10 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
             <p className="identity-note">Your saved request is visible only to your account until the matching workflow is connected.</p>
           </section>
           <section className="identity-panel">
-            <div className="workspace-section-heading"><div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Your requests</h2></div><span className="workspace-count">{requests?.length || 0} saved</span></div>
-            {requests?.length ? <div className="purchase-request-list">{requests.map((request) => (
+            <div className="workspace-section-heading"><div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Your requests</h2></div><span className="workspace-count">{requestsError ? "—" : requests?.length || 0} saved</span></div>
+            {requestsError ? (
+              <p className="organization-empty identity-error" role="alert">Your requests could not be loaded. Refresh the page to try again.</p>
+            ) : requests?.length ? <div className="purchase-request-list">{requests.map((request) => (
               <article className="purchase-request-card" key={request.id}>
                 <div className="purchase-request-top"><span className={`request-status request-status-${request.status}`}>{request.status}</span><span className="catalog-meta">{new Date(request.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</span></div>
                 <h3>{request.title}</h3><p className="request-category">{categoryLabels[request.category_key] || "Marketplace request"}</p><p>{request.details}</p>
