@@ -21,7 +21,7 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
     redirect(signInUrl("/business"));
   }
 
-  const [{ data: memberships }, params] = await Promise.all([
+  const [membershipResult, params] = await Promise.all([
     supabase
       .from("organization_members")
       .select("organization_id, role_id")
@@ -30,7 +30,7 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
     searchParams,
   ]);
 
-  const membershipRows = memberships || [];
+  const membershipRows = membershipResult.data || [];
   const organizationIds = membershipRows.map((membership) => membership.organization_id);
   const roleIds = membershipRows.map((membership) => membership.role_id);
 
@@ -53,6 +53,9 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
     const role = roles.find((item) => item.id === membership.role_id);
     return organization ? [{ ...organization, roleName: role?.name || "member" }] : [];
   });
+  const workspaceLoadError = Boolean(
+    membershipResult.error || organizationResult.error || roleResult.error
+  );
 
   const notice =
     params.notice === "created"
@@ -105,7 +108,9 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
 
           <section className="identity-panel">
             <h2>Organizations you belong to</h2>
-            {workspaces.length ? (
+            {workspaceLoadError ? (
+              <p className="organization-empty identity-error" role="alert">Your workspaces could not be loaded. Refresh the page to try again.</p>
+            ) : workspaces.length ? (
               <div className="organization-list">
                 {workspaces.map((organization) => (
                   <article className="organization-card" key={organization.id}>
