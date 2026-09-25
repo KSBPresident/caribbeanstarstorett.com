@@ -5,7 +5,7 @@ import { categories } from "../lib/store-data";
 import { getStoreProducts } from "../lib/wordpress-store";
 
 export default async function Home() {
-  const catalog = await getStoreProducts();
+  const catalog = await getStoreProducts({ perPage: 4 });
   return (
     <>
       <SiteHeader />
