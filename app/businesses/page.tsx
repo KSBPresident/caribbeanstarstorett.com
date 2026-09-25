@@ -2,7 +2,27 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 
-type SearchParams = Promise<{ q?: string; category?: string }>;
+type SearchParams = Promise<{ q?: string; category?: string; page?: string }>;
+
+const PAGE_SIZE = 12;
+
+function marketplaceSearchFilter(query: string, columns: string[]) {
+  const escaped = query
+    .replace(/[\\%_]/g, (character) => "\\" + character)
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"');
+  const pattern = `"%${escaped}%"`;
+  return columns.map((column) => `${column}.ilike.${pattern}`).join(",");
+}
+
+function directoryUrl(query: string, category: string, page: number) {
+  const params = new URLSearchParams();
+  if (query) params.set("q", query);
+  if (category) params.set("category", category);
+  if (page > 1) params.set("page", String(page));
+  const search = params.toString();
+  return search ? `/businesses?${search}` : "/businesses";
+}
 
 const categoryLabels: Record<string, string> = {
   food: "Food & groceries",
@@ -21,21 +41,22 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
   const params = await searchParams;
   const query = (params.q || "").trim().slice(0, 80);
   const requestedCategory = params.category || "";
+  const requestedPage = Math.max(1, Number.parseInt(params.page || "1", 10) || 1);
   const category = categoryKeys.has(requestedCategory) ? requestedCategory : "";
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let directoryQuery = supabase
     .from("organization_public_profiles")
-    .select("slug, display_name, summary, category_key, region, updated_at")
-    .eq("is_published", true)
+    .select("slug, display_name, summary, category_key, region, updated_at", { count: "exact" })
+    .eq("is_published", true);
+  if (category) directoryQuery = directoryQuery.eq("category_key", category);
+  if (query) directoryQuery = directoryQuery.or(marketplaceSearchFilter(query, ["display_name", "summary", "category_key", "region"]));
+  const { data, count, error } = await directoryQuery
     .order("updated_at", { ascending: false })
-    .limit(100);
+    .range((requestedPage - 1) * PAGE_SIZE, requestedPage * PAGE_SIZE - 1);
 
-  const records = data || [];
-  const filtered = records.filter((profile) => {
-    const matchesCategory = !category || profile.category_key === category;
-    const haystack = `${profile.display_name} ${profile.summary} ${profile.region}`.toLowerCase();
-    return matchesCategory && (!query || haystack.includes(query.toLowerCase()));
-  });
+  const profiles = data || [];
+  const totalCount = count ?? profiles.length;
+  const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
     <>
@@ -59,18 +80,18 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
             <button className="identity-submit" type="submit">Search</button>
           </form>
           <nav className="directory-categories" aria-label="Business categories">
-            <Link className={!category ? "selected" : ""} href="/businesses">All</Link>
-            {Object.entries(categoryLabels).map(([key, label]) => <Link className={category === key ? "selected" : ""} href={`/businesses?category=${key}`} key={key}>{label}</Link>)}
+            <Link className={!category ? "selected" : ""} href={directoryUrl(query, "", 1)}>All</Link>
+            {Object.entries(categoryLabels).map(([key, label]) => <Link className={category === key ? "selected" : ""} href={directoryUrl(query, key, 1)} key={key}>{label}</Link>)}
           </nav>
         </section>
 
         <section className="directory-results">
-          <div className="directory-results-heading"><div><span className="identity-eyebrow">LOCAL &amp; REGIONAL</span><h2>{category ? categoryLabels[category] : "Public business profiles"}</h2></div><span>{error ? "Count unavailable" : `${filtered.length} ${filtered.length === 1 ? "listing" : "listings"}`}</span></div>
+          <div className="directory-results-heading"><div><span className="identity-eyebrow">LOCAL &amp; REGIONAL</span><h2>{category ? categoryLabels[category] : "Public business profiles"}</h2></div><span>{error ? "Count unavailable" : `${totalCount} ${totalCount === 1 ? "listing" : "listings"} · Page ${requestedPage} of ${pageCount}`}</span></div>
           {error ? (
             <div className="catalog-empty"><strong>Directory connection is unavailable.</strong><br />Please try again shortly.</div>
-          ) : filtered.length ? (
+          ) : profiles.length ? (
             <div className="directory-grid">
-              {filtered.map((profile) => (
+              {profiles.map((profile) => (
                 <article className="directory-card" key={profile.slug}>
                   <div className="directory-card-mark" aria-hidden="true">{profile.display_name.slice(0, 1).toUpperCase()}</div>
                   <div className="directory-card-meta"><span>{categoryLabels[profile.category_key] || "Business"}</span><span>{profile.region}</span></div>
@@ -80,6 +101,13 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
                 </article>
               ))}
             </div>
+          ) : totalCount > 0 ? (
+            <div className="directory-empty">
+              <span aria-hidden="true">✦</span>
+              <h3>No businesses on this page</h3>
+              <p>There are {totalCount} matching listings across {pageCount} pages.</p>
+              <Link className="identity-submit" href={directoryUrl(query, category, pageCount)}>Go to the last page</Link>
+            </div>
           ) : (
             <div className="directory-empty">
               <span aria-hidden="true">✦</span>
@@ -87,6 +115,13 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
               <p>{query || category ? "Try another search or category. Only published profiles appear here." : "Create an organization workspace, then publish a profile when you are ready."}</p>
               <Link className="identity-submit" href="/business">Start a business profile</Link>
             </div>
+          )}
+          {!error && pageCount > 1 && (
+            <nav className="catalog-pagination" aria-label="Business directory pages">
+              {requestedPage > 1 ? <Link rel="prev" href={directoryUrl(query, category, requestedPage - 1)}>Previous</Link> : <span aria-disabled="true">Previous</span>}
+              <span aria-current="page">Page {requestedPage} of {pageCount}</span>
+              {requestedPage < pageCount ? <Link rel="next" href={directoryUrl(query, category, requestedPage + 1)}>Next</Link> : <span aria-disabled="true">Next</span>}
+            </nav>
           )}
         </section>
       </main>
