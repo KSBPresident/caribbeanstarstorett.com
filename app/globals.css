@@ -247,3 +247,10 @@
 .opportunity-detail-layout{grid-template-columns:minmax(0,1fr) 320px}
 .opportunity-detail-layout .identity-details{max-width:650px}
 @media(max-width:760px){.workspace-marketplace-item{align-items:flex-start;flex-direction:column}.workspace-marketplace-actions{width:100%;justify-content:space-between}}
+
+.catalog-pagination{display:flex;align-items:center;justify-content:center;gap:18px;margin:28px 0 8px;padding:14px;border:1px solid #e5e9ef;border-radius:12px;background:#fff;color:#536171;font-size:13px}
+.catalog-pagination a{color:#075da8;font-weight:800;text-decoration:none}
+.catalog-pagination a:hover{text-decoration:underline}
+.catalog-pagination [aria-disabled="true"]{color:#aab2bc}
+.catalog-pagination [aria-current="page"]{font-weight:700}
+@media(max-width:560px){.catalog-pagination{gap:12px;font-size:12px}.catalog-pagination a,.catalog-pagination [aria-disabled="true"]{padding:8px 5px}}
