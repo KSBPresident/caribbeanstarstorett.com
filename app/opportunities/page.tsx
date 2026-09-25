@@ -6,6 +6,17 @@ import { createClient } from "../../lib/supabase/server";
 export const metadata: Metadata = {
   title: "Jobs & Real Estate",
   description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store TT.",
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store TT",
+    title: "Jobs & Real Estate | Caribbean Star Store TT",
+    description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store TT.",
+  },
+  twitter: {
+    card: "summary",
+    title: "Jobs & Real Estate | Caribbean Star Store TT",
+    description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store TT.",
+  },
 };
 
 type SearchParams = Promise<{ q?: string; type?: string; page?: string }>;

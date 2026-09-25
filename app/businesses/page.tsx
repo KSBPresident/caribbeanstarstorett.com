@@ -6,6 +6,17 @@ import { createClient } from "../../lib/supabase/server";
 export const metadata: Metadata = {
   title: "Business Directory",
   description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store TT",
+    title: "Business Directory | Caribbean Star Store TT",
+    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+  },
+  twitter: {
+    card: "summary",
+    title: "Business Directory | Caribbean Star Store TT",
+    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+  },
 };
 
 type SearchParams = Promise<{ q?: string; category?: string; page?: string }>;

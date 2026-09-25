@@ -8,6 +8,17 @@ import { getStoreProducts } from "../../lib/wordpress-store";
 export const metadata: Metadata = {
   title: "Marketplace",
   description: "Browse products and discover goods from the Caribbean Star Store TT marketplace.",
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store TT",
+    title: "Marketplace | Caribbean Star Store TT",
+    description: "Browse products and discover goods from the Caribbean Star Store TT marketplace.",
+  },
+  twitter: {
+    card: "summary",
+    title: "Marketplace | Caribbean Star Store TT",
+    description: "Browse products and discover goods from the Caribbean Star Store TT marketplace.",
+  },
 };
 
 type PageProps = {
