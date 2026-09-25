@@ -105,27 +105,29 @@ async function requestProducts(path: string): Promise<{ response: Response | nul
   }
 }
 
-export async function getStoreProducts(options: { search?: string; category?: string } = {}) {
-  const query = new URLSearchParams({ per_page: "48", orderby: "popularity", order: "desc" });
+export async function getStoreProducts(options: { search?: string; category?: string; page?: number } = {}) {
+  const page = Number.isInteger(options.page) && (options.page || 0) > 0 ? options.page! : 1;
+  const query = new URLSearchParams({ per_page: "48", orderby: "popularity", order: "desc", page: String(page) });
   if (options.search) query.set("search", options.search.slice(0, 100));
   if (options.category) {
     const categorySlug = normalizeCategory(options.category.slice(0, 100));
-    if (!categorySlug) return { products: [] as Product[], status: "not-found" as const };
+    if (!categorySlug) return { products: [] as Product[], status: "not-found" as const, totalPages: 1 };
     query.set("category", categorySlug);
   }
   const { response, status } = await requestProducts(`?${query.toString()}`);
-  if (!response) return { products: [] as Product[], status };
+  if (!response) return { products: [] as Product[], status, totalPages: 1 };
+  const totalPages = Math.max(1, Number(response.headers.get("X-WP-TotalPages")) || 1);
   try {
     const data = await response.json();
     if (!Array.isArray(data)) {
       logStoreApiFailure("product-collection", { error: new TypeError("Unexpected response shape") });
-      return { products: [] as Product[], status: "unavailable" as const };
+      return { products: [] as Product[], status: "unavailable" as const, totalPages: 1 };
     }
     const products = data.flatMap((item: StoreApiProduct) => {
       const product = mapProduct(item);
       return product ? [product] : [];
     });
-    return { products, status: "available" as const };
+    return { products, status: "available" as const, totalPages };
   } catch (error) {
     logStoreApiFailure("product-collection-json", { error });
     return { products: [] as Product[], status: "unavailable" as const };
