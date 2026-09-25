@@ -15,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      allow: ["/", "/businesses"],
       disallow: [
         "/admin",
         "/auth",
@@ -30,7 +30,6 @@ export default function robots(): MetadataRoute.Robots {
         "/sign-up",
         "/update-password",
       ],
-      allow: ["/", "/businesses"],
     },
     sitemap: `${productionSite}/sitemap.xml`,
     host: productionSite,
