@@ -2,8 +2,6 @@ import type { Product } from "./store-data";
 
 type CatalogStatus = "available" | "unavailable" | "not-found";
 
-type StoreApiCategory = { id: number; name: string; slug: string; count?: number };
-
 type StoreApiProduct = {
   id: number;
   name: string;
@@ -85,39 +83,6 @@ function normalizeCategory(value: string) {
   return value.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-async function getStoreCategorySlug(name: string): Promise<{ slug: string | null; status: CatalogStatus }> {
-  try {
-    const url = new URL(`${apiPath}/products/categories`, baseUrl);
-    url.searchParams.set("per_page", "100");
-    url.searchParams.set("hide_empty", "true");
-    const response = await fetch(url, {
-      headers: { Accept: "application/json" },
-      next: { revalidate: 60 },
-      signal: AbortSignal.timeout(8_000),
-    });
-    if (response.status === 404) {
-      logStoreApiFailure("product-categories", { status: response.status });
-      return { slug: null, status: "not-found" };
-    }
-    if (!response.ok) {
-      logStoreApiFailure("product-categories", { status: response.status });
-      return { slug: null, status: "unavailable" };
-    }
-    const data = await response.json();
-    if (!Array.isArray(data)) return { slug: null, status: "unavailable" };
-    const requested = normalizeCategory(name);
-    const match = (data as StoreApiCategory[]).find((item) =>
-      normalizeCategory(item.name) === requested || item.slug === requested
-    );
-    return match?.slug
-      ? { slug: match.slug, status: "available" }
-      : { slug: null, status: "not-found" };
-  } catch (error) {
-    logStoreApiFailure("product-categories", { error });
-    return { slug: null, status: "unavailable" };
-  }
-}
-
 async function requestProducts(path: string): Promise<{ response: Response | null; status: CatalogStatus }> {
   try {
     const response = await fetch(new URL(`${apiPath}/products${path}`, baseUrl), {
@@ -144,9 +109,9 @@ export async function getStoreProducts(options: { search?: string; category?: st
   const query = new URLSearchParams({ per_page: "48", orderby: "popularity", order: "desc" });
   if (options.search) query.set("search", options.search.slice(0, 100));
   if (options.category) {
-    const category = await getStoreCategorySlug(options.category.slice(0, 100));
-    if (!category.slug) return { products: [] as Product[], status: category.status };
-    query.set("category", category.slug);
+    const categorySlug = normalizeCategory(options.category.slice(0, 100));
+    if (!categorySlug) return { products: [] as Product[], status: "not-found" as const };
+    query.set("category", categorySlug);
   }
   const { response, status } = await requestProducts(`?${query.toString()}`);
   if (!response) return { products: [] as Product[], status };
