@@ -172,7 +172,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                 {publicProfile.is_published && <Link href={`/businesses/${publicProfile.slug}`}>View public profile →</Link>}
               </div>
             )}
-            {canManageOrganization && !publicProfileResult.error ? (
+            {publicProfileResult.error ? null : canManageOrganization ? (
               <form action={saveOrganizationPublicProfile} className="identity-form">
                 <input type="hidden" name="organizationId" value={organization.id} />
                 <input type="hidden" name="organizationSlug" value={organization.slug} />
@@ -192,6 +192,8 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                 <p className="catalog-meta">Add at least one public contact method: email, phone, or website. Published details will be visible to everyone.</p>
                 <button className="identity-submit" type="submit">Save business profile</button>
               </form>
+            ) : permissionLoadError ? (
+              <p className="organization-empty identity-error" role="alert">Profile controls are unavailable because access permissions could not be checked.</p>
             ) : (
               <p className="organization-empty">An organization owner manages this public profile. You can view the directory at <Link className="identity-inline-link" href="/businesses">Businesses →</Link></p>
             )}
@@ -360,6 +362,8 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                   );
                 })}
               </div>
+            ) : permissionLoadError ? (
+              <p className="organization-empty identity-error" role="alert">Member controls are unavailable because access permissions could not be checked.</p>
             ) : (
               <p className="organization-empty">You can view workspace access, but your role cannot manage members.</p>
             )}
