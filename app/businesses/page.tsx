@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Business Directory",
+  description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+};
 
 type SearchParams = Promise<{ q?: string; category?: string; page?: string }>;
 
