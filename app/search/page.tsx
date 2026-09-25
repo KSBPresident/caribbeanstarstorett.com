@@ -44,6 +44,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
   const businesses = businessResult?.data || [];
   const opportunities = listingResult?.data || [];
   const products = catalog?.products || [];
+  const sourcesUnavailable = Boolean(
+    catalog?.status === "unavailable" || businessResult?.error || listingResult?.error
+  );
   const matchCount =
     (catalog?.totalProducts ?? products.length) +
     (businessResult?.count ?? businesses.length) +
@@ -80,7 +83,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
             <section className="directory-results">
               <div className="directory-results-heading">
                 <div><span className="identity-eyebrow">SEARCH RESULTS</span><h2>Results for “{query}”</h2></div>
-                <span>{matchCount} matches</span>
+                <span>{sourcesUnavailable ? "Some results unavailable" : `${matchCount} matches`}</span>
               </div>
               {catalog?.status === "unavailable" && (
                 <div className="catalog-empty">
