@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "../lib/supabase/server";
 import { isSupabaseConfigured } from "../lib/supabase/configured";
 
@@ -19,28 +20,28 @@ export async function SiteHeader() {
   return (
     <header className="store-header">
       <div className="store-top">
-        <a className="store-brand" href="/" aria-label="Caribbean Star Store TT home">
+        <Link className="store-brand" href="/" aria-label="Caribbean Star Store TT home">
           <img className="company-logo" src="/caribbean-star-store-logo.svg" alt="Caribbean Star Store — Connecting The Community" />
           <span><b>CARIBBEAN STAR STORE</b><small>TRINIDAD &amp; TOBAGO MARKETPLACE</small></span>
-        </a>
+        </Link>
         <form action="/search" className="header-search" role="search" aria-label="Search the marketplace">
           <input name="q" placeholder="Search products, services, businesses..." aria-label="Search products, services, businesses" />
           <button type="submit" aria-label="Search">⌕</button>
         </form>
         <div className="header-actions">
-          <a href="/sell">Sell</a>
-          {user ? <a href="/dashboard">My Account</a> : <a href="/sign-in">Sign In</a>}
-          {isPlatformAdmin && <a href="/admin">Platform Admin</a>}
-          <a href="/cart" aria-label="Shopping cart">Cart</a>
+          <Link href="/sell">Sell</Link>
+          {user ? <Link href="/dashboard">My Account</Link> : <Link href="/sign-in">Sign In</Link>}
+          {isPlatformAdmin && <Link href="/admin">Platform Admin</Link>}
+          <Link href="/cart" aria-label="Shopping cart">Cart</Link>
         </div>
       </div>
       <nav className="store-nav" aria-label="Main navigation">
-        <a href="/marketplace">Products</a>
-        <a href="/businesses?category=professional">Services</a>
-        <a href="/businesses">Businesses</a>
-        <a href="/opportunities?type=jobs">Jobs</a>
-        <a href="/opportunities?type=real-estate">Real Estate</a>
-        <a href="/build-a-buy">Build-A-Buy</a>
+        <Link href="/marketplace">Products</Link>
+        <Link href="/businesses?category=professional">Services</Link>
+        <Link href="/businesses">Businesses</Link>
+        <Link href="/opportunities?type=jobs">Jobs</Link>
+        <Link href="/opportunities?type=real-estate">Real Estate</Link>
+        <Link href="/build-a-buy">Build-A-Buy</Link>
       </nav>
     </header>
   );
