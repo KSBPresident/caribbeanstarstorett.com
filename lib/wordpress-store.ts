@@ -83,7 +83,7 @@ function normalizeCategory(value: string) {
   return value.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-async function requestProducts(path: string): Promise<{ response: Response | null; status: CatalogStatus }> {
+async function requestProducts(path: string): Promise<{ response: Response | null; status: CatalogStatus; httpStatus?: number }> {
   try {
     const response = await fetch(new URL(`${apiPath}/products${path}`, baseUrl), {
       headers: { Accept: "application/json" },
@@ -92,36 +92,36 @@ async function requestProducts(path: string): Promise<{ response: Response | nul
     });
     if (response.status === 404) {
       if (path.startsWith("?")) logStoreApiFailure("product-collection", { status: response.status });
-      return { response, status: "not-found" };
+      return { response, status: "not-found", httpStatus: response.status };
     }
     if (!response.ok) {
       logStoreApiFailure(path.startsWith("?") ? "product-collection" : "product-detail", { status: response.status });
-      return { response: null, status: "unavailable" };
+      return { response: null, status: "unavailable", httpStatus: response.status };
     }
-    return { response, status: "available" };
+    return { response, status: "available", httpStatus: response.status };
   } catch (error) {
     logStoreApiFailure(path.startsWith("?") ? "product-collection" : "product-detail", { error });
     return { response: null, status: "unavailable" };
   }
 }
 
-export async function getStoreProducts(options: { search?: string; category?: string; page?: number } = {}) {
+export async function getStoreProducts(options: { search?: string; category?: string; page?: number; perPage?: number } = {}) {
   const page = Number.isInteger(options.page) && (options.page || 0) > 0 ? options.page! : 1;
-  const perPage = 48;
+  const perPage = Number.isInteger(options.perPage) ? Math.min(48, Math.max(1, options.perPage!)) : 48;
   const query = new URLSearchParams({ per_page: String(perPage), orderby: "popularity", order: "desc", page: String(page) });
   if (options.search) query.set("search", options.search.slice(0, 100));
   if (options.category) {
     const categorySlug = normalizeCategory(options.category.slice(0, 100));
-    if (!categorySlug) return { products: [] as Product[], status: "not-found" as const, totalProducts: 0, totalPages: 1 };
+    if (!categorySlug) return { products: [] as Product[], status: "not-found" as const, totalProducts: 0, totalPages: 1, httpStatus: undefined };
     query.set("category", categorySlug);
   }
-  const { response, status } = await requestProducts(`?${query.toString()}`);
-  if (!response) return { products: [] as Product[], status, totalProducts: 0, totalPages: 1 };
+  const { response, status, httpStatus } = await requestProducts(`?${query.toString()}`);
+  if (!response) return { products: [] as Product[], status, totalProducts: 0, totalPages: 1, httpStatus };
   try {
     const data = await response.json();
     if (!Array.isArray(data)) {
       logStoreApiFailure("product-collection", { error: new TypeError("Unexpected response shape") });
-      return { products: [] as Product[], status: "unavailable" as const, totalProducts: 0, totalPages: 1 };
+      return { products: [] as Product[], status: "unavailable" as const, totalProducts: 0, totalPages: 1, httpStatus };
     }
     const products = data.flatMap((item: StoreApiProduct) => {
       const product = mapProduct(item);
@@ -136,10 +136,10 @@ export async function getStoreProducts(options: { search?: string; category?: st
     const totalPages = Number.isInteger(reportedPages) && reportedPages > 0
       ? reportedPages
       : Math.max(1, Math.ceil(totalProducts / perPage));
-    return { products, status: "available" as const, totalProducts, totalPages };
+    return { products, status: "available" as const, totalProducts, totalPages, httpStatus };
   } catch (error) {
     logStoreApiFailure("product-collection-json", { error });
-    return { products: [] as Product[], status: "unavailable" as const, totalProducts: 0, totalPages: 1 };
+    return { products: [] as Product[], status: "unavailable" as const, totalProducts: 0, totalPages: 1, httpStatus };
   }
 }
 
