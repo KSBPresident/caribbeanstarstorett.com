@@ -6,35 +6,45 @@ import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store
 
 type SearchParams = Promise<{ q?: string }>;
 
+function marketplaceSearchFilter(query: string, columns: string[]) {
+  const escaped = query
+    .replace(/[\\%_]/g, "\\\\type SearchParams = Promise<{ q?: string }>;
+
+export default async function SearchPage")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"');
+  const pattern = `"%${escaped}%"`;
+  return columns.map((column) => `${column}.ilike.${pattern}`).join(",");
+}
+
 export default async function SearchPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const query = (params.q || "").trim().slice(0, 80);
   const canSearch = query.length >= 2;
   const supabase = await createClient();
 
+  const businessFilter = marketplaceSearchFilter(query, ["display_name", "summary", "category_key", "region"]);
+  const listingFilter = marketplaceSearchFilter(query, ["title", "description", "organization_name", "location"]);
   const [catalog, businessResult, listingResult] = canSearch
     ? await Promise.all([
         getStoreProducts({ search: query }),
         supabase.from("organization_public_profiles")
           .select("slug, display_name, summary, category_key, region")
           .eq("is_published", true)
+          .or(businessFilter)
           .order("updated_at", { ascending: false })
           .limit(100),
         supabase.from("organization_marketplace_listings")
           .select("slug, organization_name, listing_type, title, description, location, salary_details, property_price")
           .eq("is_published", true)
+          .or(listingFilter)
           .order("updated_at", { ascending: false })
           .limit(100),
       ])
     : [null, null, null];
 
-  const normalizedQuery = query.toLowerCase();
-  const businesses = (businessResult?.data || []).filter((item) =>
-    `${item.display_name} ${item.summary} ${item.category_key} ${item.region}`.toLowerCase().includes(normalizedQuery)
-  );
-  const opportunities = (listingResult?.data || []).filter((item) =>
-    `${item.title} ${item.description} ${item.organization_name} ${item.location}`.toLowerCase().includes(normalizedQuery)
-  );
+  const businesses = businessResult?.data || [];
+  const opportunities = listingResult?.data || [];
   const products = catalog?.products || [];
 
   return (
