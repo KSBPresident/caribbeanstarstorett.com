@@ -11,6 +11,23 @@ type PageProps = {
   searchParams: Promise<{ error?: string; notice?: string }>;
 };
 
+function WorkspaceLoadError({ message }: { message: string }) {
+  return (
+    <>
+      <SiteHeader />
+      <main className="identity-page">
+        <p className="workspace-back"><Link href="/business">← All workspaces</Link></p>
+        <section className="identity-panel">
+          <span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span>
+          <h1>Workspace temporarily unavailable</h1>
+          <p role="alert">{message}</p>
+          <p>Please refresh the page to try again.</p>
+        </section>
+      </main>
+    </>
+  );
+}
+
 export default async function OrganizationWorkspacePage({ params, searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const [{ slug }, query] = await Promise.all([params, searchParams]);
@@ -18,20 +35,26 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(signInUrl(`/business/${encodeURIComponent(slug)}`));
 
-  const { data: organization } = await supabase
+  const { data: organization, error: organizationError } = await supabase
     .from("organizations")
     .select("id, name, slug, organization_type")
     .eq("slug", slug)
     .maybeSingle();
+  if (organizationError) {
+    return <WorkspaceLoadError message="We couldn’t load this workspace." />;
+  }
   if (!organization) notFound();
 
-  const { data: ownMembership } = await supabase
+  const { data: ownMembership, error: ownMembershipError } = await supabase
     .from("organization_members")
     .select("role_id")
     .eq("organization_id", organization.id)
     .eq("user_id", user.id)
     .eq("status", "active")
     .maybeSingle();
+  if (ownMembershipError) {
+    return <WorkspaceLoadError message="We couldn’t verify your access to this workspace." />;
+  }
   if (!ownMembership) redirect("/business?error=workspace");
 
   const [memberResult, roleResult, ownRolePermissionResult, publicProfileResult, marketplaceListingsResult] = await Promise.all([
@@ -57,30 +80,37 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
   const roles = roleResult.data || [];
   const roleLinks = ownRolePermissionResult.data || [];
   const permissionIds = roleLinks.map((row) => row.permission_id);
-  const { data: ownPermissions } = permissionIds.length
+  const { data: ownPermissions, error: ownPermissionsError } = permissionIds.length
     ? await supabase.from("permissions").select("key").in("id", permissionIds)
-    : { data: [] };
+    : { data: [], error: null };
+  const permissionLoadError = Boolean(ownRolePermissionResult.error || ownPermissionsError);
   const permissionKeys = new Set((ownPermissions || []).map((permission) => permission.key));
-  const canManageOrganization = permissionKeys.has("organization.manage");
-  const canManageMembers = permissionKeys.has("member.manage");
-  const canManageRoles = permissionKeys.has("role.manage");
-  const canReadAudit = permissionKeys.has("audit.read");
-  const { data: auditEntries } = canReadAudit
+  const canManageOrganization = !permissionLoadError && permissionKeys.has("organization.manage");
+  const canManageMembers = !permissionLoadError && permissionKeys.has("member.manage");
+  const canManageRoles = !permissionLoadError && permissionKeys.has("role.manage");
+  const canReadAudit = !permissionLoadError && permissionKeys.has("audit.read");
+  const { data: auditEntries, error: auditEntriesError } = canReadAudit
     ? await supabase.from("audit_log")
         .select("actor_user_id, action, resource_type, resource_id, created_at")
         .eq("organization_id", organization.id)
         .order("created_at", { ascending: false })
         .limit(25)
-    : { data: [] };
+    : { data: [], error: null };
   const roleIds = roles.map((role) => role.id);
-  const { data: allRoleLinks } = roleIds.length
+  const { data: allRoleLinks, error: allRoleLinksError } = roleIds.length
     ? await supabase.from("role_permissions").select("role_id, permission_id").in("role_id", roleIds)
-    : { data: [] };
+    : { data: [], error: null };
   const permissionMap = new Map<string, string>();
   const permissionIdsForRoles = [...new Set((allRoleLinks || []).map((row) => row.permission_id))];
-  const { data: permissionRows } = permissionIdsForRoles.length
+  const { data: permissionRows, error: permissionRowsError } = permissionIdsForRoles.length
     ? await supabase.from("permissions").select("id, key").in("id", permissionIdsForRoles)
-    : { data: [] };
+    : { data: [], error: null };
+  const membersLoadError = Boolean(memberResult.error || roleResult.error);
+  const workspaceDataLoadError = Boolean(
+    ownRolePermissionResult.error || ownPermissionsError || roleResult.error ||
+    publicProfileResult.error || marketplaceListingsResult.error || allRoleLinksError ||
+    permissionRowsError || (canReadAudit && auditEntriesError)
+  );
   for (const permission of permissionRows || []) permissionMap.set(permission.id, permission.key);
   const linksByRole = new Map<string, string[]>();
   for (const link of allRoleLinks || []) {
@@ -127,19 +157,22 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
         </header>
 
         {message && <p className={query.error ? "identity-message identity-error" : "identity-message"} role={query.error ? "alert" : "status"}>{message}</p>}
+        {workspaceDataLoadError && <p className="identity-message identity-error" role="alert">Some workspace information could not be loaded. Refresh the page to try again.</p>}
 
         <div className="workspace-grid">
           <section className="identity-panel workspace-listing-panel">
             <span className="identity-eyebrow">FRONT OS · BUSINESS DIRECTORY</span>
             <h2>Public business profile</h2>
             <p>Share an organization profile in the public directory. Only published profiles are visible to visitors.</p>
-            {publicProfile && (
+            {publicProfileResult.error ? (
+              <p className="organization-empty identity-error" role="alert">Business profile details could not be loaded.</p>
+            ) : publicProfile && (
               <div className="workspace-listing-current">
                 <div><strong>{publicProfile.is_published ? "Published" : "Saved as draft"}</strong><p>{publicProfile.is_published ? "Visitors can find your profile in the directory." : "Only workspace members can see this draft."}</p></div>
                 {publicProfile.is_published && <Link href={`/businesses/${publicProfile.slug}`}>View public profile →</Link>}
               </div>
             )}
-            {canManageOrganization ? (
+            {canManageOrganization && !publicProfileResult.error ? (
               <form action={saveOrganizationPublicProfile} className="identity-form">
                 <input type="hidden" name="organizationId" value={organization.id} />
                 <input type="hidden" name="organizationSlug" value={organization.slug} />
@@ -167,10 +200,12 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
           <section className="identity-panel">
             <div className="workspace-section-heading">
               <div><span className="identity-eyebrow">FRONT OS · JOBS &amp; REAL ESTATE</span><h2>Marketplace listings</h2></div>
-              <span className="workspace-count">{marketplaceListings.length} {marketplaceListings.length === 1 ? "listing" : "listings"}</span>
+              <span className="workspace-count">{marketplaceListingsResult.error ? "Count unavailable" : `${marketplaceListings.length} ${marketplaceListings.length === 1 ? "listing" : "listings"}`}</span>
             </div>
             <p>Job openings and property listings managed by this organization.</p>
-            {marketplaceListings.length ? (
+            {marketplaceListingsResult.error ? (
+              <p className="organization-empty identity-error" role="alert">Job and property listings could not be loaded.</p>
+            ) : marketplaceListings.length ? (
               <div className="workspace-marketplace-list">
                 {marketplaceListings.map((item) => (
                   <article className="workspace-marketplace-item" key={item.id}>
@@ -278,10 +313,12 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
           <section className="identity-panel">
             <div className="workspace-section-heading">
               <div><span className="identity-eyebrow">WORKSPACE ACCESS</span><h2>Members</h2></div>
-              <span className="workspace-count">{memberships.length} {memberships.length === 1 ? "member" : "members"}</span>
+              <span className="workspace-count">{membersLoadError ? "Count unavailable" : `${memberships.length} ${memberships.length === 1 ? "member" : "members"}`}</span>
             </div>
             <p>Review each person’s current role. Owners can assign any available role; administrators can manage standard members.</p>
-            {canManageMembers && memberships.length ? (
+            {membersLoadError ? (
+              <p className="organization-empty identity-error" role="alert">Workspace members could not be loaded.</p>
+            ) : canManageMembers && memberships.length ? (
               <div className="workspace-members">
                 {memberships.map((membership) => {
                   const role = roleById.get(membership.role_id);
@@ -335,7 +372,9 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                 <span className="workspace-count">Last 25 events</span>
               </div>
               <p>Changes to this workspace and its member access are recorded here.</p>
-              {auditEntries?.length ? (
+              {auditEntriesError ? (
+                <p className="organization-empty identity-error" role="alert">Workspace activity could not be loaded.</p>
+              ) : auditEntries?.length ? (
                 <div className="workspace-audit-list">
                   {auditEntries.map((entry, index) => (
                     <article className="workspace-audit-row" key={`${entry.created_at}-${index}`}>
@@ -357,14 +396,16 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
             <span className="identity-eyebrow">ROLE GUIDE</span>
             <h2>Roles and permissions</h2>
             <p>Each role grants a defined set of actions throughout the workspace.</p>
-            <div className="role-guide">
+            {roleResult.error || allRoleLinksError || permissionRowsError ? (
+              <p className="organization-empty identity-error" role="alert">The role and permission guide could not be loaded.</p>
+            ) : <div className="role-guide">
               {roles.map((role) => (
                 <article className="role-guide-card" key={role.id}>
                   <div><h3>{role.name}</h3><p>{role.description || "Workspace access role"}</p></div>
                   <ul>{(linksByRole.get(role.id) || []).filter(Boolean).map((key) => <li key={key}>{key.replaceAll(".", " ")}</li>)}</ul>
                 </article>
               ))}
-            </div>
+            </div>}
           </section>
         </div>
       </main>
