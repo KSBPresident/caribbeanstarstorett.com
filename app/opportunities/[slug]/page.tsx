@@ -22,11 +22,27 @@ const propertyTypes: Record<string, string> = {
 export default async function OpportunityDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const supabase = await createClient();
-  const { data: listing } = await supabase.from("organization_marketplace_listings")
+  const { data: listing, error } = await supabase.from("organization_marketplace_listings")
     .select("slug, organization_name, listing_type, title, description, location, employment_type, salary_details, property_type, property_price, contact_email, phone, website_url, updated_at")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
+  if (error) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="identity-page opportunity-detail-page">
+          <p className="workspace-back"><Link href="/opportunities">← Back to opportunities</Link></p>
+          <section className="identity-panel catalog-unavailable" role="alert">
+            <span className="identity-eyebrow">CARIBBEAN STAR STORE · LISTING</span>
+            <h1>We couldn’t load this listing.</h1>
+            <p>The opportunity service is temporarily unavailable. Please try again shortly.</p>
+            <Link className="identity-submit" href="/opportunities">Browse jobs &amp; real estate</Link>
+          </section>
+        </main>
+      </>
+    );
+  }
   if (!listing) notFound();
 
   const isJob = listing.listing_type === "jobs";
