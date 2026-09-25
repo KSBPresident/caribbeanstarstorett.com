@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
@@ -19,14 +21,40 @@ const propertyTypes: Record<string, string> = {
   other: "Other property",
 };
 
-export default async function OpportunityDetail({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+const getPublishedOpportunity = cache(async (slug: string) => {
   const supabase = await createClient();
-  const { data: listing, error } = await supabase.from("organization_marketplace_listings")
+  return supabase.from("organization_marketplace_listings")
     .select("slug, organization_name, listing_type, title, description, location, employment_type, salary_details, property_type, property_price, contact_email, phone, website_url, updated_at")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
+});
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: listing, error } = await getPublishedOpportunity(slug);
+  if (error || !listing) {
+    return {
+      title: "Opportunity listing",
+      description: "Explore published jobs and real estate listings on Caribbean Star Store TT.",
+    };
+  }
+
+  const details = [listing.description, listing.location, listing.organization_name].filter(Boolean).join(" · ");
+  const description = details.replace(/\\s+/g, " ").slice(0, 160);
+  const title = `${listing.title} | Caribbean Star Store TT`;
+
+  return {
+    title: listing.title,
+    description,
+    openGraph: { type: "website", siteName: "Caribbean Star Store TT", title, description },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+export default async function OpportunityDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const { data: listing, error } = await getPublishedOpportunity(slug);
   if (error) {
     return (
       <>

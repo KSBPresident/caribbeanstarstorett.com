@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
@@ -14,15 +16,42 @@ const categoryLabels: Record<string, string> = {
   other: "Other",
 };
 
-export default async function BusinessProfilePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+const getPublicBusinessProfile = cache(async (slug: string) => {
   const supabase = await createClient();
-  const { data: profile, error } = await supabase
+  return supabase
     .from("organization_public_profiles")
     .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
+});
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: profile, error } = await getPublicBusinessProfile(slug);
+  if (error || !profile) {
+    return {
+      title: "Business profile",
+      description: "Explore published Caribbean businesses and services on Caribbean Star Store TT.",
+    };
+  }
+
+  const description = (profile.summary || `Discover ${profile.display_name}, a Caribbean business on Caribbean Star Store TT.`)
+    .replace(/\\s+/g, " ")
+    .slice(0, 160);
+  const title = `${profile.display_name} | Caribbean Star Store TT`;
+
+  return {
+    title: profile.display_name,
+    description,
+    openGraph: { type: "website", siteName: "Caribbean Star Store TT", title, description },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+export default async function BusinessProfilePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const { data: profile, error } = await getPublicBusinessProfile(slug);
 
   if (error) {
     return (
