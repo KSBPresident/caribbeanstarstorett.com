@@ -27,13 +27,13 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
     ? await Promise.all([
         getStoreProducts({ search: query }),
         supabase.from("organization_public_profiles")
-          .select("slug, display_name, summary, category_key, region")
+          .select("slug, display_name, summary, category_key, region", { count: "exact" })
           .eq("is_published", true)
           .or(businessFilter)
           .order("updated_at", { ascending: false })
           .limit(100),
         supabase.from("organization_marketplace_listings")
-          .select("slug, organization_name, listing_type, title, description, location, salary_details, property_price")
+          .select("slug, organization_name, listing_type, title, description, location, salary_details, property_price", { count: "exact" })
           .eq("is_published", true)
           .or(listingFilter)
           .order("updated_at", { ascending: false })
@@ -44,6 +44,10 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
   const businesses = businessResult?.data || [];
   const opportunities = listingResult?.data || [];
   const products = catalog?.products || [];
+  const matchCount =
+    (catalog?.totalProducts ?? products.length) +
+    (businessResult?.count ?? businesses.length) +
+    (listingResult?.count ?? opportunities.length);
 
   return (
     <>
@@ -76,7 +80,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
             <section className="directory-results">
               <div className="directory-results-heading">
                 <div><span className="identity-eyebrow">SEARCH RESULTS</span><h2>Results for “{query}”</h2></div>
-                <span>{products.length + businesses.length + opportunities.length} matches</span>
+                <span>{matchCount} matches</span>
               </div>
               {catalog?.status === "unavailable" && (
                 <div className="catalog-empty">
