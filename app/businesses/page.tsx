@@ -58,7 +58,8 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
   const params = await searchParams;
   const query = (params.q || "").trim().slice(0, 80);
   const requestedCategory = params.category || "";
-  const requestedPage = Math.max(1, Number.parseInt(params.page || "1", 10) || 1);
+  const parsedPage = Number(params.page);
+  const requestedPage = Number.isInteger(parsedPage) && parsedPage > 0 ? Math.min(parsedPage, 9999) : 1;
   const category = categoryKeys.has(requestedCategory) ? requestedCategory : "";
   const supabase = await createClient();
   let directoryQuery = supabase
