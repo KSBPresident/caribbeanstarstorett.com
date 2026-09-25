@@ -93,7 +93,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
         <section className="directory-toolbar" aria-label="Filter business directory">
           <form action="/businesses" className="directory-search">
             <label className="visually-hidden" htmlFor="business-query">Search business profiles</label>
-            <input id="business-query" name="q" type="search" defaultValue={query} placeholder="Search names, services, and areas" />
+            <input id="business-query" name="q" type="search" defaultValue={query} maxLength={80} placeholder="Search names, services, and areas" />
             {category && <input type="hidden" name="category" value={category} />}
             <button className="identity-submit" type="submit">Search</button>
           </form>

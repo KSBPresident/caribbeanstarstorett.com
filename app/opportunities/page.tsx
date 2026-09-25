@@ -76,7 +76,7 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
         <section className="directory-toolbar">
           <form action="/opportunities" className="directory-search">
             <label className="visually-hidden" htmlFor="opportunity-search">Search jobs and real estate</label>
-            <input id="opportunity-search" name="q" type="search" defaultValue={query} placeholder="Search titles, organizations, and areas" />
+            <input id="opportunity-search" name="q" type="search" defaultValue={query} maxLength={80} placeholder="Search titles, organizations, and areas" />
             {type && <input type="hidden" name="type" value={type} />}
             <button className="identity-submit" type="submit">Search</button>
           </form>
