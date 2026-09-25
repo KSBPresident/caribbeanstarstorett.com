@@ -48,7 +48,7 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
         </section>
 
         <section className="directory-results">
-          <div className="directory-results-heading"><div><span className="identity-eyebrow">PUBLISHED LISTINGS</span><h2>{type === "jobs" ? "Jobs" : type === "real-estate" ? "Real estate" : "Jobs & real estate"}</h2></div><span>{listings.length} {listings.length === 1 ? "listing" : "listings"}</span></div>
+          <div className="directory-results-heading"><div><span className="identity-eyebrow">PUBLISHED LISTINGS</span><h2>{type === "jobs" ? "Jobs" : type === "real-estate" ? "Real estate" : "Jobs & real estate"}</h2></div><span>{error ? "Count unavailable" : `${listings.length} ${listings.length === 1 ? "listing" : "listings"}`}</span></div>
           {error ? (
             <div className="catalog-empty"><strong>Listings are temporarily unavailable.</strong><br />Please try again shortly.</div>
           ) : listings.length ? (
