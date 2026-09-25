@@ -5,14 +5,24 @@ import { categories } from "../../lib/store-data";
 import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
 
 type PageProps = {
-  searchParams: Promise<{ q?: string; category?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; page?: string }>;
 };
 
 export default async function Marketplace({ searchParams }: PageProps) {
   const params = await searchParams;
   const query = params.q?.trim() || "";
   const category = params.category?.trim() || "";
-  const catalog = await getStoreProducts({ search: query || undefined, category: category || undefined });
+  const parsedPage = Number(params.page);
+  const page = Number.isInteger(parsedPage) && parsedPage > 0 ? Math.min(parsedPage, 9999) : 1;
+  const catalog = await getStoreProducts({ search: query || undefined, category: category || undefined, page });
+  const totalPages = catalog.totalPages;
+  function pageHref(targetPage: number) {
+    const next = new URLSearchParams();
+    if (query) next.set("q", query);
+    if (category) next.set("category", category);
+    next.set("page", String(targetPage));
+    return `/marketplace?${next.toString()}`;
+  }
   const products = catalog.products;
   const heading = category || "All products";
 
@@ -45,6 +55,13 @@ export default async function Marketplace({ searchParams }: PageProps) {
                 <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
               )}
             </div>
+          )}
+          {catalog.status === "available" && totalPages > 1 && (
+            <nav className="catalog-pagination" aria-label="Product pages">
+              {page > 1 ? <Link href={pageHref(page - 1)} rel="prev">Previous</Link> : <span aria-disabled="true">Previous</span>}
+              <span aria-current="page">Page {page} of {totalPages}</span>
+              {page < totalPages ? <Link href={pageHref(page + 1)} rel="next">Next</Link> : <span aria-disabled="true">Next</span>}
+            </nav>
           )}
         </section>
       </main>
