@@ -318,3 +318,35 @@
 .skip-to-content{position:fixed;top:1rem;left:1rem;z-index:10000;padding:.75rem 1rem;border:2px solid #fff;border-radius:999px;background:#151515;color:#fff;font-weight:700;text-decoration:none;transform:translateY(calc(-100% - 2rem));transition:transform .16s ease}
 .skip-to-content:focus{transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){.skip-to-content{transition:none}}
+
+
+/* Keep marketplace search available in the mobile header */
+@media(max-width:560px){
+  .store-top{
+    height:auto;
+    min-height:70px;
+    padding:8px 4%;
+    gap:8px 12px;
+    flex-wrap:wrap;
+    justify-content:space-between;
+  }
+  .store-brand{
+    min-width:0;
+    flex:1 1 205px;
+  }
+  .header-actions{
+    flex:0 1 auto;
+    gap:10px;
+    font-size:11px;
+  }
+  .header-search{
+    display:flex;
+    order:3;
+    flex:1 0 100%;
+    max-width:none;
+    margin-bottom:5px;
+  }
+  .header-search input{
+    font-size:16px;
+  }
+}
