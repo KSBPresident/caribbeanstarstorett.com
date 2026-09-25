@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
@@ -14,6 +15,12 @@ function marketplaceSearchFilter(query: string, columns: string[]) {
   const pattern = `"%${escaped}%"`;
   return columns.map((column) => `${column}.ilike.${pattern}`).join(",");
 }
+
+export const metadata: Metadata = {
+  title: "Search",
+  description: "Search products, services, businesses, jobs, and real estate across Caribbean Star Store TT.",
+  robots: { index: false, follow: true },
+};
 
 export default async function SearchPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;

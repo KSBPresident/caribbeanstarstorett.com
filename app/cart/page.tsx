@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
+
+export const metadata: Metadata = {
+  title: "Cart",
+  description: "The Caribbean Star Store cart and checkout are being prepared for the marketplace.",
+  robots: { index: false, follow: true },
+};
 
 export default function Cart() {
   return (
