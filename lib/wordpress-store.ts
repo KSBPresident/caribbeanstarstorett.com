@@ -137,13 +137,18 @@ export async function getStoreProducts(options: { search?: string; category?: st
 export async function getStoreProductBySlug(slug: string): Promise<{ product: Product | null; status: CatalogStatus }> {
   const safeSlug = slug.replace(/[^a-z0-9-]/gi, "").slice(0, 160);
   if (!safeSlug) return { product: null, status: "not-found" };
-  const { response, status } = await requestProducts(`/${encodeURIComponent(safeSlug)}`);
+  const query = new URLSearchParams({ slug: safeSlug, per_page: "1" });
+  const { response, status } = await requestProducts(`?${query.toString()}`);
   if (status === "not-found") return { product: null, status };
   if (!response) return { product: null, status };
   try {
     const data = await response.json();
-    if (!data || typeof data !== "object" || Array.isArray(data)) return { product: null, status: "not-found" };
-    return { product: mapProduct(data as StoreApiProduct), status: "available" };
+    if (!Array.isArray(data)) {
+      logStoreApiFailure("product-detail-json", { error: new TypeError("Unexpected response shape") });
+      return { product: null, status: "unavailable" };
+    }
+    const product = data.length ? mapProduct(data[0] as StoreApiProduct) : null;
+    return product ? { product, status: "available" } : { product: null, status: "not-found" };
   } catch (error) {
     logStoreApiFailure("product-detail-json", { error });
     return { product: null, status: "unavailable" };
