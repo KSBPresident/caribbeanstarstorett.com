@@ -8,9 +8,7 @@ type SearchParams = Promise<{ q?: string }>;
 
 function marketplaceSearchFilter(query: string, columns: string[]) {
   const escaped = query
-    .replace(/[\\%_]/g, "\\\\type SearchParams = Promise<{ q?: string }>;
-
-export default async function SearchPage")
+    .replace(/[\\%_]/g, (character) => "\\" + character)
     .replace(/\\/g, "\\\\")
     .replace(/"/g, '\\"');
   const pattern = `"%${escaped}%"`;
