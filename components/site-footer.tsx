@@ -41,7 +41,7 @@ export function SiteFooter() {
         </div>
         <div className="site-footer-bottom">
           <span>© {new Date().getFullYear()} Caribbean Star Store TT</span>
-          <span>Product listings will appear here when the catalog is ready.</span>
+          <span>Connecting the community across the Caribbean.</span>
         </div>
       </div>
     </footer>
