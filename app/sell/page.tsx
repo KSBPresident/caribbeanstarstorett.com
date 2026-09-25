@@ -22,19 +22,20 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(signInUrl("/sell"));
 
-  const { data } = await supabase
+  const { data: applications, error: applicationsError } = await supabase
     .from("seller_applications")
     .select("id, seller_name, category_key, status, created_at, organization_id")
     .eq("applicant_user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(10);
 
-  const organizationIds = [...new Set((data || [])
+  const organizationIds = [...new Set((applications || [])
     .map((application) => application.organization_id)
     .filter((id): id is string => Boolean(id)))];
   const workspaceResult = organizationIds.length
     ? await supabase.from("organizations").select("id, slug").in("id", organizationIds)
-    : { data: [] };
+    : { data: [], error: null };
+  const workspaceLoadError = Boolean(workspaceResult.error);
   const workspaceSlugs = new Map(
     (workspaceResult.data || []).map((workspace) => [workspace.id, workspace.slug]),
   );
@@ -91,9 +92,11 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <section className="identity-panel">
               <span className="identity-eyebrow">YOUR APPLICATIONS</span>
               <h2>Application status</h2>
-              {data?.length ? (
+              {applicationsError ? (
+                <p className="organization-empty identity-error" role="alert">Your seller applications could not be loaded. Refresh the page to try again.</p>
+              ) : applications?.length ? (
                 <div className="seller-app-list">
-                  {data.map((application) => {
+                  {applications.map((application) => {
                     const workspaceSlug = application.organization_id
                       ? workspaceSlugs.get(application.organization_id)
                       : null;
@@ -115,6 +118,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               ) : (
                 <p className="organization-empty">Your seller applications will appear here.</p>
               )}
+              {workspaceLoadError && <p className="organization-empty identity-error" role="alert">Your private workspace links could not be loaded. Refresh the page to try again.</p>}
             </section>
             <section className="seller-note"><strong>What happens next?</strong><p>We’ll review your details and contact you about next steps. If approved, you can set up a private workspace, then publish your business profile when you’re ready. Product publishing and payments will be enabled when the store connection is ready.</p><Link href="/business">View business workspaces →</Link></section>
           </aside>
