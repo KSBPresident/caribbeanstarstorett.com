@@ -65,7 +65,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
         </section>
 
         <section className="directory-results">
-          <div className="directory-results-heading"><div><span className="identity-eyebrow">LOCAL &amp; REGIONAL</span><h2>{category ? categoryLabels[category] : "Public business profiles"}</h2></div><span>{filtered.length} {filtered.length === 1 ? "listing" : "listings"}</span></div>
+          <div className="directory-results-heading"><div><span className="identity-eyebrow">LOCAL &amp; REGIONAL</span><h2>{category ? categoryLabels[category] : "Public business profiles"}</h2></div><span>{error ? "Count unavailable" : `${filtered.length} ${filtered.length === 1 ? "listing" : "listings"}`}</span></div>
           {error ? (
             <div className="catalog-empty"><strong>Directory connection is unavailable.</strong><br />Please try again shortly.</div>
           ) : filtered.length ? (
