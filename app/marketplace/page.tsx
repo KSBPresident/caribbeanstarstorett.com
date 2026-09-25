@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
 import { categories } from "../../lib/store-data";
 import { getStoreProducts } from "../../lib/wordpress-store";
+
+export const metadata: Metadata = {
+  title: "Marketplace",
+  description: "Browse products and discover goods from the Caribbean Star Store TT marketplace.",
+};
 
 type PageProps = {
   searchParams: Promise<{ q?: string; category?: string; page?: string }>;
