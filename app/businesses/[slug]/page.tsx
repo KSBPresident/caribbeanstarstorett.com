@@ -17,12 +17,27 @@ const categoryLabels: Record<string, string> = {
 export default async function BusinessProfilePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const supabase = await createClient();
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("organization_public_profiles")
     .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
+
+  if (error) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="identity-page directory-detail-page">
+          <p className="workspace-back"><Link href="/businesses">← Business directory</Link></p>
+          <section className="catalog-empty" role="alert">
+            <strong>This business profile is temporarily unavailable.</strong>
+            <p>Please refresh the page to try again.</p>
+          </section>
+        </main>
+      </>
+    );
+  }
 
   if (!profile) notFound();
 
