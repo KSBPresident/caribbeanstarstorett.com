@@ -254,3 +254,52 @@
 .catalog-pagination [aria-disabled="true"]{color:#aab2bc}
 .catalog-pagination [aria-current="page"]{font-weight:700}
 @media(max-width:560px){.catalog-pagination{gap:12px;font-size:12px}.catalog-pagination a,.catalog-pagination [aria-disabled="true"]{padding:8px 5px}}
+
+
+/* Storefront readability and compact-screen refinements */
+.store-brand small{font-size:10px}
+.header-search input{font-size:14px}
+.header-search button{font-size:17px}
+.header-actions{align-items:center;font-size:13px}
+.store-nav{height:42px;gap:24px;font-size:13px}
+.hero-kicker{font-size:12px}
+.quick-card b{font-size:14px}
+.quick-card small{font-size:12px;line-height:1.35}
+.section-title span{font-size:11px}
+.section-title h2{font-size:22px}
+.section-title>a{font-size:13px}
+.category-card div{font-size:13px;line-height:1.35}
+.product-category{font-size:12px}
+.product-info h3{font-size:15px;line-height:1.35}
+.rating{font-size:11px}
+.seller{font-size:12px}
+.add-cart,.blue-btn,.pay-btn{font-size:13px}
+.badge{font-size:11px}
+.category-sidebar b{font-size:14px}
+.category-sidebar a{font-size:12px}
+.listing-head p,.sort,.breadcrumbs{font-size:12px}
+.stock{font-size:12px}
+.seller-box{font-size:13px}
+.seller-box small{font-size:12px}
+.delivery-list{font-size:12px}
+.detail-tabs{font-size:12px;line-height:1.6}
+.cart-item{font-size:12px}
+.totals{font-size:12px}
+.steps{font-size:11px}
+.checkout-panel h3{font-size:14px}
+.radio-row{font-size:12px}
+:where(a,button,input,select,textarea):focus-visible{outline:3px solid #ffbf47;outline-offset:3px}
+@media(max-width:560px){
+  .store-top{height:auto;min-height:68px;padding:8px 4%;gap:10px;flex-wrap:wrap}
+  .store-brand{min-width:0;gap:7px}
+  .company-logo{width:48px;height:48px}
+  .store-brand b{font-size:12px}
+  .store-brand small{font-size:9px}
+  .header-actions{gap:10px;font-size:12px}
+  .store-nav{height:42px;gap:18px;padding:0 4%;font-size:12px}
+  .quick-card b{font-size:12px}
+  .quick-card small{font-size:11px}
+  .category-card div{font-size:12px}
+  .product-info h3{font-size:13px}
+  .seller{font-size:11px}
+}
