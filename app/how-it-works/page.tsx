@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
+
+export const metadata: Metadata = {
+  title: "How It Works",
+  description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store TT.",
+};
 
 const steps = [
   {
