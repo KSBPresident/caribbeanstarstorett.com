@@ -38,7 +38,7 @@ export default async function Marketplace({ searchParams }: PageProps) {
         <section className="listing-area">
           <div className="breadcrumbs"><Link href="/">Home</Link> › Marketplace</div>
           <div className="listing-head">
-            <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "The live store could not be reached." : catalog.status === "not-found" && category ? "This category is not available in the original store." : `${products.length} published ${products.length === 1 ? "product" : "products"}`}</p></div>
+            <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "The live store could not be reached." : catalog.status === "not-found" && category ? "This category is not available in the original store." : catalog.totalProducts === 0 ? "0 published products" : `Showing ${(page - 1) * 48 + 1}–${Math.min(page * 48, catalog.totalProducts)} of ${catalog.totalProducts} published products`}</p></div>
             <form className="catalog-search" action="/marketplace" role="search">
               {category && <input type="hidden" name="category" value={category} />}
               <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
