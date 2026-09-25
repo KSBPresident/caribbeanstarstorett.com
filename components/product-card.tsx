@@ -6,7 +6,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="product-card store-product">
       <Link href={`/product/${product.slug}`} className="product-image">
-        <img src={product.image} alt={product.name} />
+        <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
         <span className="badge">{product.inStock ? "Available" : "Check availability"}</span>
       </Link>
       <div className="product-info">
