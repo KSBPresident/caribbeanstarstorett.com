@@ -84,7 +84,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
               </div>
               {catalog?.status === "unavailable" && (
                 <div className="catalog-empty">
-                  <strong>Product results are temporarily unavailable.</strong>
+                  <strong>Product results are currently unavailable through this marketplace.</strong>
                   <p>You can still search businesses and opportunities, or shop on the existing store.</p>
                   <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
                 </div>
@@ -138,7 +138,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
               <section className="directory-empty">
                 <span aria-hidden="true">✦</span>
                 <h2>{catalog?.status === "unavailable" ? "No matching public listings yet" : `No matches for “${query}”`}</h2>
-                <p>{catalog?.status === "unavailable" ? "No published businesses, services, jobs, or real-estate listings matched. Product search is temporarily unavailable above." : "Try a different word or browse the marketplace sections."}</p>
+                <p>{catalog?.status === "unavailable" ? "No published businesses, services, jobs, or real-estate listings matched. Product results are currently unavailable through this marketplace." : "Try a different word or browse the marketplace sections."}</p>
                 <div className="directory-hero-actions"><Link className="identity-submit" href="/marketplace">Browse products</Link><Link className="directory-secondary" href="/businesses">Explore businesses</Link><Link className="directory-secondary" href="/opportunities">View opportunities</Link></div>
               </section>
             )}

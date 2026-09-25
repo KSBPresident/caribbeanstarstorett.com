@@ -66,8 +66,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
         ) : (
           <section className="identity-panel catalog-unavailable">
             <span className="identity-eyebrow">STORE CONNECTION</span>
-            <h1>Product details are temporarily unavailable</h1>
-            <p>The original store catalog could not be reached. Open this product on the existing WooCommerce site, or try browsing the marketplace again later.</p>
+            <h1>This product is unavailable here right now</h1>
+            <p>The product listing could not be loaded through this marketplace. Open it on the existing WooCommerce store or return to browse other sections.</p>
             <div className="cart-empty-actions">
               <a className="identity-submit" href={`${getOriginalStoreUrl()}/product/${encodeURIComponent(slug)}/`} target="_blank" rel="noopener noreferrer">Open product in the existing store</a>
               <Link className="identity-secondary" href="/marketplace">Back to products</Link>
