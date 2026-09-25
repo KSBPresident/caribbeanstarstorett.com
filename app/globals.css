@@ -303,3 +303,14 @@
   .product-info h3{font-size:13px}
   .seller{font-size:11px}
 }
+
+
+/* Branded loading state for route transitions and data-heavy pages */
+.marketplace-loading{min-height:42vh;display:grid;place-items:center}
+.marketplace-loading .loading-card{width:min(100%,620px);padding:clamp(22px,4vw,36px)}
+.marketplace-loading h1{margin:12px 0;font-size:clamp(24px,4vw,34px)}
+.marketplace-loading p{color:#526071;font-size:14px;line-height:1.6}
+.marketplace-loading-bar{height:6px;margin-top:22px;overflow:hidden;border-radius:999px;background:#e6edf4}
+.marketplace-loading-bar>span{display:block;width:32%;height:100%;border-radius:inherit;background:#0877df;animation:marketplace-loading-sweep 1.2s ease-in-out infinite alternate}
+@keyframes marketplace-loading-sweep{from{transform:translateX(0)}to{transform:translateX(210%)}}
+@media(prefers-reduced-motion:reduce){.marketplace-loading-bar>span{width:100%;animation:none}}
