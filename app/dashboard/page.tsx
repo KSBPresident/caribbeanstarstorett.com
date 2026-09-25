@@ -40,9 +40,10 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           ? "We couldn’t save that change. Please try again."
           : null;
 
-  const requestCount = requestResult.data?.length || 0;
-  const sellerCount = sellerResult.data?.length || 0;
-  const workspaceTotal = workspaceCount.count || 0;
+  const accountDataError = profileResult.error || workspaceCount.error || requestResult.error || sellerResult.error;
+  const requestCount = requestResult.error ? null : requestResult.data?.length || 0;
+  const sellerCount = sellerResult.error ? null : sellerResult.data?.length || 0;
+  const workspaceTotal = workspaceCount.error ? null : workspaceCount.count || 0;
 
   return (
     <>
@@ -60,11 +61,12 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         </header>
 
         {notice && <p className="identity-message" role="status">{notice}</p>}
+        {accountDataError && <p className="identity-message identity-error" role="alert">Some account information could not be loaded. Refresh the page to try again.</p>}
 
         <section className="account-overview" aria-label="Account activity summary">
-          <article className="account-overview-card"><span>Workspaces</span><strong>{workspaceTotal}</strong><Link href="/business">Manage workspaces →</Link></article>
-          <article className="account-overview-card"><span>Buying requests</span><strong>{requestCount}{requestCount === 3 ? "+" : ""}</strong><Link href="/build-a-buy">View Build-A-Buy →</Link></article>
-          <article className="account-overview-card"><span>Seller applications</span><strong>{sellerCount}{sellerCount === 3 ? "+" : ""}</strong><Link href="/sell">Open seller space →</Link></article>
+          <article className="account-overview-card"><span>Workspaces</span><strong>{workspaceTotal ?? "—"}</strong><Link href="/business">Manage workspaces →</Link></article>
+          <article className="account-overview-card"><span>Buying requests</span><strong>{requestCount ?? "—"}{requestCount === 3 ? "+" : ""}</strong><Link href="/build-a-buy">View Build-A-Buy →</Link></article>
+          <article className="account-overview-card"><span>Seller applications</span><strong>{sellerCount ?? "—"}{sellerCount === 3 ? "+" : ""}</strong><Link href="/sell">Open seller space →</Link></article>
         </section>
 
         <div className="identity-dashboard-grid account-dashboard-grid">
@@ -91,14 +93,18 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
           <section className="identity-panel">
             <div className="account-panel-title"><div><span className="identity-eyebrow">BUYING</span><h2>Recent Build-A-Buy requests</h2></div><Link href="/build-a-buy">All requests →</Link></div>
-            {requestResult.data?.length ? (
+            {requestResult.error ? (
+              <p className="organization-empty" role="alert">Buying requests could not be loaded. Refresh and try again.</p>
+            ) : requestResult.data?.length ? (
               <div className="account-activity-list">{requestResult.data.map((item) => <article key={item.id}><div><strong>{item.title}</strong><span>{item.category_key.replaceAll("-", " ")} · {new Date(item.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short" })}</span></div><em>{item.status}</em></article>)}</div>
             ) : <p className="organization-empty">No buying requests yet. Describe what you need and we’ll keep the request with your account.</p>}
           </section>
 
           <section className="identity-panel">
             <div className="account-panel-title"><div><span className="identity-eyebrow">SELLING</span><h2>Seller applications</h2></div><Link href="/sell">Seller space →</Link></div>
-            {sellerResult.data?.length ? (
+            {sellerResult.error ? (
+              <p className="organization-empty" role="alert">Seller applications could not be loaded. Refresh and try again.</p>
+            ) : sellerResult.data?.length ? (
               <div className="account-activity-list">{sellerResult.data.map((item) => <article key={item.id}><div><strong>{item.seller_name}</strong><span>{item.category_key.replaceAll("-", " ")} · {new Date(item.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short" })}</span></div><em>{item.status}</em></article>)}
               </div>
             ) : <p className="organization-empty">No seller applications yet. Start an application when you’re ready to join the marketplace.</p>}
