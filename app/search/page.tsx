@@ -62,7 +62,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
   return (
     <>
       <SiteHeader />
-      <main className="identity-page directory-page">
+      <main id="main-content" tabIndex={-1} className="identity-page directory-page">
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · MARKETPLACE SEARCH</span>
           <h1>Find it across the marketplace.</h1>

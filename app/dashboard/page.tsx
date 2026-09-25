@@ -48,7 +48,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   return (
     <>
       <SiteHeader />
-      <main className="identity-page">
+      <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading account-heading">
           <div>
             <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>

@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       <SiteHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="home-hero">
           <div className="hero-overlay">
             <span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span>

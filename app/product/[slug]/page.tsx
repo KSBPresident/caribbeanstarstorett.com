@@ -45,7 +45,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
   return (
     <>
       <SiteHeader />
-      <main className="product-detail">
+      <main id="main-content" tabIndex={-1} className="product-detail">
         {product ? (
           <>
             <div className="breadcrumbs"><Link href="/">Home</Link> › {product.category} › {product.name}</div>

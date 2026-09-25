@@ -51,7 +51,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
   return (
     <>
       <SiteHeader />
-      <main className="identity-page seller-onboarding">
+      <main id="main-content" tabIndex={-1} className="identity-page seller-onboarding">
         <div className="seller-intro">
           <div>
             <span className="identity-eyebrow">SELL ON CARIBBEAN STAR STORE</span>

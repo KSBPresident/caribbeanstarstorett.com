@@ -79,7 +79,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
   return (
     <>
       <SiteHeader />
-      <main className="identity-page directory-page">
+      <main id="main-content" tabIndex={-1} className="identity-page directory-page">
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS DIRECTORY</span>
           <h1>Discover businesses in your community.</h1>

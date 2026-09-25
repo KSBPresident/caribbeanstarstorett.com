@@ -46,7 +46,7 @@ export default async function Marketplace({ searchParams }: PageProps) {
   return (
     <>
       <SiteHeader />
-      <main className="market-layout">
+      <main id="main-content" tabIndex={-1} className="market-layout">
         <aside className="category-sidebar">
           <b>Product categories</b>
           <Link href="/marketplace">All products</Link>

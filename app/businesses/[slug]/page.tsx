@@ -28,7 +28,7 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
     return (
       <>
         <SiteHeader />
-        <main className="identity-page directory-detail-page">
+        <main id="main-content" tabIndex={-1} className="identity-page directory-detail-page">
           <p className="workspace-back"><Link href="/businesses">← Business directory</Link></p>
           <section className="catalog-empty" role="alert">
             <strong>This business profile is temporarily unavailable.</strong>
@@ -44,7 +44,7 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
   return (
     <>
       <SiteHeader />
-      <main className="identity-page directory-detail-page">
+      <main id="main-content" tabIndex={-1} className="identity-page directory-detail-page">
         <p className="workspace-back"><Link href="/businesses">← Business directory</Link></p>
         <section className="directory-detail-hero">
           <div className="directory-card-mark directory-detail-mark" aria-hidden="true">{profile.display_name.slice(0, 1).toUpperCase()}</div>

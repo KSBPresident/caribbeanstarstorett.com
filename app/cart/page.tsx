@@ -12,7 +12,7 @@ export default function Cart() {
   return (
     <>
       <SiteHeader />
-      <main className="identity-page">
+      <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading"><div><span className="identity-eyebrow">CARIBBEAN STAR STORE</span><h1>Your marketplace cart</h1><p>Cart and checkout are being prepared for the marketplace.</p></div></header>
         <section className="identity-panel cart-empty-state">
           <span className="cart-empty-icon" aria-hidden="true">🛒</span>

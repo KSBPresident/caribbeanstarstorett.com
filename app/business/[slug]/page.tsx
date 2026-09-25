@@ -15,7 +15,7 @@ function WorkspaceLoadError({ message }: { message: string }) {
   return (
     <>
       <SiteHeader />
-      <main className="identity-page">
+      <main id="main-content" tabIndex={-1} className="identity-page">
         <p className="workspace-back"><Link href="/business">← All workspaces</Link></p>
         <section className="identity-panel">
           <span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span>
@@ -145,7 +145,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
   return (
     <>
       <SiteHeader />
-      <main className="identity-page">
+      <main id="main-content" tabIndex={-1} className="identity-page">
         <p className="workspace-back"><Link href="/business">← All workspaces</Link></p>
         <header className="identity-heading">
           <div>

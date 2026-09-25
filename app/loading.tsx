@@ -11,7 +11,7 @@ export default function Loading() {
           </Link>
         </div>
       </header>
-      <main className="identity-page marketplace-loading" aria-busy="true">
+      <main id="main-content" tabIndex={-1} className="identity-page marketplace-loading" aria-busy="true">
         <section className="identity-panel loading-card" role="status" aria-live="polite">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · MARKETPLACE</span>
           <h1>Loading the marketplace</h1>

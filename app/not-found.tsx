@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <>
       <SiteHeader />
-      <main className="identity-page">
+      <main id="main-content" tabIndex={-1} className="identity-page">
         <section className="identity-panel catalog-unavailable">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · 404</span>
           <h1>We couldn’t find that page</h1>

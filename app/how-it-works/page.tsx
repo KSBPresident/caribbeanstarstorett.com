@@ -60,7 +60,7 @@ export default function HowItWorksPage() {
   return (
     <>
       <SiteHeader />
-      <main className="identity-page directory-page">
+      <main id="main-content" tabIndex={-1} className="identity-page directory-page">
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · GETTING STARTED</span>
           <h1>One marketplace for the Caribbean community.</h1>

@@ -25,7 +25,7 @@ export default async function UpdatePasswordPage({ searchParams }: PageProps) {
   return (
     <>
       <SiteHeader />
-      <main className="identity-auth-page">
+      <main id="main-content" tabIndex={-1} className="identity-auth-page">
         <section className="identity-auth-card">
           <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
           <h1>Choose a new password</h1>

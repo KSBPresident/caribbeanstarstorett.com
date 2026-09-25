@@ -11,7 +11,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
   void error;
 
   return (
-    <main className="identity-page">
+    <main id="main-content" tabIndex={-1} className="identity-page">
       <section className="identity-panel catalog-unavailable" role="alert" aria-labelledby="site-error-title">
         <span className="identity-eyebrow">CARIBBEAN STAR STORE · TEMPORARY ERROR</span>
         <h1 id="site-error-title">We couldn’t load this page</h1>

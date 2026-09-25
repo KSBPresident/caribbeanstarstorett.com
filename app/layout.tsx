@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <a className="skip-to-content" href="#main-content">Skip to content</a>
         {children}
         <SiteFooter />
       </body>

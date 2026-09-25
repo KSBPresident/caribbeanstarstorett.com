@@ -31,7 +31,7 @@ export default async function OpportunityDetail({ params }: { params: Promise<{ 
     return (
       <>
         <SiteHeader />
-        <main className="identity-page opportunity-detail-page">
+        <main id="main-content" tabIndex={-1} className="identity-page opportunity-detail-page">
           <p className="workspace-back"><Link href="/opportunities">← Back to opportunities</Link></p>
           <section className="identity-panel catalog-unavailable" role="alert">
             <span className="identity-eyebrow">CARIBBEAN STAR STORE · LISTING</span>
@@ -49,7 +49,7 @@ export default async function OpportunityDetail({ params }: { params: Promise<{ 
   return (
     <>
       <SiteHeader />
-      <main className="identity-page opportunity-detail-page">
+      <main id="main-content" tabIndex={-1} className="identity-page opportunity-detail-page">
         <p className="workspace-back"><Link href={isJob ? "/opportunities?type=jobs" : "/opportunities?type=real-estate"}>← Back to {isJob ? "jobs" : "real estate"}</Link></p>
         <section className="opportunity-detail-hero">
           <span className="opportunity-type-mark" aria-hidden="true">{isJob ? "↗" : "⌂"}</span>

@@ -22,7 +22,7 @@ export default async function Admin({ searchParams }: PageProps) {
     return (
       <>
         <SiteHeader />
-        <main className="identity-page">
+        <main id="main-content" tabIndex={-1} className="identity-page">
           <header className="identity-heading">
             <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Caribbean Star Store TT</p></div>
           </header>
@@ -88,7 +88,7 @@ export default async function Admin({ searchParams }: PageProps) {
   return (
     <>
       <SiteHeader />
-      <main className="identity-page">
+      <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading account-heading">
           <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Platform activity, seller onboarding, and marketplace requests.</p></div>
           <span className="organization-role">Platform administrator</span>

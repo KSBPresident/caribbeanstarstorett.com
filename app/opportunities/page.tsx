@@ -65,7 +65,7 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
   return (
     <>
       <SiteHeader />
-      <main className="identity-page opportunities-page">
+      <main id="main-content" tabIndex={-1} className="identity-page opportunities-page">
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · OPPORTUNITIES</span>
           <h1>Find work and places to call home.</h1>
