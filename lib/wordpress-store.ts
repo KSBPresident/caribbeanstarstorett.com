@@ -130,7 +130,7 @@ export async function getStoreProducts(options: { search?: string; category?: st
     return { products, status: "available" as const, totalPages };
   } catch (error) {
     logStoreApiFailure("product-collection-json", { error });
-    return { products: [] as Product[], status: "unavailable" as const };
+    return { products: [] as Product[], status: "unavailable" as const, totalPages: 1 };
   }
 }
 
