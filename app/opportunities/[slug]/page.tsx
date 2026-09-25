@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const details = [listing.description, listing.location, listing.organization_name].filter(Boolean).join(" · ");
-  const description = details.replace(/\\s+/g, " ").slice(0, 160);
+  const description = details.replace(/\s+/g, " ").slice(0, 160);
   const title = `${listing.title} | Caribbean Star Store TT`;
 
   return {

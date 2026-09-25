@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const description = (profile.summary || `Discover ${profile.display_name}, a Caribbean business on Caribbean Star Store TT.`)
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .slice(0, 160);
   const title = `${profile.display_name} | Caribbean Star Store TT`;
 
