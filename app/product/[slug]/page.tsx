@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { money } from "../../../lib/store-data";
-import { getOriginalStoreUrl, getStoreProductBySlug } from "../../../lib/wordpress-store";
+import { getStoreProductBySlug } from "../../../lib/wordpress-store";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!product) {
     return {
       title: "Product details",
-      description: "Browse products from Caribbean Star Store TT and continue to the original store for checkout.",
+      description: "Caribbean Star Store TT product listings are being prepared for launch.",
     };
   }
 
@@ -66,11 +66,12 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
         ) : (
           <section className="identity-panel catalog-unavailable">
             <span className="identity-eyebrow">STORE CONNECTION</span>
-            <h1>This product is unavailable here right now</h1>
-            <p>The product listing could not be loaded through this marketplace. Open it on the existing WooCommerce store or return to browse other sections.</p>
+            <h1>Product details are being prepared</h1>
+            <p>This product is not available in the marketplace yet. Browse the product section again later, or explore businesses and opportunities now.</p>
             <div className="cart-empty-actions">
-              <a className="identity-submit" href={`${getOriginalStoreUrl()}/product/${encodeURIComponent(slug)}/`} target="_blank" rel="noopener noreferrer">Open product in the existing store</a>
-              <Link className="identity-secondary" href="/marketplace">Back to products</Link>
+              <Link className="identity-submit" href="/marketplace">Browse products</Link>
+              <Link className="identity-secondary" href="/businesses">Explore businesses</Link>
+              <Link className="identity-secondary" href="/opportunities">View opportunities</Link>
             </div>
           </section>
         )}

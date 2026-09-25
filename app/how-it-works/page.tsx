@@ -5,7 +5,7 @@ const steps = [
   {
     number: "01",
     title: "Find products",
-    description: "Use product search and categories to explore the store. Product details, current availability, and checkout are handled by the original WooCommerce store.",
+    description: "Use product search and categories to explore the marketplace. Product listings and checkout are being prepared for launch.",
     href: "/marketplace",
     link: "Browse products",
   },
@@ -47,7 +47,7 @@ export default function HowItWorksPage() {
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · GETTING STARTED</span>
           <h1>One marketplace for the Caribbean community.</h1>
-          <p>Shop the existing store, discover local businesses and opportunities, or create an account to take part in the marketplace.</p>
+          <p>Explore the marketplace, discover local businesses and opportunities, or create an account to take part in the community.</p>
           <div className="directory-hero-actions">
             <Link className="identity-submit" href="/marketplace">Explore the marketplace</Link>
             <Link className="directory-secondary" href="/sign-up">Create an account</Link>

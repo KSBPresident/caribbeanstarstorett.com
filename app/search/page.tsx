@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
 import { createClient } from "../../lib/supabase/server";
-import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
+import { getStoreProducts } from "../../lib/wordpress-store";
 
 type SearchParams = Promise<{ q?: string }>;
 
@@ -87,9 +87,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
               </div>
               {catalog?.status === "unavailable" && (
                 <div className="catalog-empty">
-                  <strong>Product results are currently unavailable through this marketplace.</strong>
-                  <p>You can still search businesses and opportunities, or shop on the existing store.</p>
-                  <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
+                  <strong>Product results are not available yet while the catalog is being prepared.</strong>
+                  <p>You can still search businesses and opportunities while product listings are added to the marketplace.</p>
+                  <div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View opportunities</Link></div>
                 </div>
               )}
               {businessResult?.error && <div className="catalog-empty">Business results are temporarily unavailable.</div>}
@@ -98,7 +98,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
 
             {products.length > 0 && (
               <section className="store-section">
-                <div className="section-title"><div><span>PRODUCTS</span><h2>From the live store</h2></div><Link href={`/marketplace?q=${encodeURIComponent(query)}`}>View products →</Link></div>
+                <div className="section-title"><div><span>PRODUCTS</span><h2>Marketplace listings</h2></div><Link href={`/marketplace?q=${encodeURIComponent(query)}`}>View products →</Link></div>
                 <div className="product-grid">{products.slice(0, 8).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
               </section>
             )}
@@ -141,7 +141,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
               <section className="directory-empty">
                 <span aria-hidden="true">✦</span>
                 <h2>{catalog?.status === "unavailable" ? "No matching public listings yet" : `No matches for “${query}”`}</h2>
-                <p>{catalog?.status === "unavailable" ? "No published businesses, services, jobs, or real-estate listings matched. Product results are currently unavailable through this marketplace." : "Try a different word or browse the marketplace sections."}</p>
+                <p>{catalog?.status === "unavailable" ? "No published businesses, services, jobs, or real-estate listings matched. Product results will appear when the catalog is ready." : "Try a different word or browse the marketplace sections."}</p>
                 <div className="directory-hero-actions"><Link className="identity-submit" href="/marketplace">Browse products</Link><Link className="directory-secondary" href="/businesses">Explore businesses</Link><Link className="directory-secondary" href="/opportunities">View opportunities</Link></div>
               </section>
             )}
