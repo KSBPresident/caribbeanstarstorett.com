@@ -103,7 +103,7 @@ export default async function Admin({ searchParams }: PageProps) {
 
         <div className="identity-dashboard-grid">
           <section className="identity-panel">
-            <div className="account-panel-title"><div><span className="identity-eyebrow">TRUST · SELLER ONBOARDING</span><h2>Applications to review</h2></div><span>{sellers.data?.length || 0}</span></div>
+            <div className="account-panel-title"><div><span className="identity-eyebrow">TRUST · SELLER ONBOARDING</span><h2>Applications to review</h2></div><span>{sellers.error ? "Count unavailable" : sellers.data?.length || 0}</span></div>
             {sellers.error ? <p className="organization-empty">Seller applications are temporarily unavailable.</p> : sellers.data?.length ? (
               <div className="admin-review-list">
                 {sellers.data.map((application) => (
@@ -124,7 +124,7 @@ export default async function Admin({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel">
-            <div className="account-panel-title"><div><span className="identity-eyebrow">FRONT OS · BUILD-A-BUY</span><h2>Active buying requests</h2></div><span>{requests.data?.length || 0}</span></div>
+            <div className="account-panel-title"><div><span className="identity-eyebrow">FRONT OS · BUILD-A-BUY</span><h2>Active buying requests</h2></div><span>{requests.error ? "Count unavailable" : requests.data?.length || 0}</span></div>
             {requests.error ? <p className="organization-empty">Buying requests are temporarily unavailable.</p> : requests.data?.length ? (
               <div className="admin-review-list">
                 {requests.data.map((request) => (
@@ -149,7 +149,7 @@ export default async function Admin({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide">
-            <div className="account-panel-title"><div><span className="identity-eyebrow">BACK OS · TRUST</span><h2>Recent platform audit</h2></div><span>{audit.data?.length || 0} events</span></div>
+            <div className="account-panel-title"><div><span className="identity-eyebrow">BACK OS · TRUST</span><h2>Recent platform audit</h2></div><span>{audit.error ? "Count unavailable" : `${audit.data?.length || 0} events`}</span></div>
             {audit.error ? <p className="organization-empty">Audit events are temporarily unavailable.</p> : audit.data?.length ? (
               <div className="account-activity-list">
                 {audit.data.map((entry) => <article key={entry.id}><div><strong>{entry.action.replaceAll("_", " ").replaceAll(".", " ")}</strong><span>{entry.resource_type || "platform"} · {entry.resource_id || "—"} · {dateLabel(entry.created_at)}</span></div></article>)}
