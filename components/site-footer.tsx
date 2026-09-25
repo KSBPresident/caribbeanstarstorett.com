@@ -36,13 +36,12 @@ export function SiteFooter() {
             <nav aria-label="Account links">
               <Link href="/sign-in">Sign in</Link>
               <Link href="/dashboard">Account activity</Link>
-              <a href="https://caribbeanstarstorett.com" target="_blank" rel="noopener noreferrer">Existing store &amp; checkout ↗</a>
             </nav>
           </section>
         </div>
         <div className="site-footer-bottom">
           <span>© {new Date().getFullYear()} Caribbean Star Store TT</span>
-          <span>Products and checkout are handled by the existing WooCommerce store.</span>
+          <span>Product listings will appear here when the catalog is ready.</span>
         </div>
       </div>
     </footer>

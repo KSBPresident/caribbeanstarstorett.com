@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { ProductCard } from "../components/product-card";
 import { categories } from "../lib/store-data";
-import { getOriginalStoreUrl, getStoreProducts } from "../lib/wordpress-store";
+import { getStoreProducts } from "../lib/wordpress-store";
 
 export default async function Home() {
   const catalog = await getStoreProducts();
@@ -23,7 +23,7 @@ export default async function Home() {
           </div>
         </section>
         <section className="quick-grid">
-          {[["🛒","Products","Shop the live store catalog","/marketplace"],["♧","Services","Find local services","/businesses?category=professional"],["▦","Businesses","Support local & regional","/businesses"],["♙","Jobs","Find work or hire","/opportunities?type=jobs"],["⌂","Real Estate","Buy, rent, invest","/opportunities?type=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
+          {[["🛒","Products","Browse marketplace products","/marketplace"],["♧","Services","Find local services","/businesses?category=professional"],["▦","Businesses","Support local & regional","/businesses"],["♙","Jobs","Find work or hire","/opportunities?type=jobs"],["⌂","Real Estate","Buy, rent, invest","/opportunities?type=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
             <Link href={href} className="quick-card" key={label}><span>{icon}</span><b>{label}</b><small>{description}</small></Link>
           ))}
         </section>
@@ -34,14 +34,14 @@ export default async function Home() {
           </div>
         </section>
         <section className="store-section">
-          <div className="section-title"><div><span>FROM THE LIVE STORE</span><h2>Available products</h2></div><Link href="/marketplace">View all →</Link></div>
+          <div className="section-title"><div><span>PRODUCT MARKETPLACE</span><h2>Available products</h2></div><Link href="/marketplace">View all →</Link></div>
           {catalog.products.length ? (
             <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
           ) : (
             <div className="catalog-empty">
-              <p>{catalog.status === "unavailable" ? "Product listings are currently unavailable through this marketplace. Visit the existing Caribbean Star Store to browse the live catalog and continue to checkout." : "There are no published products in the store catalog yet."}</p>
+              <p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch. In the meantime, explore Caribbean businesses, job listings, and real estate opportunities across the marketplace." : "There are no published products in the store catalog yet."}</p>
               {catalog.status === "unavailable" && (
-                <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store</a>
+                <div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link></div>
               )}
             </div>
           )}
