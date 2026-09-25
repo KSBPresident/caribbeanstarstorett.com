@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const description = (product.description || `Shop ${product.name} through Caribbean Star Store TT. View the original listing for current details and checkout.`)
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .slice(0, 160);
 
   return {
