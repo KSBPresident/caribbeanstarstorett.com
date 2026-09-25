@@ -25,7 +25,7 @@ export async function SiteHeader() {
           <span><b>CARIBBEAN STAR STORE</b><small>TRINIDAD &amp; TOBAGO MARKETPLACE</small></span>
         </Link>
         <form action="/search" className="header-search" role="search" aria-label="Search the marketplace">
-          <input name="q" placeholder="Search products, services, businesses..." aria-label="Search products, services, businesses" />
+          <input name="q" maxLength={80} placeholder="Search products, services, businesses..." aria-label="Search products, services, businesses" />
           <button type="submit" aria-label="Search">⌕</button>
         </form>
         <div className="header-actions">

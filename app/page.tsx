@@ -16,7 +16,7 @@ export default async function Home() {
             <h1>The Caribbean&apos;s<br />Digital Marketplace</h1>
             <p>Buy · Sell · Work · Grow Together</p>
             <form className="hero-search" role="search" action="/search">
-              <input name="q" placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
+              <input name="q" maxLength={80} placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
               <button type="submit">Search</button>
             </form>
             <Link href="/how-it-works" className="identity-submit" style={{ display: "inline-block", marginTop: 14 }}>New here? See how it works →</Link>

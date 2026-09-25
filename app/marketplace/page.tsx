@@ -27,7 +27,7 @@ type PageProps = {
 
 export default async function Marketplace({ searchParams }: PageProps) {
   const params = await searchParams;
-  const query = params.q?.trim() || "";
+  const query = params.q?.trim().slice(0, 80) || "";
   const category = params.category?.trim() || "";
   const parsedPage = Number(params.page);
   const page = Number.isInteger(parsedPage) && parsedPage > 0 ? Math.min(parsedPage, 9999) : 1;
@@ -59,7 +59,7 @@ export default async function Marketplace({ searchParams }: PageProps) {
             <form className="catalog-search" action="/marketplace" role="search">
               {category && <input type="hidden" name="category" value={category} />}
               <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
-              <input id="marketplace-query" name="q" defaultValue={query} placeholder="Search products" />
+              <input id="marketplace-query" name="q" defaultValue={query} maxLength={80} placeholder="Search products" />
               <button className="identity-submit" type="submit">Search</button>
             </form>
           </div>
