@@ -18,7 +18,35 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    redirect(signInUrl("/business"));
+    return (
+      <>
+        <SiteHeader />
+        <main id="main-content" tabIndex={-1} className="identity-page">
+          <header className="identity-heading">
+            <div>
+              <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS</span>
+              <h1>Bring your business to the Caribbean marketplace.</h1>
+              <p>Create an organization workspace, then build and publish a public business profile when you are ready.</p>
+              <div className="directory-hero-actions">
+                <Link className="identity-submit" href={"/sign-up?next=" + encodeURIComponent("/business")}>Create a business workspace</Link>
+                <Link className="directory-secondary" href={signInUrl("/business")}>Already have an account? Sign in</Link>
+              </div>
+            </div>
+          </header>
+          <div className="build-request-grid">
+            <section className="identity-panel">
+              <h2>Build your business presence</h2>
+              <p>Set up your organization workspace, add the information customers need, and publish your business profile when it is ready.</p>
+            </section>
+            <section className="identity-panel">
+              <h2>Reach more customers</h2>
+              <p>Help shoppers discover your business across the Caribbean. You control when your public profile is ready to appear in the directory.</p>
+              <p><Link className="identity-inline-link" href="/sell">Learn about selling on Caribbean Star Store →</Link></p>
+            </section>
+          </div>
+        </main>
+      </>
+    );
   }
 
   const [membershipResult, params] = await Promise.all([
