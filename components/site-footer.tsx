@@ -45,6 +45,10 @@ export function SiteFooter() {
           <span>Connecting the community across the Caribbean.</span>
         </div>
       </div>
+      <div className="site-footer-credit">
+        <span>Website Designed &amp; Developed by</span>
+        <span>Nebula Interstellar Networking Economy LLC.</span>
+      </div>
     </footer>
   );
 }
