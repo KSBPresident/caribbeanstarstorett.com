@@ -1,11 +1,31 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { ProductCard } from "../components/product-card";
 import { categories } from "../lib/store-data";
 import { getStoreProducts } from "../lib/wordpress-store";
 
-export default async function Home() {
+async function FeaturedProducts() {
   const catalog = await getStoreProducts({ perPage: 4 });
+
+  return (
+    <section className="store-section">
+      <div className="section-title"><div><span>PRODUCT MARKETPLACE</span><h2>Available products</h2></div><Link href="/marketplace">View all →</Link></div>
+      {catalog.products.length ? (
+        <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
+      ) : (
+        <div className="catalog-empty">
+          <p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch. In the meantime, explore Caribbean businesses, job listings, and real estate opportunities across the marketplace." : "There are no published products in the store catalog yet."}</p>
+          {catalog.status === "unavailable" && (
+            <div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link></div>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+export default function Home() {
   return (
     <>
       <SiteHeader />
@@ -30,22 +50,17 @@ export default async function Home() {
         <section className="store-section">
           <div className="section-title"><div><span>DISCOVER</span><h2>Featured Categories</h2></div><Link href="/marketplace">View all →</Link></div>
           <div className="category-grid">
-            {categories.map((category) => <Link href={`/marketplace?category=${encodeURIComponent(category.name)}`} className="category-card" key={category.name}><img src={category.image} alt="" /><div><b>{category.name}</b></div></Link>)}
+            {categories.map((category) => <Link href={"/marketplace?category=" + encodeURIComponent(category.name)} className="category-card" key={category.name}><img src={category.image} alt="" /><div><b>{category.name}</b></div></Link>)}
           </div>
         </section>
-        <section className="store-section">
-          <div className="section-title"><div><span>PRODUCT MARKETPLACE</span><h2>Available products</h2></div><Link href="/marketplace">View all →</Link></div>
-          {catalog.products.length ? (
-            <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
-          ) : (
-            <div className="catalog-empty">
-              <p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch. In the meantime, explore Caribbean businesses, job listings, and real estate opportunities across the marketplace." : "There are no published products in the store catalog yet."}</p>
-              {catalog.status === "unavailable" && (
-                <div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link></div>
-              )}
-            </div>
-          )}
-        </section>
+        <Suspense fallback={
+          <section className="store-section" aria-busy="true">
+            <div className="section-title"><div><span>PRODUCT MARKETPLACE</span><h2>Available products</h2></div><Link href="/marketplace">View all →</Link></div>
+            <div className="catalog-empty" role="status"><p>Checking the live store catalog. You can explore the rest of the marketplace while it loads.</p></div>
+          </section>
+        }>
+          <FeaturedProducts />
+        </Suspense>
       </main>
     </>
   );
