@@ -96,7 +96,56 @@ export default function HelpPage() {
         <details className="help-card help-terms"><summary>Disputes and governing law</summary><p>The supplied terms refer to the laws of Trinidad and Tobago and CARICOM and describe dispute resolution or arbitration. The precise scope and enforceability depend on the complete terms and applicable law; obtain qualified legal review before relying on this summary.</p></details>
       </section>
 
-      <section id="contact" className="help-section help-contact">
+            <section id="full-terms" className="help-section">
+        <span className="identity-eyebrow">FULL POLICY</span>
+        <h2>Full terms and conditions</h2>
+        <details className="help-card help-terms">
+          <summary>Read the full terms supplied by Caribbean Star Store</summary>
+          <h3>Conditions of use</h3>
+          <p>Welcome to CaribbeanStarStore. CaribbeanStarStore (CSS) is here to provide a safe online market/platform to help communities connect through the sale of goods and services. CSS aims to provide a quality marketplace where vendors can communicate with clients and merchants locally and overseas to optimize sales. The services we provide are subject to the following conditions. Please read carefully.</p>
+          <h3>Vendor policy agreement</h3>
+          <p>To sign up as a vendor, click “Seller Registration” at the top of the website. Once registered, you will receive a reply within 24 hours with an application form and terms of agreement. Email the completed form to CaribbeanStarStore. There are no monthly fees or hidden charges; however, CSS is entitled to 15% of the cost of each item purchased from your online store inventory. This will be deducted automatically upon purchase.</p>
+          <p>Prices are quoted in U.S. dollars. Payment platforms available to customers include PayPal, WiPay and direct bank transfers. Vendors receive half of the purchase cost after an order is placed, and the second half is dispatched once the item(s) are forwarded to the buyer. A further 2% is deducted to facilitate bank transfer fees. Vendor store features include coupons, vacation mode and reports sheet analytics.</p>
+          <h3>Vendor rules and regulations</h3>
+          <p>All disputes between vendors and customers are to be dealt with in a timely manner. Any breach of CSS terms and agreement would be addressed as per the company's protocols.</p>
+          <h3>Auction/bidding</h3>
+          <p>In an auction listing, vendors/sellers add a starting price to a product and buyers bid against one another. Auction/bidding is available only to sellers/vendors who register and have their own store on our platform. Sellers/vendors should contact Caribbean Star Store by email or phone with product information to request an auction listing.</p>
+          <h3>Membership account</h3>
+          <p>You are responsible for maintaining the confidentiality of your account and password, restricting access to your computer, and accepting responsibility for all activities under your account or password. The supplied terms state: “If you are under the age of 18, you may use our website only with involvement of a parent or guardian or edit content, or cancel orders in its sole discretion.”</p>
+          <h3>Product descriptions</h3>
+          <p>CaribbeanStarStore (CSS) and its associates attempt to be as accurate as possible. As such, CSS does not warrant that product descriptions or other content on this site will be accurate, complete, reliable, current, or error-free. If a product offered by Caribbean Star Store is not as described, the supplied terms state that the remedy is to return it unused, with a new tracking number to facilitate return or exchange.</p>
+          <h3>Reviews, comments, emails and other content</h3>
+          <p>Visitors may post reviews, comments and other content and submit suggestions, ideas, comments, questions or other information, provided the content is not illegal, obscene, threatening, defamatory, invasive of privacy, infringing on intellectual property rights, injurious to third parties or objectionable. It must not contain software viruses, political campaigning, commercial solicitation, chain letters, mass mailing or spam. You may not use a false email address, impersonate any individual or entity, or mislead others as to the origin of a card or other content. Caribbean Star Store reserves the right, but not the obligation, to remove or edit such content and does not regularly review posted content.</p>
+          <p>If you post content or submit material, and unless CSS indicates otherwise, you grant CaribbeanStarStore and its associates a nonexclusive, royalty-free, perpetual, irrevocable and fully sublicensable right to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute and display such content throughout the world in any media. You grant CSS and its associates and sublicensees the right to use the name you submit with such content if it chooses. You represent and warrant that you own or control the rights to content you post; that it is accurate; that its use does not violate this policy or injure any person or entity; and that you will indemnify Caribbean Star Store or its associates for claims resulting from content you supply.</p>
+          <p>CaribbeanStarStore (CSS) has the right, but not the obligation, to monitor and edit or remove activity or content. CSS takes no responsibility and assumes no liability for content posted by you or any third party.</p>
+          <h3>Privacy</h3>
+          <p>Please review our Privacy Notice, which also governs your visit to our website, to understand our practices.</p>
+          <h3>Electronic communications</h3>
+          <p>When you visit CaribbeanStarStore (CSS) or send emails to us, you are communicating with us electronically. You consent to receive communications from us electronically. We will communicate by email or by posting notices on this site. You agree that agreements, notices, disclosures and other communications provided electronically satisfy any legal requirement for written communications.</p>
+          <h3>Copyright</h3>
+          <p>All content on this site, such as text, graphics, logos, icons, images, audio, downloads, data compilations and software, is the property of Caribbean Star Store (CSS) or its content suppliers and is protected by international copyright laws. The compilation of this content is the exclusive property of CSS.</p>
+          <h3>Trade marks</h3>
+          <p>CaribbeanStarStore (CSS) trademarks and trade dress may not be used with a product or service that is not CSS in a manner likely to cause confusion or disparage or discredit CSS. Other trademarks are the property of their respective owners, who may or may not be affiliated with CSS.</p>
+          <h3>Risk of loss</h3>
+          <p>Items purchased from Caribbean Star Store are made pursuant to a shipment contract. Risk of loss and title pass to you upon delivery to the carrier. Contact your vendor/seller for help with package updates or misunderstandings. If the vendor/seller does not resolve the issue, contact CSS.</p>
+          <h3>Disclaimer of warranties and limitation of liability</h3>
+          <p>Warranty will be attached to vendors' descriptions and not CaribbeanStarStore. CSS makes no representations or warranties of any kind, expressed or implied, on information, content, materials or products on this site.</p>
+          <p>You expressly agree that your use of this site is at your sole risk to the full extent permissible by applicable law. This site, its servers and emails sent from CaribbeanStarStore are represented as free of viruses or other harmful components. CSS will not be liable for damages arising from use of this site, including direct, indirect, incidental, punitive and consequential damages. Some state laws do not allow limits on implied warranties or certain damages. If those laws apply, some disclaimers, exclusions or limitations may not apply and you may have additional rights.</p>
+          <h3>Money back guarantee</h3>
+          <p>CaribbeanStarStore's money back guarantee applies to most products on the website.</p>
+          <h3>Applicable law</h3>
+          <p>By visiting CaribbeanStarStore, you agree that the principle law will govern these Conditions of Use and disputes that may arise between you and CaribbeanStarStore or its associates. The supplied wording does not identify the governing law in this section.</p>
+          <h3>Disputes</h3>
+          <p>Disputes related to your visit to Caribbean Star Store or products purchased through CSS are stated to be submitted to confidential arbitration in Trinidad and Tobago/CARICOM, except where you have violated or threatened to violate Caribbean Star Store intellectual property rights.</p>
+          <p>The Company may seek injunctive or other appropriate relief in any federal court in Trinidad and Tobago/CARICOM, and you consent to exclusive jurisdiction and venue in such courts. The arbitrator award shall be binding and may be entered as a judgment in any court of competent jurisdiction to the fullest extent permitted by applicable law. No arbitration under this Agreement shall be joined to an arbitration involving another party subject to this Agreement, including through class arbitration proceedings.</p>
+          <h3>Site policies, modification and severability</h3>
+          <p>Please review other policies, such as Caribbean Star Store's Shipping and Returns Policy, posted on this site. These policies also govern your visit. We reserve the right to change our policies and conditions of use at any time. If any condition is deemed invalid, it shall be severable and shall not affect the validity and enforceability of any remaining condition.</p>
+          <h3>Questions and help</h3>
+          <p>Questions regarding these Conditions of Use, Privacy Policy or other policy material can be directed to support by clicking the “Contact Us” link in the side menu, emailing caribbeanstarstore@gmail.com, or calling (239) 330-8955.</p>
+        </details>
+      </section>
+              
+<section id="contact" className="help-section help-contact">
         <span className="identity-eyebrow">WE’RE HERE TO HELP</span><h2>Contact Caribbean Star Store</h2>
         <p>For order, seller, refund or account questions, include the relevant order or item details when you contact CSS.</p>
         <div className="directory-hero-actions"><a className="identity-submit" href="mailto:caribbeanstarstore@gmail.com">Email CSS</a><a className="directory-secondary" href="tel:+12393308955">Call (239) 330-8955</a></div>
