@@ -20,9 +20,9 @@ export async function SiteHeader() {
   return (
     <header className="store-header">
       <div className="store-top">
-        <Link className="store-brand" href="/" aria-label="Caribbean Star Store TT home">
+        <Link className="store-brand" href="/" aria-label="Caribbean Star Store home">
           <img className="company-logo" src="/caribbean-star-store-logo.svg" alt="Caribbean Star Store — Connecting The Community" />
-          <span><b>CARIBBEAN STAR STORE</b><small>TRINIDAD &amp; TOBAGO MARKETPLACE</small></span>
+          <span><b>CARIBBEAN STAR STORE</b><small>CARIBBEAN MARKETPLACE</small></span>
         </Link>
         <form action="/search" className="header-search" role="search" aria-label="Search the marketplace">
           <input name="q" maxLength={80} placeholder="Search products, services, businesses..." aria-label="Search products, services, businesses" />
