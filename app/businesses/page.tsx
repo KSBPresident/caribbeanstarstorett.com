@@ -5,17 +5,17 @@ import { createClient } from "../../lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Business Directory",
-  description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+  description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
   openGraph: {
     type: "website",
-    siteName: "Caribbean Star Store TT",
-    title: "Business Directory | Caribbean Star Store TT",
-    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+    siteName: "Caribbean Star Store",
+    title: "Business Directory | Caribbean Star Store",
+    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
   },
   twitter: {
     card: "summary",
-    title: "Business Directory | Caribbean Star Store TT",
-    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store TT.",
+    title: "Business Directory | Caribbean Star Store",
+    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
   },
 };
 
@@ -83,7 +83,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS DIRECTORY</span>
           <h1>Discover businesses in your community.</h1>
-          <p>Browse public profiles published by local businesses and organizations across Trinidad &amp; Tobago.</p>
+          <p>Browse public profiles published by local businesses and organizations across the Caribbean.</p>
           <div className="directory-hero-actions">
             <Link className="identity-submit" href="/business">List your business</Link>
             <Link className="directory-secondary" href="/marketplace">Shop products</Link>
