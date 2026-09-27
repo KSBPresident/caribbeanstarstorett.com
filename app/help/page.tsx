@@ -33,7 +33,7 @@ export default function HelpPage() {
         <div className="directory-grid help-grid">
           <article className="directory-card"><div className="directory-card-mark">✦</div><h3>Supporting businesses</h3><p>CSS helps businesses reach customers through the marketplace, giving them an opportunity to compete and showcase their products and services.</p></article>
           <article className="directory-card"><div className="directory-card-mark">↗</div><h3>Our impact</h3><p>We bring businesses and shoppers together around a variety of products, choice and convenient online discovery.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">★</div><h3>Careers</h3><p>We welcome people who share our commitment to customers, local businesses and building a better marketplace. Contact CSS to ask about opportunities.</p></article>
+          <article className="directory-card"><div className="directory-card-mark">★</div><h3>Careers</h3><p>We do not have company career opportunities to share right now. We will post information here when opportunities become available.</p></article>
         </div>
       </section>
 
