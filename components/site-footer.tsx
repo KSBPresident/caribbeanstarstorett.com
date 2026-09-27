@@ -27,7 +27,7 @@ export function SiteFooter() {
             <h2>Join the marketplace</h2>
             <nav aria-label="Join Caribbean Star Store">
               <Link href="/sell">Sell products</Link>
-              <Link href="/business">Build your business</Link>
+              <Link href="/sell">Grow your business</Link>
               <Link href="/build-a-buy">Post a buying request</Link>
               <Link href="/sign-up">Create an account</Link>
             </nav>
