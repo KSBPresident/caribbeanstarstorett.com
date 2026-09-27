@@ -6,9 +6,9 @@ export function SiteFooter() {
       <div className="site-footer-inner">
         <div className="site-footer-main">
           <section className="site-footer-about" aria-label="About Caribbean Star Store">
-            <Link className="site-footer-brand" href="/" aria-label="Caribbean Star Store TT home">
+            <Link className="site-footer-brand" href="/" aria-label="Caribbean Star Store home">
               <img src="/caribbean-star-store-logo.svg" alt="" />
-              <span><strong>CARIBBEAN STAR STORE TT</strong><span>Connecting the community</span></span>
+              <span><strong>CARIBBEAN STAR STORE</strong><span>Connecting the community</span></span>
             </Link>
             <p>A Caribbean marketplace bringing products, local services, businesses, job opportunities, and real estate together in one place.</p>
           </section>
@@ -41,7 +41,7 @@ export function SiteFooter() {
           </section>
         </div>
         <div className="site-footer-bottom">
-          <span>© {new Date().getFullYear()} Caribbean Star Store TT</span>
+          <span>© {new Date().getFullYear()} Caribbean Star Store</span>
           <span>Connecting the community across the Caribbean.</span>
         </div>
       </div>
