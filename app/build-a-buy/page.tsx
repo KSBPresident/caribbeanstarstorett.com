@@ -93,7 +93,7 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
               <label>What are you looking for?<input name="title" minLength={4} maxLength={100} placeholder="For example, catering for a family event" required /></label>
               <label>Section<select name="category" defaultValue={selectedCategory}><option value="products">Products</option><option value="services">Services</option><option value="businesses">Businesses</option><option value="jobs">Jobs</option><option value="real-estate">Real Estate</option><option value="multi-item">Build-A-Buy bundle</option></select></label>
               <label>Tell us more<textarea name="details" minLength={20} maxLength={3000} rows={6} placeholder="Add details, preferences, timing, or services you need." required /></label>
-              <label>Budget in TTD (optional)<input name="budget" type="number" min="0.01" max="1000000000" step="0.01" inputMode="decimal" /></label>
+              <label>Budget in USD (optional)<input name="budget" type="number" min="0.01" max="1000000000" step="0.01" inputMode="decimal" /></label>
               <button className="identity-submit" type="submit">Save request</button>
             </form>
             <p className="identity-note">Your saved request is visible only to your account until the matching workflow is connected.</p>
@@ -106,7 +106,7 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
               <article className="purchase-request-card" key={request.id}>
                 <div className="purchase-request-top"><span className={`request-status request-status-${request.status}`}>{request.status}</span><span className="catalog-meta">{new Date(request.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</span></div>
                 <h3>{request.title}</h3><p className="request-category">{categoryLabels[request.category_key] || "Marketplace request"}</p><p>{request.details}</p>
-                {request.budget_amount !== null && <strong className="request-budget">{new Intl.NumberFormat("en-TT", { style: "currency", currency: request.currency || "TTD" }).format(Number(request.budget_amount))}</strong>}
+                {request.budget_amount !== null && <strong className="request-budget">{new Intl.NumberFormat("en-TT", { style: "currency", currency: request.currency || "USD" }).format(Number(request.budget_amount))}</strong>}
                 {request.status === "open" && <form action={cancelPurchaseRequest} className="request-cancel-form"><input type="hidden" name="requestId" value={request.id} /><button className="workspace-remove" type="submit">Cancel request</button></form>}
               </article>
             ))}</div> : <p className="organization-empty">You haven’t saved a request yet.</p>}
