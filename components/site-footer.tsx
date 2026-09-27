@@ -20,6 +20,7 @@ export function SiteFooter() {
               <Link href="/businesses">Businesses &amp; services</Link>
               <Link href="/opportunities">Jobs &amp; real estate</Link>
               <Link href="/search">Search the marketplace</Link>
+              <Link href="/help">Help &amp; information</Link>
             </nav>
           </section>
           <section className="site-footer-group">
