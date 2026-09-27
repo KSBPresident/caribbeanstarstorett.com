@@ -36,18 +36,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (error || !listing) {
     return {
       title: "Opportunity listing",
-      description: "Explore published jobs and real estate listings on Caribbean Star Store TT.",
+      description: "Explore published jobs and real estate listings on Caribbean Star Store.",
     };
   }
 
   const details = [listing.description, listing.location, listing.organization_name].filter(Boolean).join(" · ");
   const description = details.replace(/\s+/g, " ").slice(0, 160);
-  const title = `${listing.title} | Caribbean Star Store TT`;
+  const title = `${listing.title} | Caribbean Star Store`;
 
   return {
     title: listing.title,
     description,
-    openGraph: { type: "website", siteName: "Caribbean Star Store TT", title, description },
+    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description },
     twitter: { card: "summary", title, description },
   };
 }

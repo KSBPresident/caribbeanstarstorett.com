@@ -23,10 +23,10 @@ export const categories = [
   { name: "Vehicles & Parts", icon: "⌁", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80" },
 ];
 
-export const money = (amount: number, currency = "TTD", minorUnit = 0) => {
-  const safeCurrency = /^[A-Z]{3}$/.test(currency) ? currency : "TTD";
+export const money = (amount: number, currency = "USD", minorUnit = 2) => {
+  const safeCurrency = /^[A-Z]{3}$/.test(currency) ? currency : "USD";
   const digits = Math.max(0, Math.min(4, minorUnit));
-  return new Intl.NumberFormat("en-TT", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: safeCurrency,
     minimumFractionDigits: digits,

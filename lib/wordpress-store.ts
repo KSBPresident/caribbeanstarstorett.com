@@ -68,7 +68,7 @@ function mapProduct(raw: StoreApiProduct): Product | null {
     name: plainText(raw.name),
     category: plainText(raw.categories?.[0]?.name || "General"),
     price: rawPrice / 10 ** minorUnit,
-    currency: raw.prices?.currency_code || "TTD",
+    currency: raw.prices?.currency_code || "USD",
     currencyMinorUnit: minorUnit,
     rating: Math.max(0, Number(raw.average_rating) || 0),
     reviews: Math.max(0, Number(raw.review_count) || 0),

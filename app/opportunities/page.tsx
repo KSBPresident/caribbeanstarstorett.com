@@ -5,17 +5,17 @@ import { createClient } from "../../lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Jobs & Real Estate",
-  description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store TT.",
+  description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
   openGraph: {
     type: "website",
-    siteName: "Caribbean Star Store TT",
-    title: "Jobs & Real Estate | Caribbean Star Store TT",
-    description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store TT.",
+    siteName: "Caribbean Star Store",
+    title: "Jobs & Real Estate | Caribbean Star Store",
+    description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
   },
   twitter: {
     card: "summary",
-    title: "Jobs & Real Estate | Caribbean Star Store TT",
-    description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store TT.",
+    title: "Jobs & Real Estate | Caribbean Star Store",
+    description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
   },
 };
 

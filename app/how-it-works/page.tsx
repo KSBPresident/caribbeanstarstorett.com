@@ -4,17 +4,17 @@ import { SiteHeader } from "../../components/site-header";
 
 export const metadata: Metadata = {
   title: "How It Works",
-  description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store TT.",
+  description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
   openGraph: {
     type: "website",
-    siteName: "Caribbean Star Store TT",
-    title: "How It Works | Caribbean Star Store TT",
-    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store TT.",
+    siteName: "Caribbean Star Store",
+    title: "How It Works | Caribbean Star Store",
+    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
   },
   twitter: {
     card: "summary",
-    title: "How It Works | Caribbean Star Store TT",
-    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store TT.",
+    title: "How It Works | Caribbean Star Store",
+    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
   },
 };
 
