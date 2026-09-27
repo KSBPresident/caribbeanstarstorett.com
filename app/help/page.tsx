@@ -75,7 +75,7 @@ export default function HelpPage() {
 
       <section id="shipping" className="help-section">
         <span className="identity-eyebrow">DELIVERY</span><h2>Shipping help</h2>
-        <div className="help-card"><h3>Track a package</h3><ol><li>Sign in to your CSS account.</li><li>Open your order and select tracking.</li><li>Review the logistics information and tracking number.</li></ol><h3>How long does delivery take?</h3><p>Orders are generally expected to arrive within 5–10 working days. Delivery time can vary by seller and destination. If your order has not shipped by the agreed date, contact the seller or CSS for an update or to request help.</p></div>
+        <div className="help-card"><h3>Track a package</h3><ol><li>Sign in to your CSS account.</li><li>Open your order and select tracking.</li><li>Review the logistics information and tracking number.</li></ol><h3>How long does delivery take?</h3><p>Orders are generally expected to arrive within 5–10 working days. The supplied CSS copy also states that orders will be delivered within 72 hours, so contact the seller or CSS to confirm which estimate applies to your order. Delivery time can vary by seller and destination. If your order has not shipped by the agreed date, contact the seller or CSS for an update or to request help.</p></div>
       </section>
 
       <section id="orders" className="help-section">
