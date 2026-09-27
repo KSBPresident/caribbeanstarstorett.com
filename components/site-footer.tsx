@@ -21,6 +21,7 @@ export function SiteFooter() {
               <Link href="/opportunities">Jobs &amp; real estate</Link>
               <Link href="/search">Search the marketplace</Link>
               <Link href="/help">Help &amp; information</Link>
+              <Link href="/about">About us</Link>
             </nav>
           </section>
           <section className="site-footer-group">
