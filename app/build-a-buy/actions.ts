@@ -38,7 +38,7 @@ export async function createPurchaseRequest(formData: FormData) {
     details,
     category_key: categoryKey,
     budget_amount: budget,
-    currency: "TTD",
+    currency: "USD",
     status: "open",
   });
 
