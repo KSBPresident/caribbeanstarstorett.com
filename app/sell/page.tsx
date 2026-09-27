@@ -20,7 +20,54 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
   const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect(signInUrl("/sell"));
+  if (!user) {
+    return (
+      <>
+        <SiteHeader />
+        <main id="main-content" tabIndex={-1} className="identity-page seller-onboarding">
+          <div className="seller-intro">
+            <div>
+              <span className="identity-eyebrow">MAKE MONEY WITH US</span>
+              <h1>Sell and advertise on Caribbean Star Store.</h1>
+              <p>Introduce your business and products to shoppers across the Caribbean marketplace.</p>
+              <div className="directory-hero-actions">
+                <Link className="identity-submit" href="/sign-up?next=%2Fsell">Start your seller application</Link>
+                <Link className="directory-secondary" href={signInUrl("/sell")}>Already have an account? Sign in</Link>
+              </div>
+            </div>
+            <div className="seller-steps" aria-label="Seller onboarding steps">
+              <div><span>1</span><b>Apply</b><small>Share your details</small></div>
+              <div><span>2</span><b>Review</b><small>We check your request</small></div>
+              <div><span>3</span><b>Set up</b><small>Prepare your storefront</small></div>
+            </div>
+          </div>
+          <div className="seller-layout">
+            <section className="identity-panel">
+              <span className="identity-eyebrow">GROW YOUR BUSINESS</span>
+              <h2>Reach more clients</h2>
+              <p>Introduce your business and products to shoppers using Caribbean Star Store.</p>
+              <h2>Focus on your business</h2>
+              <p>Sellers manage their products, packing, shipping, customer service and returns.</p>
+              <h2>Get your products seen</h2>
+              <p>Relevant product titles and keywords help shoppers find your listings. Advertising can help increase your reach.</p>
+            </section>
+            <aside className="seller-side">
+              <section className="identity-panel">
+                <span className="identity-eyebrow">YOUR BRAND</span>
+                <h2>Build a store customers remember</h2>
+                <p>Present your business in one place, customize your store page and logo, and organize your inventory for shoppers.</p>
+                <h2>Promote individual products</h2>
+                <p>Clear product information and useful keywords help shoppers discover your listings in search.</p>
+                <p className="catalog-meta">Seller registration and store access are subject to CSS review and platform availability.</p>
+                <Link className="identity-submit" href="/sign-up?next=%2Fsell">Create an account to apply</Link>
+              </section>
+              <section className="seller-note"><strong>How it works</strong><p>After approval, your account gets a private workspace to manage your public profile and listings. Product publishing and payments will be enabled when the store connection is ready.</p><Link href="/help#sell">Read seller help →</Link></section>
+            </aside>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   const { data: applications, error: applicationsError } = await supabase
     .from("seller_applications")
