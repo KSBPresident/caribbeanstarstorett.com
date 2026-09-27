@@ -320,8 +320,7 @@
 @media(prefers-reduced-motion:reduce){.skip-to-content{transition:none}}
 
 
-/* Keep marketplace search available in the mobile header */
-@media(max-width:560px){
+/* Keep marketplace search available in the mobile header */@media(max-width:680px){
   .store-top{
     height:auto;
     min-height:70px;
