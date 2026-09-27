@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
 import { categories } from "../../lib/store-data";
-import { getStoreProducts } from "../../lib/wordpress-store";
+import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
 
 export const metadata: Metadata = {
   title: "Marketplace",
@@ -63,7 +63,11 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
         <div className="catalog-empty">
           <p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch. You can still explore Caribbean businesses, jobs, and real estate while this section is completed." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
           {catalog.status === "unavailable" && (
-            <div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link></div>
+            <div className="cart-empty-actions">
+              <Link className="identity-submit" href="/businesses">Explore businesses</Link>
+              <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
+              <a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Shop on the existing store</a>
+            </div>
           )}
         </div>
       )}
