@@ -32,19 +32,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (error || !profile) {
     return {
       title: "Business profile",
-      description: "Explore published Caribbean businesses and services on Caribbean Star Store TT.",
+      description: "Explore published Caribbean businesses and services on Caribbean Star Store.",
     };
   }
 
-  const description = (profile.summary || `Discover ${profile.display_name}, a Caribbean business on Caribbean Star Store TT.`)
+  const description = (profile.summary || `Discover ${profile.display_name}, a Caribbean business on Caribbean Star Store.`)
     .replace(/\s+/g, " ")
     .slice(0, 160);
-  const title = `${profile.display_name} | Caribbean Star Store TT`;
+  const title = `${profile.display_name} | Caribbean Star Store`;
 
   return {
     title: profile.display_name,
     description,
-    openGraph: { type: "website", siteName: "Caribbean Star Store TT", title, description },
+    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description },
     twitter: { card: "summary", title, description },
   };
 }
