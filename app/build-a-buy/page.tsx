@@ -24,7 +24,31 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   const requestedCategory = params.category && categoryKeys.has(params.category) ? params.category : null;
   const nextPath = requestedCategory ? `/build-a-buy?category=${encodeURIComponent(requestedCategory)}` : "/build-a-buy";
-  if (!user) redirect(signInUrl(nextPath));
+  if (!user) {
+    return (
+      <>
+        <SiteHeader />
+        <main id="main-content" tabIndex={-1} className="identity-page">
+          <header className="identity-heading">
+            <div>
+              <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUILD-A-BUY</span>
+              <h1>Tell us what you need.</h1>
+              <p>Describe a product, service, or combination you are looking for, then save the request to your account.</p>
+              {requestedCategory && <p className="identity-note">Selected section: {categoryLabels[requestedCategory]}.</p>}
+              <div className="directory-hero-actions">
+                <Link className="identity-submit" href={"/sign-up?next=" + encodeURIComponent(nextPath)}>Create an account to post a request</Link>
+                <Link className="directory-secondary" href={signInUrl(nextPath)}>Already have an account? Sign in</Link>
+              </div>
+            </div>
+          </header>
+          <div className="build-request-grid">
+            <section className="identity-panel"><h2>How Build-A-Buy works</h2><p>Tell us what product or service you need, add preferences and timing, and save the request privately to your account.</p><p>Requests can cover products, services, businesses, jobs, real estate, or a combination.</p></section>
+            <section className="identity-panel"><h2>What happens next?</h2><p>Your request is private to your account. Seller matching and fulfillment are not connected yet, so saving a request does not send it to sellers or guarantee a response.</p><p><Link className="identity-inline-link" href="/marketplace">Browse available products →</Link></p></section>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   const selectedCategory = params.category && categoryKeys.has(params.category)
     ? params.category
