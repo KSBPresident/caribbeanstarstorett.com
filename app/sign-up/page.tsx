@@ -52,7 +52,8 @@ export default async function SignUpPage({ searchParams }: PageProps) {
             </label>
             <label>
               Password
-              <input name="password" type="password" autoComplete="new-password" minLength={8} required />
+              <input name="password" type="password" autoComplete="new-password" minLength={8} required aria-describedby="password-hint" />
+              <span id="password-hint" className="catalog-meta">Use at least 8 characters.</span>
             </label>
             <button className="identity-submit" type="submit">Create account</button>
           </form>
