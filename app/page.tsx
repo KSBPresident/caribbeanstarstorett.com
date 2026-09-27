@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { ProductCard } from "../components/product-card";
 import { categories } from "../lib/store-data";
-import { getStoreProducts } from "../lib/wordpress-store";
+import { getOriginalStoreUrl, getStoreProducts } from "../lib/wordpress-store";
 
 async function FeaturedProducts() {
   const catalog = await getStoreProducts({ perPage: 4 });
@@ -17,7 +17,11 @@ async function FeaturedProducts() {
         <div className="catalog-empty">
           <p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch. In the meantime, explore Caribbean businesses, job listings, and real estate opportunities across the marketplace." : "There are no published products in the store catalog yet."}</p>
           {catalog.status === "unavailable" && (
-            <div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link></div>
+            <div className="cart-empty-actions">
+              <Link className="identity-submit" href="/businesses">Explore businesses</Link>
+              <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
+              <a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Shop on the existing store</a>
+            </div>
           )}
         </div>
       )}
