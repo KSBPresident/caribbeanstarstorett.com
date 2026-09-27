@@ -45,11 +45,8 @@ export function SiteFooter() {
         <div className="site-footer-bottom">
           <span>© {new Date().getFullYear()} Caribbean Star Store</span>
           <span>Connecting the community across the Caribbean.</span>
+          <span className="site-footer-credit">Website Designed &amp; Developed by <strong>Nebula Interstellar Networking Economy LLC.</strong></span>
         </div>
-      </div>
-      <div className="site-footer-credit">
-        <span>Website Designed &amp; Developed by</span>
-        <span>Nebula Interstellar Networking Economy LLC.</span>
       </div>
     </footer>
   );
