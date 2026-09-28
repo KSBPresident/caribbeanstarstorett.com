@@ -17,9 +17,10 @@ export async function wordpressFetch<T>(
     baseUrl,
   );
 
+  const { next: fetchNext, ...requestInit } = init ?? {};
   const response = await fetch(url, {
-    ...init,
-    next: { revalidate: 60 },
+    ...requestInit,
+    next: { ...fetchNext, revalidate: fetchNext?.revalidate ?? 3600 },
   });
 
   if (!response.ok) {

@@ -87,7 +87,7 @@ async function requestProducts(path: string): Promise<{ response: Response | nul
   try {
     const response = await fetch(new URL(`${apiPath}/products${path}`, baseUrl), {
       headers: { Accept: "application/json" },
-      next: { revalidate: 60 },
+      next: { revalidate: 3600 },
       signal: AbortSignal.timeout(8_000),
     });
     if (response.status === 404) {
