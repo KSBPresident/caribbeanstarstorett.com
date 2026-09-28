@@ -49,7 +49,7 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
     <section className="listing-area">
       <div className="breadcrumbs"><Link href="/">Home</Link> › Marketplace</div>
       <div className="listing-head">
-        <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "Product listings are temporarily unavailable here." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : catalog.totalProducts === 0 ? "0 published products" : "Showing " + ((page - 1) * 48 + 1) + "–" + Math.min(page * 48, catalog.totalProducts) + " of " + catalog.totalProducts + " published products"}</p></div>
+        <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "Explore categories or shop through the existing store." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : catalog.totalProducts === 0 ? "0 published products" : "Showing " + ((page - 1) * 48 + 1) + "–" + Math.min(page * 48, catalog.totalProducts) + " of " + catalog.totalProducts + " published products"}</p></div>
         <form className="catalog-search" action="/marketplace" role="search">
           {category && <input type="hidden" name="category" value={category} />}
           <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
