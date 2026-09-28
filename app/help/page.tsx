@@ -57,7 +57,7 @@ export default function HelpPage() {
 
       <section id="payments" className="help-section">
         <span className="identity-eyebrow">CHECKING OUT</span><h2>Payments</h2>
-        <div className="help-card"><p>Payments on CSS are charged in U.S. dollars. Available payment methods may vary by country.</p><ul><li>PayPal</li><li>Credit card</li><li>WiPay</li><li>Direct bank transfer where offered</li></ul><p>Additional payment methods may become available. Confirm the methods and total displayed at checkout before placing an order.</p><p>Seller fees and payout timing are described in the seller terms below.</p></div>
+        <div className="help-card"><p>Payments on CSS are charged in U.S. dollars. Available payment methods may vary by country.</p><ul><li>PayPal</li><li>Credit card</li><li>WiPay</li></ul><p>Additional payment methods may become available. Confirm the methods and total displayed at checkout before placing an order.</p><p>Seller fees and payout timing are described in the seller terms below.</p></div>
       </section>
 
       <section id="search" className="help-section">
