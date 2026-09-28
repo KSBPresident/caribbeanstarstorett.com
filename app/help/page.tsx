@@ -69,13 +69,13 @@ export default function HelpPage() {
         <span className="identity-eyebrow">PURCHASE PROTECTION</span><h2>Refunds & money-back guarantee</h2>
         <div className="help-grid-two">
           <article className="help-card"><h3>PayPal refunds</h3><p>Approved PayPal refunds are returned to the original PayPal account used for payment. CSS will send an email notification when the refund is processed. Bank clearance may take about 3–4 business days.</p><h3>Credit card refunds</h3><p>For an eligible refund on a credit-card purchase, contact CSS with the item number and account details. Once issued, your bank may take 3–4 business days to post it.</p></article>
-          <article className="help-card"><h3>Money-back guarantee</h3><p>The supplied CSS policy says eligible purchases are covered without an extra fee. If an item has not arrived or is not as described, first contact the seller through your account and explain the issue.</p><p>If it remains unresolved after three business days, contact CSS. Any refund remains subject to the applicable order terms and eligibility.</p></article>
+          <article className="help-card"><h3>Money-back guarantee</h3><p>The CSS Money-Back Guarantee applies to eligible purchases at no extra fee. If an item has not arrived or is not as described, first contact your seller through your account and explain the issue.</p><p>If it remains unresolved after three business days, contact CSS. Any refund remains subject to the applicable order terms and eligibility.</p></article>
         </div>
       </section>
 
       <section id="shipping" className="help-section">
         <span className="identity-eyebrow">DELIVERY</span><h2>Shipping help</h2>
-        <div className="help-card"><h3>Track a package</h3><ol><li>Sign in to your CSS account.</li><li>Open your order and select tracking.</li><li>Review the logistics information and tracking number.</li></ol><h3>How long does delivery take?</h3><p>Orders are generally expected to arrive within 5–10 working days. The supplied CSS copy also states that orders will be delivered within 72 hours, so contact the seller or CSS to confirm which estimate applies to your order. Delivery time can vary by seller and destination. If your order has not shipped by the agreed date, contact the seller or CSS for an update or to request help.</p></div>
+        <div className="help-card"><h3>Track a package</h3><ol><li>Sign in to your CSS account.</li><li>Open your order and select tracking.</li><li>Review the logistics information and tracking number.</li></ol><h3>How long does delivery take?</h3><p>Orders generally take 5–10 working days to arrive. Delivery times can vary by seller and destination. If your order has not shipped by the agreed date, contact the seller or CSS for an update or to request help.</p></div>
       </section>
 
       <section id="orders" className="help-section">
