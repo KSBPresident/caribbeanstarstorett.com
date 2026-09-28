@@ -49,7 +49,7 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
     <section className="listing-area">
       <div className="breadcrumbs"><Link href="/">Home</Link> › Marketplace</div>
       <div className="listing-head">
-        <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : catalog.totalProducts === 0 ? "0 published products" : "Showing " + ((page - 1) * 48 + 1) + "–" + Math.min(page * 48, catalog.totalProducts) + " of " + catalog.totalProducts + " published products"}</p></div>
+        <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "Product listings are temporarily unavailable here." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : catalog.totalProducts === 0 ? "0 published products" : "Showing " + ((page - 1) * 48 + 1) + "–" + Math.min(page * 48, catalog.totalProducts) + " of " + catalog.totalProducts + " published products"}</p></div>
         <form className="catalog-search" action="/marketplace" role="search">
           {category && <input type="hidden" name="category" value={category} />}
           <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
@@ -61,7 +61,7 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
         <div className="product-grid listing-grid">{products.map((product) => <ProductCard product={product} key={product.slug} />)}</div>
       ) : (
         <div className="catalog-empty">
-          <p>{catalog.status === "unavailable" ? "The product catalog is being prepared for launch. You can still explore Caribbean businesses, jobs, and real estate while this section is completed." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
+          <p>{catalog.status === "unavailable" ? "Product listings are temporarily unavailable here. You can still explore Caribbean businesses, jobs, and real estate, or browse products on the existing store." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
           {catalog.status === "unavailable" && (
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/businesses">Explore businesses</Link>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { money } from "../../../lib/store-data";
-import { getStoreProductBySlug } from "../../../lib/wordpress-store";
+import { getOriginalStoreUrl, getStoreProductBySlug } from "../../../lib/wordpress-store";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!product) {
     return {
       title: "Product details",
-      description: "Caribbean Star Store product listings are being prepared for launch.",
+      description: "Product listings are temporarily unavailable here.",
     };
   }
 
@@ -66,12 +66,13 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
         ) : (
           <section className="identity-panel catalog-unavailable">
             <span className="identity-eyebrow">STORE CONNECTION</span>
-            <h1>Product details are being prepared</h1>
-            <p>This product is not available in the marketplace yet. Browse the product section again later, or explore businesses and opportunities now.</p>
+            <h1>Product details are temporarily unavailable</h1>
+            <p>We couldn't load this product from the live catalog. Browse current products in the existing store, or explore businesses and opportunities on this marketplace.</p>
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/marketplace">Browse products</Link>
               <Link className="identity-secondary" href="/businesses">Explore businesses</Link>
               <Link className="identity-secondary" href="/opportunities">View opportunities</Link>
+              <a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Browse products on the existing store</a>
             </div>
           </section>
         )}
