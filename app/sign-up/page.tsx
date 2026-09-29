@@ -31,7 +31,16 @@ export default async function SignUpPage({ searchParams }: PageProps) {
         <section className="identity-auth-card">
           <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
           <h1>Create your account</h1>
-          <p>Use your account for marketplace requests, seller applications, and organization workspaces. Product listings and checkout are being prepared for launch.</p>
+          <p>Create a standard marketplace account for your profile and requests. Seller and organization capabilities have separate access requirements.</p>
+          <section className="identity-panel identity-access-guide" aria-labelledby="account-access-title">
+            <h2 id="account-access-title">How account access works</h2>
+            <ul>
+              <li><strong>Shopper:</strong> Manage your profile and your own marketplace requests.</li>
+              <li><strong>Seller:</strong> Submit an application; seller tools require approval.</li>
+              <li><strong>Organization member:</strong> Workspace access depends on your assigned role.</li>
+              <li><strong>Platform owner:</strong> Trusted administrator access is provisioned separately and cannot be granted by public sign-up.</li>
+            </ul>
+          </section>
           <p className="identity-switch"><Link href="/how-it-works">Learn how the marketplace works</Link></p>
           {!isSupabaseConfigured() && (
             <p className="identity-message" role="status">
