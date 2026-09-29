@@ -35,11 +35,12 @@ export default async function SignUpPage({ searchParams }: PageProps) {
           <section className="identity-panel identity-access-guide" aria-labelledby="account-access-title">
             <h2 id="account-access-title">How account access works</h2>
             <ul>
-              <li><strong>Shopper:</strong> Manage your profile and your own marketplace requests.</li>
-              <li><strong>Seller:</strong> Submit an application; seller tools require approval.</li>
-              <li><strong>Organization member:</strong> Workspace access depends on your assigned role.</li>
-              <li><strong>Platform owner:</strong> Trusted administrator access is provisioned separately and cannot be granted by public sign-up.</li>
+              <li><strong>Shopper:</strong> Manage your profile and private requests. Shopper accounts cannot publish products or manage an organization workspace.</li>
+              <li><strong>Seller / store owner:</strong> Start with a standard account and apply. Seller tools become available only after review; an approved owner can manage their assigned store and its listings.</li>
+              <li><strong>Organization member:</strong> Access is limited to the organization and actions allowed by the role assigned by its owner.</li>
+              <li><strong>Platform owner:</strong> Trusted site-wide administrator access is provisioned separately. Public sign-up cannot grant it.</li>
             </ul>
+            <p className="catalog-meta">Account privileges are assigned through approval and trusted roles; choosing a label or changing profile details cannot raise access. Product publishing and checkout will be enabled as the marketplace services are completed.</p>
           </section>
           <p className="identity-switch"><Link href="/how-it-works">Learn how the marketplace works</Link></p>
           {!isSupabaseConfigured() && (
