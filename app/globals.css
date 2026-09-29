@@ -357,3 +357,26 @@
 :where(h1,h2,h3,.store-brand b){font-family:var(--font-island-display),Georgia,serif;letter-spacing:-.015em}
 
 .identity-access-guide{margin:18px 0;box-shadow:none;padding:16px 18px}.identity-access-guide ul{margin:10px 0 0;padding-left:20px;color:#687587;font-size:12px;line-height:1.6}.identity-access-guide li+li{margin-top:6px}
+
+.add-cart{display:block;text-align:center;cursor:pointer;font-family:inherit}
+.add-cart:disabled,.buy-now:disabled{cursor:not-allowed;opacity:.58}
+.cart-count{display:inline-grid;place-items:center;min-width:18px;height:18px;margin-left:4px;padding:0 5px;border-radius:999px;background:#f4c44e;color:#172033;font-size:10px;line-height:1}
+.shopping-cart-layout{max-width:1200px;margin:20px auto;padding:0 3%;display:grid;grid-template-columns:minmax(0,1fr) 320px;align-items:start;gap:18px}
+.shopping-cart-list{margin:0;padding:0;list-style:none}
+.shopping-cart-line{display:grid;grid-template-columns:88px minmax(0,1fr) auto;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid #edf0f4}
+.shopping-cart-line:first-child{padding-top:0}
+.shopping-cart-image{width:88px;height:88px;object-fit:contain;background:#f5f7fa;border-radius:6px}
+.shopping-cart-product{display:grid;gap:6px;min-width:0}
+.shopping-cart-product strong{font-size:14px}
+.shopping-cart-product span,.shopping-cart-product small{color:#687587;font-size:11px}
+.shopping-cart-controls{display:flex;align-items:center;gap:8px}
+.shopping-cart-controls button{min-width:32px;height:32px;border:1px solid #dce3eb;border-radius:5px;background:#fff;color:#172033;font-weight:700}
+.shopping-cart-controls button:hover{background:#f4f7fa}
+.shopping-cart-line-total{font-size:13px;font-weight:800;text-align:right}
+.shopping-cart-summary{position:sticky;top:128px}
+.shopping-cart-summary h2{margin:0 0 16px;font-size:18px}
+.shopping-cart-total-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid #edf0f4;font-size:13px}
+.shopping-cart-summary button{margin-top:14px}
+.shopping-cart-summary .catalog-meta{display:block;margin-top:10px}
+@media(max-width:760px){.shopping-cart-layout{grid-template-columns:1fr}.shopping-cart-summary{position:static}}
+@media(max-width:520px){.shopping-cart-line{grid-template-columns:64px minmax(0,1fr);gap:10px}.shopping-cart-image{width:64px;height:64px}.shopping-cart-line-total{grid-column:2;text-align:left}.shopping-cart-controls{grid-column:2}}

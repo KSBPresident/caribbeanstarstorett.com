@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { money } from "../../../lib/store-data";
 import { getStoreProductBySlug } from "../../../lib/store-catalog";
+import { AddToCartButton } from "../../../components/add-to-cart-button";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -61,7 +62,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
                 <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available" : "Check availability"}</p>
                 <div className="seller-box"><b>Caribbean Star Store product listing</b><small>Product information and checkout will be available here after launch.</small></div>
                 <p className="catalog-meta">Delivery, warranty, and return information will appear with each listing.</p>
-                <p className="identity-message">Purchasing will be available here after checkout is connected.</p>
+                <AddToCartButton product={product} className="buy-now" />
+                <p className="catalog-meta">Checkout will be available after the marketplace checkout service is connected.</p>
               </div>
             </section>
             <section className="detail-tabs"><b>Product details</b><div><p>{product.description || "No additional product details are available yet."}</p></div></section>

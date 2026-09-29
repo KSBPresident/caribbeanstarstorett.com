@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CartCount } from "./cart-count";
 import { createClient } from "../lib/supabase/server";
 import { isSupabaseConfigured } from "../lib/supabase/configured";
 
@@ -32,7 +33,7 @@ export async function SiteHeader() {
           <Link href="/sell">Sell</Link>
           {user ? <Link href="/dashboard">My Account</Link> : <Link href="/sign-in">Sign In</Link>}
           {isPlatformAdmin && <Link href="/admin">Platform Admin</Link>}
-          <Link href="/cart" aria-label="Shopping cart">Cart</Link>
+          <Link href="/cart" aria-label="Shopping cart">Cart <CartCount /></Link>
         </div>
       </div>
       <nav className="store-nav" aria-label="Main navigation">

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
+import { CartContents } from "../../components/cart-contents";
 
 export const metadata: Metadata = {
   title: "Your Cart",
@@ -17,19 +17,10 @@ export default function Cart() {
           <div>
             <span className="identity-eyebrow">CARIBBEAN STAR STORE</span>
             <h1>Your cart</h1>
-            <p>Your shopping cart and checkout will be available here when product listings are launched.</p>
+            <p>Review the items you have added to your marketplace cart.</p>
           </div>
         </header>
-        <section className="identity-panel cart-empty-state">
-          <span className="cart-empty-icon" aria-hidden="true">🛒</span>
-          <h2>Your cart is ready for your finds</h2>
-          <p>We are preparing the product catalog and checkout for Caribbean Star Store.</p>
-          <div className="cart-empty-actions">
-            <Link className="identity-submit" href="/marketplace">Explore the marketplace</Link>
-            <Link className="identity-secondary" href="/businesses">Discover businesses</Link>
-            <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
-          </div>
-        </section>
+        <CartContents />
       </main>
     </>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { money } from "../lib/store-data";
 import type { Product } from "../lib/store-data";
+import { AddToCartButton } from "./add-to-cart-button";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -15,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
         {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <div className="catalog-meta">No reviews yet</div>}
         <strong className="price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
         <p className="seller">Listed on Caribbean Star Store</p>
-        <Link className="add-cart" href={`/product/${product.slug}`}>View details</Link>
+        <AddToCartButton product={product} />
       </div>
     </article>
   );

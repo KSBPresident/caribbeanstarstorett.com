@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Lora, Nunito_Sans } from "next/font/google";
 import { SiteFooter } from "../components/site-footer";
+import { CartProvider } from "../components/cart-provider";
 import "./globals.css";
 import "./site-footer.css";
 
@@ -40,8 +41,10 @@ export default function RootLayout({
     <html lang="en" className={`${islandDisplay.variable} ${islandSans.variable}`}>
       <body>
         <a className="skip-to-content" href="#main-content">Skip to content</a>
-        {children}
-        <SiteFooter />
+        <CartProvider>
+          {children}
+          <SiteFooter />
+        </CartProvider>
       </body>
     </html>
   );
