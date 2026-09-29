@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Lora, Nunito_Sans } from "next/font/google";
 import { SiteFooter } from "../components/site-footer";
 import "./globals.css";
 import "./site-footer.css";
+
+const islandDisplay = Lora({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap", variable: "--font-island-display" });
+const islandSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-island-sans" });
 
 const brandLogo = "/caribbean-star-store-logo.svg";
 
@@ -32,7 +36,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${islandDisplay.variable} ${islandSans.variable}`}>
       <body>
         <a className="skip-to-content" href="#main-content">Skip to content</a>
         {children}
