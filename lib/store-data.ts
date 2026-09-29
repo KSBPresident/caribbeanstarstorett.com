@@ -9,7 +9,6 @@ export type Product = {
   rating: number;
   reviews: number;
   image: string;
-  permalink: string;
   inStock: boolean;
   description: string;
 };

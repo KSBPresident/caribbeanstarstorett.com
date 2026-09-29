@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { ProductCard } from "../components/product-card";
 import { categories } from "../lib/store-data";
-import { getOriginalStoreUrl, getStoreProducts } from "../lib/wordpress-store";
+import { getStoreProducts } from "../lib/store-catalog";
 
 export const metadata: Metadata = {
   title: "The Caribbean's Digital Marketplace",
@@ -50,12 +50,12 @@ async function FeaturedProducts() {
         <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
       ) : (
         <div className="catalog-empty">
-          <p>{catalog.status === "unavailable" ? "Product listings are temporarily unavailable here. You can still explore Caribbean businesses, job listings, and real estate, or browse products on the existing store." : "There are no published products in the store catalog yet."}</p>
+          <p>{catalog.status === "unavailable" ? "Product listings are being prepared. You can explore Caribbean businesses, jobs, and real estate in the meantime." : "There are no published product listings yet."}</p>
           {catalog.status === "unavailable" && (
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/businesses">Explore businesses</Link>
               <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
-              <a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Shop on the existing store</a>
+              
             </div>
           )}
         </div>

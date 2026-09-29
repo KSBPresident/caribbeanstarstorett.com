@@ -331,7 +331,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                         <span className="workspace-avatar" aria-hidden="true">{isSelf ? "Y" : "•"}</span>
                         <div>
                           <strong>{isSelf ? "You" : `Member · ${membership.user_id.slice(-6)}`}</strong>
-                          <span>Joined {new Date(membership.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</span>
+                          <span>Joined {new Date(membership.created_at).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span>
                         </div>
                       </div>
                       <div className="workspace-member-controls">
@@ -385,7 +385,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                       <span className="workspace-audit-dot" aria-hidden="true">•</span>
                       <div>
                         <strong>{entry.action.replaceAll(".", " ").replaceAll("_", " ")}</strong>
-                        <span>{entry.actor_user_id ? (entry.actor_user_id === user.id ? "You" : `Account · ${entry.actor_user_id.slice(-6)}`) : "System"} · {new Date(entry.created_at).toLocaleString("en-TT", { dateStyle: "medium", timeStyle: "short" })}</span>
+                        <span>{entry.actor_user_id ? (entry.actor_user_id === user.id ? "You" : `Account · ${entry.actor_user_id.slice(-6)}`) : "System"} · {new Date(entry.created_at).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}</span>
                       </div>
                     </article>
                   ))}

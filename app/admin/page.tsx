@@ -9,7 +9,7 @@ import { signInUrl } from "../../lib/auth/return-path";
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string }> };
 
 function dateLabel(value: string) {
-  return new Date(value).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(value).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" });
 }
 
 export default async function Admin({ searchParams }: PageProps) {
@@ -24,7 +24,7 @@ export default async function Admin({ searchParams }: PageProps) {
         <SiteHeader />
         <main id="main-content" tabIndex={-1} className="identity-page">
           <header className="identity-heading">
-            <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Caribbean Star Store TT</p></div>
+            <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Caribbean Star Store</p></div>
           </header>
           <section className="identity-panel exec-setup-panel">
             <span className="exec-setup-icon" aria-hidden="true">✦</span>
@@ -130,7 +130,7 @@ export default async function Admin({ searchParams }: PageProps) {
                 {requests.data.map((request) => (
                   <article className="seller-app-card" key={request.id}>
                     <div className="seller-app-heading"><strong>{request.title}</strong><span className="seller-status">{request.status}</span></div>
-                    <p>{request.category_key.replaceAll("-", " ")} · Received {dateLabel(request.created_at)}{request.budget_amount ? ` · ${request.currency} ${Number(request.budget_amount).toLocaleString("en-TT", { minimumFractionDigits: 2 })}` : ""}</p>
+                    <p>{request.category_key.replaceAll("-", " ")} · Received {dateLabel(request.created_at)}{request.budget_amount ? ` · ${request.currency} ${Number(request.budget_amount).toLocaleString("en", { minimumFractionDigits: 2 })}` : ""}</p>
                     <p>{request.details}</p>
                     <form action={updatePurchaseRequestStatus} className="identity-form">
                       <input type="hidden" name="requestId" value={request.id} />

@@ -151,7 +151,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
                     return (
                       <article className="seller-app-card" key={application.id}>
                         <div className="seller-app-heading"><strong>{application.seller_name}</strong><span className={`seller-status seller-status-${application.status}`}>{statusCopy[application.status] || "Submitted"}</span></div>
-                        <p>{application.category_key.replaceAll("-", " ")} · Submitted {new Date(application.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</p>
+                        <p>{application.category_key.replaceAll("-", " ")} · Submitted {new Date(application.created_at).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</p>
                         {workspaceSlug && (
                           <>
                             <p className="catalog-meta">Your private workspace is ready. It stays private until you publish a business profile.</p>

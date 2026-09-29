@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { money } from "../../../lib/store-data";
-import { getOriginalStoreUrl, getStoreProductBySlug } from "../../../lib/wordpress-store";
+import { getStoreProductBySlug } from "../../../lib/store-catalog";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -58,24 +58,24 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
                 <h1>{product.name}</h1>
                 {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <p className="catalog-meta">No customer reviews yet</p>}
                 <strong className="detail-price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
-                <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available in the original store" : "Availability is shown by the original store"}</p>
-                <div className="seller-box"><b>Caribbean Star Store product listing</b><small>Product information and checkout are managed by the original store.</small></div>
-                <p className="catalog-meta">Check the original listing for current delivery, warranty, and return details.</p>
-                <a className="buy-now" href={product.permalink}>View product and continue to checkout</a>
+                <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available" : "Check availability"}</p>
+                <div className="seller-box"><b>Caribbean Star Store product listing</b><small>Product information and checkout will be available here after launch.</small></div>
+                <p className="catalog-meta">Delivery, warranty, and return information will appear with each listing.</p>
+                <p className="identity-message">Purchasing will be available here after checkout is connected.</p>
               </div>
             </section>
-            <section className="detail-tabs"><b>Product details</b><div><p>{product.description || "See the original store listing for product details."}</p></div></section>
+            <section className="detail-tabs"><b>Product details</b><div><p>{product.description || "No additional product details are available yet."}</p></div></section>
           </>
         ) : (
           <section className="identity-panel catalog-unavailable">
             <span className="identity-eyebrow">STORE CONNECTION</span>
             <h1>Product details are temporarily unavailable</h1>
-            <p>We couldn't load this product from the live catalog. Browse current products in the existing store, or explore businesses and opportunities on this marketplace.</p>
+            <p>Product details are not available yet. Browse the marketplace or explore businesses and opportunities.</p>
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/marketplace">Browse products</Link>
               <Link className="identity-secondary" href="/businesses">Explore businesses</Link>
               <Link className="identity-secondary" href="/opportunities">View opportunities</Link>
-              <a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Browse products on the existing store</a>
+              
             </div>
           </section>
         )}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
 import { categories } from "../../lib/store-data";
-import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
+import { getStoreProducts } from "../../lib/store-catalog";
 
 export const metadata: Metadata = {
   title: "Marketplace",
@@ -50,7 +50,7 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
     <section className="listing-area">
       <div className="breadcrumbs"><Link href="/">Home</Link> › Marketplace</div>
       <div className="listing-head">
-        <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "Explore categories or shop through the existing store." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : catalog.totalProducts === 0 ? "0 published products" : "Showing " + ((page - 1) * 48 + 1) + "–" + Math.min(page * 48, catalog.totalProducts) + " of " + catalog.totalProducts + " published products"}</p></div>
+        <div><h1>{heading}</h1><p>{catalog.status === "unavailable" ? "Explore product categories while the catalog is being prepared." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : catalog.totalProducts === 0 ? "0 published products" : "Showing " + ((page - 1) * 48 + 1) + "–" + Math.min(page * 48, catalog.totalProducts) + " of " + catalog.totalProducts + " published products"}</p></div>
         <form className="catalog-search" action="/marketplace" role="search">
           {category && <input type="hidden" name="category" value={category} />}
           <label className="visually-hidden" htmlFor="marketplace-query">Search products</label>
@@ -62,12 +62,12 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
         <div className="product-grid listing-grid">{products.map((product) => <ProductCard product={product} key={product.slug} />)}</div>
       ) : (
         <div className="catalog-empty">
-          <p>{catalog.status === "unavailable" ? "Product listings are temporarily unavailable here. You can still explore Caribbean businesses, jobs, and real estate, or browse products on the existing store." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
+          <p>{catalog.status === "unavailable" ? "Product listings are being prepared. You can explore Caribbean businesses, jobs, and real estate in the meantime." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
           {catalog.status === "unavailable" && (
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/businesses">Explore businesses</Link>
               <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
-              <a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Shop on the existing store</a>
+              
             </div>
           )}
         </div>

@@ -104,9 +104,9 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
               <p className="organization-empty identity-error" role="alert">Your requests could not be loaded. Refresh the page to try again.</p>
             ) : requests?.length ? <div className="purchase-request-list">{requests.map((request) => (
               <article className="purchase-request-card" key={request.id}>
-                <div className="purchase-request-top"><span className={`request-status request-status-${request.status}`}>{request.status}</span><span className="catalog-meta">{new Date(request.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short", year: "numeric" })}</span></div>
+                <div className="purchase-request-top"><span className={`request-status request-status-${request.status}`}>{request.status}</span><span className="catalog-meta">{new Date(request.created_at).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span></div>
                 <h3>{request.title}</h3><p className="request-category">{categoryLabels[request.category_key] || "Marketplace request"}</p><p>{request.details}</p>
-                {request.budget_amount !== null && <strong className="request-budget">{new Intl.NumberFormat("en-TT", { style: "currency", currency: request.currency || "USD" }).format(Number(request.budget_amount))}</strong>}
+                {request.budget_amount !== null && <strong className="request-budget">{new Intl.NumberFormat("en", { style: "currency", currency: request.currency || "USD" }).format(Number(request.budget_amount))}</strong>}
                 {request.status === "open" && <form action={cancelPurchaseRequest} className="request-cancel-form"><input type="hidden" name="requestId" value={request.id} /><button className="workspace-remove" type="submit">Cancel request</button></form>}
               </article>
             ))}</div> : <p className="organization-empty">You haven’t saved a request yet.</p>}

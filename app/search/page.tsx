@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 import { ProductCard } from "../../components/product-card";
 import { createClient } from "../../lib/supabase/server";
-import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store";
+import { getStoreProducts } from "../../lib/store-catalog";
 
 type SearchParams = Promise<{ q?: string }>;
 
@@ -46,7 +46,7 @@ async function SearchResults({ query }: { query: string }) {
     <>
       <section className="directory-results">
         <div className="directory-results-heading"><div><span className="identity-eyebrow">SEARCH RESULTS</span><h2>Results for “{query}”</h2></div><span>{unavailable ? "Some results unavailable" : matchCount + " matches"}</span></div>
-        {catalog?.status === "unavailable" && <div className="catalog-empty"><strong>Product listings are temporarily unavailable here.</strong><p>You can still search businesses and opportunities here, or browse products on the existing store.</p><div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View opportunities</Link><a className="identity-secondary" href={`${getOriginalStoreUrl()}/shop/`} target="_blank" rel="noopener noreferrer">Browse products on the existing store</a></div></div>}
+        {catalog?.status === "unavailable" && <div className="catalog-empty"><strong>Product listings are being prepared for launch.</strong><p>You can still search businesses and opportunities here.</p><div className="cart-empty-actions"><Link className="identity-submit" href="/businesses">Explore businesses</Link><Link className="identity-secondary" href="/opportunities">View opportunities</Link></div></div>}
         {businessResult.error && <div className="catalog-empty">Business results are temporarily unavailable.</div>}
         {listingResult.error && <div className="catalog-empty">Job and real-estate results are temporarily unavailable.</div>}
       </section>

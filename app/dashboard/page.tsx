@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
-import { getOriginalStoreUrl } from "../../lib/wordpress-store";
 import { updateProfile } from "./actions";
 import { signInUrl } from "../../lib/auth/return-path";
 
@@ -116,8 +115,8 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide account-workspace-link">
-            <div><span className="identity-eyebrow">ORIGINAL STORE · WOOCOMMERCE</span><h2>Purchases and order history</h2><p>Orders and checkout from the existing store stay in WooCommerce. Open the original store to sign in and manage your purchases.</p></div>
-            <a className="identity-submit" href={getOriginalStoreUrl()} target="_blank" rel="noopener noreferrer">Open the existing store →</a>
+            <div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Purchases and order history</h2><p>Order history will appear here after product checkout is available on Caribbean Star Store.</p></div>
+            <Link className="identity-submit" href="/cart">View your cart →</Link>
           </section>
         </div>
       </main>
