@@ -5,6 +5,7 @@ import { SiteHeader } from "../../components/site-header";
 export const metadata: Metadata = {
   title: "How It Works",
   description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+  alternates: { canonical: "/how-it-works" },
   openGraph: {
     type: "website",
     siteName: "Caribbean Star Store",

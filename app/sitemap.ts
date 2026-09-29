@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const productionSite = "https://caribbeanstarstorett.com";
+const productionSite = "https://www.caribbeanstarstorett.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   if (process.env.VERCEL_ENV !== "production") return [];
@@ -10,6 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${productionSite}/marketplace`, changeFrequency: "daily", priority: 0.9 },
     { url: `${productionSite}/businesses`, changeFrequency: "daily", priority: 0.8 },
     { url: `${productionSite}/opportunities`, changeFrequency: "daily", priority: 0.8 },
+    { url: `${productionSite}/about`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${productionSite}/help`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${productionSite}/how-it-works`, changeFrequency: "monthly", priority: 0.6 },
   ];
 }

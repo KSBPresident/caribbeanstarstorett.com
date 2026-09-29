@@ -9,6 +9,7 @@ import { getOriginalStoreUrl, getStoreProducts } from "../../lib/wordpress-store
 export const metadata: Metadata = {
   title: "Marketplace",
   description: "Browse products and discover goods from the Caribbean Star Store marketplace.",
+  alternates: { canonical: "/marketplace" },
   openGraph: {
     type: "website",
     siteName: "Caribbean Star Store",

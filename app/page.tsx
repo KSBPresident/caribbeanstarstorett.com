@@ -1,9 +1,44 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { SiteHeader } from "../components/site-header";
 import { ProductCard } from "../components/product-card";
 import { categories } from "../lib/store-data";
 import { getOriginalStoreUrl, getStoreProducts } from "../lib/wordpress-store";
+
+export const metadata: Metadata = {
+  title: "The Caribbean's Digital Marketplace",
+  description:
+    "Discover products, services, Caribbean businesses, jobs, and real estate in one marketplace connecting communities across the Caribbean.",
+  alternates: { canonical: "/" },
+};
+
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Caribbean Star Store",
+    url: "https://www.caribbeanstarstorett.com",
+    logo: "https://www.caribbeanstarstorett.com/caribbean-star-store-logo.svg",
+    description:
+      "A Caribbean marketplace for products, services, businesses, jobs, and real-estate opportunities.",
+    areaServed: { "@type": "Place", name: "Caribbean" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Caribbean Star Store",
+    url: "https://www.caribbeanstarstorett.com",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://www.caribbeanstarstorett.com/search?q={search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
+    },
+  },
+];
 
 async function FeaturedProducts() {
   const catalog = await getStoreProducts({ perPage: 4 });
@@ -33,6 +68,12 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <main id="main-content" tabIndex={-1}>
         <section className="home-hero">
           <div className="hero-overlay">

@@ -5,6 +5,7 @@ import { SiteHeader } from "../../components/site-header";
 export const metadata: Metadata = {
   title: "Help & Information",
   description: "Learn about Caribbean Star Store, selling, bidding, payments, refunds, shipping, and store policies.",
+  alternates: { canonical: "/help" },
 };
 
 const topics = [

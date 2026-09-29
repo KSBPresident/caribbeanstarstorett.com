@@ -11,6 +11,7 @@ const islandSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: 
 const brandLogo = "/caribbean-star-store-logo.svg";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.caribbeanstarstorett.com"),
   title: {
     default: "Caribbean Star Store",
     template: "%s | Caribbean Star Store",
