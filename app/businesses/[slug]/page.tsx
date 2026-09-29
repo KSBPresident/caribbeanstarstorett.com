@@ -28,11 +28,13 @@ const getPublicBusinessProfile = cache(async (slug: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const canonical = `/businesses/${encodeURIComponent(slug)}`;
   const { data: profile, error } = await getPublicBusinessProfile(slug);
   if (error || !profile) {
     return {
       title: "Business profile",
       description: "Explore published Caribbean businesses and services on Caribbean Star Store.",
+      alternates: { canonical },
     };
   }
 
@@ -44,6 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: profile.display_name,
     description,
+    alternates: { canonical },
     openGraph: { type: "website", siteName: "Caribbean Star Store", title, description },
     twitter: { card: "summary", title, description },
   };

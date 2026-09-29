@@ -7,11 +7,13 @@ import { getOriginalStoreUrl, getStoreProductBySlug } from "../../../lib/wordpre
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const canonical = `/product/${encodeURIComponent(slug)}`;
   const { product } = await getStoreProductBySlug(slug);
   if (!product) {
     return {
       title: "Product details",
       description: "Product listings are temporarily unavailable here.",
+      alternates: { canonical },
     };
   }
 
@@ -22,6 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: product.name,
     description,
+    alternates: { canonical },
     openGraph: {
       title: product.name,
       description,

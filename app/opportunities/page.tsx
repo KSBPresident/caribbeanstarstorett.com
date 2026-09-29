@@ -6,6 +6,7 @@ import { createClient } from "../../lib/supabase/server";
 export const metadata: Metadata = {
   title: "Jobs & Real Estate",
   description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
+  alternates: { canonical: "/opportunities" },
   openGraph: {
     type: "website",
     siteName: "Caribbean Star Store",

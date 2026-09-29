@@ -32,11 +32,13 @@ const getPublishedOpportunity = cache(async (slug: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const canonical = `/opportunities/${encodeURIComponent(slug)}`;
   const { data: listing, error } = await getPublishedOpportunity(slug);
   if (error || !listing) {
     return {
       title: "Opportunity listing",
       description: "Explore published jobs and real estate listings on Caribbean Star Store.",
+      alternates: { canonical },
     };
   }
 
@@ -47,6 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: listing.title,
     description,
+    alternates: { canonical },
     openGraph: { type: "website", siteName: "Caribbean Star Store", title, description },
     twitter: { card: "summary", title, description },
   };
