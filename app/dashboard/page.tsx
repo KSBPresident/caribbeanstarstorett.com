@@ -95,7 +95,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             {requestResult.error ? (
               <p className="organization-empty" role="alert">Buying requests could not be loaded. Refresh and try again.</p>
             ) : requestResult.data?.length ? (
-              <div className="account-activity-list">{requestResult.data.map((item) => <article key={item.id}><div><strong>{item.title}</strong><span>{item.category_key.replaceAll("-", " ")} · {new Date(item.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short" })}</span></div><em>{item.status}</em></article>)}</div>
+              <div className="account-activity-list">{requestResult.data.map((item) => <article key={item.id}><div><strong>{item.title}</strong><span>{item.category_key.replaceAll("-", " ")} · {new Date(item.created_at).toLocaleDateString("en", { day: "numeric", month: "short" })}</span></div><em>{item.status}</em></article>)}</div>
             ) : <p className="organization-empty">No buying requests yet. Describe what you need and we’ll keep the request with your account.</p>}
           </section>
 
@@ -104,7 +104,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             {sellerResult.error ? (
               <p className="organization-empty" role="alert">Seller applications could not be loaded. Refresh and try again.</p>
             ) : sellerResult.data?.length ? (
-              <div className="account-activity-list">{sellerResult.data.map((item) => <article key={item.id}><div><strong>{item.seller_name}</strong><span>{item.category_key.replaceAll("-", " ")} · {new Date(item.created_at).toLocaleDateString("en-TT", { day: "numeric", month: "short" })}</span></div><em>{item.status}</em></article>)}
+              <div className="account-activity-list">{sellerResult.data.map((item) => <article key={item.id}><div><strong>{item.seller_name}</strong><span>{item.category_key.replaceAll("-", " ")} · {new Date(item.created_at).toLocaleDateString("en", { day: "numeric", month: "short" })}</span></div><em>{item.status}</em></article>)}
               </div>
             ) : <p className="organization-empty">No seller applications yet. Start an application when you’re ready to join the marketplace.</p>}
           </section>
