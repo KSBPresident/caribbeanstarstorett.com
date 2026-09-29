@@ -350,3 +350,8 @@
   }
 }
 
+
+
+/* Island-inspired typography: warm serif display with a friendly, highly readable sans-serif. */
+:root{font-family:var(--font-island-sans),"Trebuchet MS",Arial,sans-serif}
+:where(h1,h2,h3,.store-brand b){font-family:var(--font-island-display),Georgia,serif;letter-spacing:-.015em}
