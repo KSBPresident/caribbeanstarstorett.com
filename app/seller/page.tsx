@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function Seller() {
-  redirect("/business");
+  redirect("/sell");
 }
