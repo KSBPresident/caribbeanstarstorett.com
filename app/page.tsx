@@ -95,7 +95,7 @@ export default function Home() {
         <section className="store-section">
           <div className="section-title"><div><span>DISCOVER</span><h2>Featured Categories</h2></div><Link href="/marketplace">View all →</Link></div>
           <div className="category-grid">
-            {categories.map((category) => <Link href={"/marketplace?category=" + encodeURIComponent(category.name)} className="category-card" key={category.name}><img src={category.image} alt="" /><div><b>{category.name}</b></div></Link>)}
+            {categories.map((category) => <Link href={"/marketplace?category=" + encodeURIComponent(category.name)} className="category-card" key={category.name}><img src={category.image} alt="" loading="lazy" decoding="async" /><div><b>{category.name}</b></div></Link>)}
           </div>
         </section>
         <Suspense fallback={
