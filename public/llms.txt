@@ -6,6 +6,7 @@
 
 - [Home](https://www.caribbeanstarstorett.com/): Marketplace overview and discovery.
 - [Marketplace](https://www.caribbeanstarstorett.com/marketplace): Product categories and current product availability.
+- [Auctions](https://www.caribbeanstarstorett.com/auctions): Auction status and guidance for buyers and sellers.
 - [Business directory](https://www.caribbeanstarstorett.com/businesses): Public business and service profiles.
 - [Jobs and real estate](https://www.caribbeanstarstorett.com/opportunities): Public opportunity listings.
 - [How it works](https://www.caribbeanstarstorett.com/how-it-works): Marketplace overview for shoppers, sellers, and organizations.
