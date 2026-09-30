@@ -53,7 +53,7 @@ export default function HelpPage() {
 
       <section id="bidding" className="help-section">
         <span className="identity-eyebrow">MORE HELP</span><h2>How bidding works</h2>
-        <div className="help-card"><p>In an auction, a seller sets a starting price and buyers place bids against one another. A bid is a commitment to purchase if you win, so review the listing and its terms before bidding.</p><h3>Getting a product listed</h3><p>Auction listings are available to sellers or vendors with a store on the platform. Sellers can contact Caribbean Star Store with information about their product to request an auction listing. Listings remain subject to platform review and availability.</p></div>
+        <div className="help-card"><p>In an auction, a seller sets a starting price and buyers place bids against one another. A bid is a commitment to purchase if you win, so review the listing and its terms before bidding.</p><h3>Getting a product listed</h3><p>Auction listings are available to sellers or vendors with a store on the platform. Sellers can contact Caribbean Star Store with information about their product to request an auction listing. Listings remain subject to platform review and availability.</p><p><Link className="directory-card-link" href="/auctions">See the Auctions section →</Link></p></div>
       </section>
 
       <section id="payments" className="help-section">

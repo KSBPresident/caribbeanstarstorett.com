@@ -17,6 +17,7 @@ export function SiteFooter() {
             <nav aria-label="Explore marketplace">
               <Link href="/how-it-works">How it works</Link>
               <Link href="/marketplace">Products</Link>
+              <Link href="/auctions">Auctions</Link>
               <Link href="/businesses">Businesses &amp; services</Link>
               <Link href="/opportunities">Jobs &amp; real estate</Link>
               <Link href="/search">Search the marketplace</Link>
