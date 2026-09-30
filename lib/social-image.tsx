@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const socialImageAlt =
@@ -7,13 +5,7 @@ export const socialImageAlt =
 export const socialImageSize = { width: 1200, height: 630 };
 export const socialImageContentType = "image/png";
 
-export async function createSocialImage() {
-  const logo = await readFile(
-    join(process.cwd(), "public", "caribbean-star-store-logo.svg"),
-    "base64",
-  );
-  const logoSource = `data:image/svg+xml;base64,${logo}`;
-
+export function createSocialImage() {
   return new ImageResponse(
     (
       <div
@@ -66,14 +58,18 @@ export async function createSocialImage() {
               height: 330,
               flexShrink: 0,
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              padding: 18,
+              gap: 8,
               borderRadius: 165,
               backgroundColor: "#fffdf6",
+              border: "8px solid #f4cd59",
+              color: "#073f4a",
             }}
           >
-            <img src={logoSource} alt="" width="294" height="294" />
+            <span style={{ fontSize: 112, lineHeight: 1, color: "#d83d86" }}>★</span>
+            <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: 3 }}>CSS</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", maxWidth: 650 }}>
             <div
@@ -87,13 +83,7 @@ export async function createSocialImage() {
                 letterSpacing: 3,
               }}
             >
-              <span
-                style={{
-                  width: 38,
-                  height: 3,
-                  backgroundColor: "#f4cd59",
-                }}
-              />
+              <span style={{ width: 38, height: 3, backgroundColor: "#f4cd59" }} />
               CARIBBEAN MARKETPLACE
             </div>
             <div
