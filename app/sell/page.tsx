@@ -71,6 +71,8 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
     );
   }
 
+  if (!supabase) redirect("/sign-in?notice=setup");
+
   const { data: applications, error: applicationsError } = await supabase
     .from("seller_applications")
     .select("id, seller_name, category_key, status, created_at, organization_id")
