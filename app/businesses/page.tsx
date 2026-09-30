@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Business Directory | Caribbean Star Store",
     description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
   },

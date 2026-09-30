@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: "Browse products and discover goods from the Caribbean Star Store marketplace.",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Marketplace | Caribbean Star Store",
     description: "Browse products and discover goods from the Caribbean Star Store marketplace.",
   },

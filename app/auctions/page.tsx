@@ -15,7 +15,7 @@ export const metadata: Metadata = {
       "Explore product auctions and bidding guidance from Caribbean Star Store.",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Auctions | Caribbean Star Store",
     description:
       "Explore product auctions and bidding guidance from Caribbean Star Store.",

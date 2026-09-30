@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Jobs & Real Estate | Caribbean Star Store",
     description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
   },

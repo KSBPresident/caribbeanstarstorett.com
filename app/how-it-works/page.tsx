@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "How It Works | Caribbean Star Store",
     description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
   },

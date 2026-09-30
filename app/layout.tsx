@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     description:
       "Discover products, services, Caribbean businesses, jobs, and real estate. Connecting the community.",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Caribbean Star Store",
+    description:
+      "Discover products, services, Caribbean businesses, jobs, and real estate. Connecting the community.",
+  },
 };
 
 export default function RootLayout({
