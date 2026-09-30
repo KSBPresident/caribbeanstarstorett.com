@@ -26,6 +26,8 @@ export default function HelpPage() {
         <div className="directory-hero-actions"><Link className="identity-submit" href="/marketplace">Explore the marketplace</Link><a className="directory-secondary" href="#contact">Contact CSS</a></div>
       </section>
 
+      <div className="help-callout" role="note"><strong>Storefront status:</strong> Caribbean Star Store checkout is not open yet. Orders, payment processing, account order tracking and refunds are not available through this site at this time. The guidance below reflects policies supplied for CSS; confirm that each service is active before placing an order. Never send payment outside an enabled Caribbean Star Store checkout.</div>
+
       <nav className="help-nav" aria-label="Help topics">{topics.map(([id, label]) => <a key={id} href={`#${id}`}>{label}</a>)}</nav>
 
       <section id="about" className="help-section">
@@ -58,7 +60,7 @@ export default function HelpPage() {
 
       <section id="payments" className="help-section">
         <span className="identity-eyebrow">CHECKING OUT</span><h2>Payments</h2>
-        <div className="help-card"><p>Payments on CSS are charged in U.S. dollars. Available payment methods may vary by country.</p><ul><li>PayPal</li><li>Credit card</li><li>WiPay</li></ul><p>Additional payment methods may become available. Confirm the methods and total displayed at checkout before placing an order.</p><p>Seller fees and payout timing are described in the seller terms below.</p></div>
+        <div className="help-card"><p>Payments are intended to be charged in U.S. dollars. When checkout opens, available methods may vary by country.</p><p>Payment methods supplied for CSS include:</p><ul><li>PayPal</li><li>Credit card</li><li>WiPay</li></ul><p>Confirm the methods and total shown in an active checkout before placing an order. Additional methods may become available.</p><p>Seller fees and payout timing are described in the seller terms below; confirm current terms with CSS before selling.</p></div>
       </section>
 
       <section id="search" className="help-section">
