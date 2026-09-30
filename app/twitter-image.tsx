@@ -1,11 +1,8 @@
-import {
-  createSocialImage,
-  socialImageAlt as alt,
-  socialImageContentType as contentType,
-  socialImageSize as size,
-} from "../lib/social-image";
+import { createSocialImage } from "../lib/social-image";
 
-export { alt, contentType, size };
+export const alt = "Caribbean Star Store — Connecting the community across the Caribbean";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
 export const runtime = "nodejs";
 
 export default createSocialImage;
