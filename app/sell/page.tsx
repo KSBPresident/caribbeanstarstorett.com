@@ -16,10 +16,11 @@ const statusCopy: Record<string, string> = {
 };
 
 export default async function SellPage({ searchParams }: { searchParams: SearchParams }) {
-  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const params = await searchParams;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const accountServicesReady = isSupabaseConfigured();
+  const supabase = accountServicesReady ? await createClient() : null;
+  const auth = supabase ? await supabase.auth.getUser() : null;
+  const user = auth?.data.user ?? null;
   if (!user) {
     return (
       <>
@@ -30,6 +31,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               <span className="identity-eyebrow">MAKE MONEY WITH US</span>
               <h1>Sell and advertise on Caribbean Star Store.</h1>
               <p>Introduce your business and products to shoppers across the Caribbean marketplace.</p>
+              {!accountServicesReady && <p className="identity-message" role="status">Seller information is available now. Account registration and applications will open after account services are configured.</p>}
               <div className="directory-hero-actions">
                 <Link className="identity-submit" href="/sign-up?next=%2Fsell">Start your seller application</Link>
                 <Link className="directory-secondary" href={signInUrl("/sell")}>Already have an account? Sign in</Link>
@@ -58,7 +60,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
                 <p>Present your business in one place, customize your store page and logo, and organize your inventory for shoppers.</p>
                 <h2>Promote individual products</h2>
                 <p>Clear product information and useful keywords help shoppers discover your listings in search.</p>
-                <p className="catalog-meta">Seller registration and store access are subject to CSS review and platform availability.</p>
+                <p className="catalog-meta">{accountServicesReady ? "Seller registration and store access are subject to CSS review and platform availability." : "Account registration and seller applications will open after account services are configured."}</p>
                 <Link className="identity-submit" href="/sign-up?next=%2Fsell">Create an account to apply</Link>
               </section>
               <section className="seller-note"><strong>How it works</strong><p>After approval, your account gets a private workspace to manage your public profile and listings. Product publishing and payments will be enabled when the store connection is ready.</p><Link href="/help#sell">Read seller help →</Link></section>
