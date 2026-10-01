@@ -67,6 +67,7 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/businesses">Explore businesses</Link>
               <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
+              <Link className="identity-secondary" href="/sell">Learn how to sell</Link>
               
             </div>
           )}
