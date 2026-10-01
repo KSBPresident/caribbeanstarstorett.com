@@ -24,6 +24,7 @@ export function SiteFooter() {
               <Link href="/help">Help &amp; information</Link>
               <Link href="/about">About us</Link>
               <Link href="/help#full-terms">Terms &amp; conditions</Link>
+              <Link href="/privacy">Privacy notice</Link>
             </nav>
           </section>
           <section className="site-footer-group">
