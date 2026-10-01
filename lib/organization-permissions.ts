@@ -1,5 +1,3 @@
-import "server-only";
-
 import { createClient } from "./supabase/server";
 
 export async function canManageOrganizationMember(
