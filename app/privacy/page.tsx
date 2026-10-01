@@ -23,7 +23,7 @@ export default function PrivacyPage() {
           <ul>
             <li>Account registration asks for your display name, email address and password. Profile settings may include a display name.</li>
             <li>A seller application asks for a store or seller name, seller type, category, contact email and description. Phone and website details are optional.</li>
-            <li>A Build-A-Buy request asks for information about the item or service you need, such as its title, category, description, budget and preferred location or timing.</li>
+            <li>A Build-A-Buy request asks for information about the item or service you need, such as its title, category, details (which may include preferences or timing), and optional budget.</li>
             <li>Organization owners may add business profile and listing details, including public contact information, and choose whether a profile or listing is published.</li>
           </ul>
 
