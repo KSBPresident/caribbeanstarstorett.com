@@ -129,7 +129,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
           <h1>Discover businesses in your community.</h1>
           <p>Browse public profiles published by local businesses and organizations across the Caribbean.</p>
           <div className="directory-hero-actions">
-            <Link className="identity-submit" href="/business">List your business</Link>
+            <Link className="identity-submit" href="/sell">Apply to list your business</Link>
             <Link className="directory-secondary" href="/marketplace">Shop products</Link>
           </div>
         </header>
@@ -174,8 +174,9 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
             <div className="directory-empty">
               <span aria-hidden="true">✦</span>
               <h3>{query || category ? "No matching businesses yet" : "Be one of the first businesses listed"}</h3>
-              <p>{query || category ? "Try another search or category. Only published profiles appear here." : "Create an organization workspace, then publish a profile when you are ready."}</p>
-              <Link className="identity-submit" href="/business">Start a business profile</Link>
+              <p>{query || category ? "Try another search or category. Only published profiles appear here." : "Business owners can apply for a seller workspace, then publish a directory profile. Community and nonprofit groups can create an organization workspace."}</p>
+              <Link className="identity-submit" href="/sell">Apply to create a seller workspace</Link>
+              <Link className="directory-secondary" href="/business">Create a community or nonprofit workspace</Link>
             </div>
           )}
           {!error && pageCount > 1 && (

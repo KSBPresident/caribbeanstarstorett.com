@@ -113,7 +113,7 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · OPPORTUNITIES</span>
           <h1>Find work and places to call home.</h1>
           <p>Explore jobs and real estate posted by Caribbean organizations. Contact each publisher directly for current details.</p>
-          <div className="directory-hero-actions"><Link className="identity-submit" href="/build-a-buy?category=jobs">Request what you need</Link><Link className="directory-secondary" href="/business">Post a listing</Link></div>
+          <div className="directory-hero-actions"><Link className="identity-submit" href="/build-a-buy?category=jobs">Request what you need</Link><Link className="directory-secondary" href="/sell">Apply to post listings</Link></div>
         </header>
 
         <section className="directory-toolbar">
@@ -158,8 +158,11 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
             <div className="directory-empty">
               <span aria-hidden="true">✦</span>
               <h3>{query || type ? "No matching listings yet" : "No published listings yet"}</h3>
-              <p>{query || type ? "Try another search or category. Only published listings appear here." : "Organizations can publish job openings and property listings from their workspace."}</p>
-              <Link className="identity-submit" href="/business">Create an organization listing</Link>
+              <p>{query || type ? "Try another search or category. Only published listings appear here." : "Organizations with listing access can publish jobs and real estate. Business owners apply for seller access; community and nonprofit groups can create an organization workspace."}</p>
+              <div className="directory-hero-actions">
+                <Link className="identity-submit" href="/sell">Apply to list with a store</Link>
+                <Link className="directory-secondary" href="/business">Create a community or nonprofit workspace</Link>
+              </div>
             </div>
           )}
           {!error && pageCount > 1 && (
