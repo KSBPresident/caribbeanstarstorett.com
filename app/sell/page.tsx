@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
+import { PrivacyStatusNote } from "../../components/privacy-status-note";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { submitSellerApplication } from "./actions";
@@ -144,6 +145,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <span className="identity-eyebrow">SELLER APPLICATION</span>
             <h2>Tell us about your store</h2>
             <p>Use accurate contact details. Submitting an application does not publish products or charge you.</p>
+            <PrivacyStatusNote submittedData="This form sends your store details, contact information, and description to account services for seller review." />
             <form action={submitSellerApplication} className="identity-form seller-form">
               <label>Store or seller name<input name="sellerName" autoComplete="organization" minLength={2} maxLength={100} required /></label>
               <div className="seller-form-row">

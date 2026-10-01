@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
+import { PrivacyStatusNote } from "../../components/privacy-status-note";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { cancelPurchaseRequest, createPurchaseRequest } from "./actions";
@@ -93,6 +94,7 @@ export default async function BuildABuyPage({ searchParams }: PageProps) {
           <section className="identity-panel">
             <h2>Create a request</h2>
             <p>Requests are private to your account. Seller matching and fulfillment are not connected yet.</p>
+            <PrivacyStatusNote submittedData="This form sends your request title, details, category, and optional budget to account services." />
             <form action={createPurchaseRequest} className="identity-form">
               <label>What are you looking for?<input name="title" minLength={4} maxLength={100} placeholder="For example, catering for a family event" required /></label>
               <label>Section<select name="category" defaultValue={selectedCategory}><option value="products">Products</option><option value="services">Services</option><option value="businesses">Businesses</option><option value="jobs">Jobs</option><option value="real-estate">Real Estate</option><option value="multi-item">Build-A-Buy bundle</option></select></label>
