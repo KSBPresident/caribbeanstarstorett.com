@@ -69,7 +69,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         <section className="account-overview" aria-label="Account activity summary">
           <article className="account-overview-card"><span>Workspaces</span><strong>{workspaceTotal ?? "—"}</strong><Link href="/business">Manage workspaces →</Link></article>
           <article className="account-overview-card"><span>Buying requests</span><strong>{requestCount ?? "—"}{requestCount === 3 ? "+" : ""}</strong><Link href="/build-a-buy">View Build-A-Buy →</Link></article>
-          <article className="account-overview-card"><span>Seller applications</span><strong>{sellerCount ?? "—"}{sellerCount === 3 ? "+" : ""}</strong><Link href="/sell">Open seller space →</Link></article>
+          <article className="account-overview-card"><span>Seller applications</span><strong>{sellerCount ?? "—"}{sellerCount === 3 ? "+" : ""}</strong><Link href="/seller">Open seller space →</Link></article>
         </section>
 
         <div className="identity-dashboard-grid account-dashboard-grid">
@@ -104,7 +104,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel">
-            <div className="account-panel-title"><div><span className="identity-eyebrow">SELLING</span><h2>Seller applications</h2></div><Link href="/sell">Seller space →</Link></div>
+            <div className="account-panel-title"><div><span className="identity-eyebrow">SELLING</span><h2>Seller applications</h2></div><Link href="/seller">Store owner space →</Link></div>
             {sellerResult.error ? (
               <p className="organization-empty" role="alert">Seller applications could not be loaded. Refresh and try again.</p>
             ) : sellerResult.data?.length ? (
