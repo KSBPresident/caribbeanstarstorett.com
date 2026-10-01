@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
-import { canManageOrganizationMember } from "../../../lib/organization-permissions";
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -39,9 +38,6 @@ export async function updateOrganizationMemberRole(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/sign-in?notice=signin");
   if (memberUserId === user.id) redirect(`${base}?error=self`);
-  if (!(await canManageOrganizationMember(organizationId, user.id, memberUserId))) {
-    redirect(`${base}?error=permission`);
-  }
 
   const { data, error } = await supabase
     .from("organization_members")
@@ -69,9 +65,6 @@ export async function removeOrganizationMember(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/sign-in?notice=signin");
   if (memberUserId === user.id) redirect(`${base}?error=self`);
-  if (!(await canManageOrganizationMember(organizationId, user.id, memberUserId))) {
-    redirect(`${base}?error=permission`);
-  }
 
   const { data, error } = await supabase
     .from("organization_members")
