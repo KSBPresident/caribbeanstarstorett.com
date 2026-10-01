@@ -11,7 +11,8 @@
 - [Jobs and real estate](https://www.caribbeanstarstorett.com/opportunities): Public opportunity listings.
 - [How it works](https://www.caribbeanstarstorett.com/how-it-works): Marketplace overview for shoppers, sellers, and organizations.
 - [About](https://www.caribbeanstarstorett.com/about): Company and marketplace information.
-- [Help](https://www.caribbeanstarstorett.com/help): Customer and seller information.
+- [Help](https://www.caribbeanstarstorett.com/help): Customer and seller information, including the full terms and conditions.
+- [Privacy information](https://www.caribbeanstarstorett.com/privacy): Interim summary of information requested by current site features.
 
 ## Source guidance
 
