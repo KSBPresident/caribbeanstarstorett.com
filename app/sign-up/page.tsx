@@ -18,7 +18,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
   const nextPath = safeNextPath(params.next);
   const notice =
     params.notice === "setup"
-      ? "Account services are not configured yet. The site owner needs to add the Supabase URL and publishable key to Vercel."
+      ? "Account registration is temporarily unavailable while the site is being prepared. You can still browse the marketplace and public directories."
       : params.notice === "confirm"
         ? "If the address can be registered, you’ll receive an email with a confirmation link."
         : null;
@@ -50,7 +50,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
           <p className="identity-switch"><Link href="/how-it-works">Learn how the marketplace works</Link></p>
           {!isSupabaseConfigured() && (
             <p className="identity-message" role="status">
-              Account services are not configured yet. The site owner needs to add the Supabase URL and publishable key to Vercel.
+              Account registration is temporarily unavailable while the site is being prepared. You can still browse the marketplace and public directories.
             </p>
           )}
           {notice && <p className="identity-message" role="status">{notice}</p>}

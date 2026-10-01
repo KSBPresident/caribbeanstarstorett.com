@@ -38,7 +38,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
           <p className="identity-switch"><Link href="/how-it-works">See how the marketplace works</Link></p>
           {!isSupabaseConfigured() && (
             <p className="identity-message" role="status">
-              Account services are not configured yet. The site owner needs to add the Supabase URL and publishable key to Vercel.
+              Account registration is temporarily unavailable while the site is being prepared. You can still browse the marketplace and public directories.
             </p>
           )}
           {notice && <p className="identity-message" role="status">{notice}</p>}
