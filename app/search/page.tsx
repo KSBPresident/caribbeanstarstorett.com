@@ -19,7 +19,7 @@ function marketplaceSearchFilter(query: string, columns: string[]) {
 }
 
 function hasSearchableText(query: string) {
-  const searchableText = query.normalize("NFC").replace(/[^\\p{L}\\p{N}]/gu, "");
+  const searchableText = query.normalize("NFC").replace(/[^\p{L}\p{N}]/gu, "");
   return Array.from(searchableText).length >= 2;
 }
 
