@@ -73,10 +73,47 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
 
   if (!profile) notFound();
 
+  const siteUrl = "https://www.caribbeanstarstorett.com";
+  const pageUrl = siteUrl + "/businesses/" + encodeURIComponent(profile.slug);
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": pageUrl + "#business",
+      name: profile.display_name,
+      url: pageUrl,
+      description: profile.summary,
+      areaServed: { "@type": "Place", name: profile.region },
+      sameAs: profile.website_url || undefined,
+      contactPoint: profile.contact_email || profile.phone
+        ? [{
+            "@type": "ContactPoint",
+            contactType: "Business inquiries",
+            email: profile.contact_email || undefined,
+            telephone: profile.phone || undefined,
+          }]
+        : undefined,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Business directory", item: siteUrl + "/businesses" },
+        { "@type": "ListItem", position: 3, name: profile.display_name, item: pageUrl },
+      ],
+    },
+  ];
+  const serializedStructuredData = JSON.stringify(structuredData).replace(/</g, "\\u003c");
+
   return (
     <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page directory-detail-page">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializedStructuredData }}
+        />
         <p className="workspace-back"><Link href="/businesses">← Business directory</Link></p>
         <section className="directory-detail-hero">
           <div className="directory-card-mark directory-detail-mark" aria-hidden="true">{profile.display_name.slice(0, 1).toUpperCase()}</div>

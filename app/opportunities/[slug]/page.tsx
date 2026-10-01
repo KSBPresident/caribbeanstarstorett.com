@@ -24,7 +24,7 @@ const propertyTypes: Record<string, string> = {
 const getPublishedOpportunity = cache(async (slug: string) => {
   const supabase = await createClient();
   return supabase.from("organization_marketplace_listings")
-    .select("slug, organization_name, listing_type, title, description, location, employment_type, salary_details, property_type, property_price, contact_email, phone, website_url, updated_at")
+    .select("slug, organization_name, listing_type, title, description, location, employment_type, salary_details, property_type, property_price, contact_email, phone, website_url, created_at, updated_at")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
@@ -77,10 +77,75 @@ export default async function OpportunityDetail({ params }: { params: Promise<{ 
   if (!listing) notFound();
 
   const isJob = listing.listing_type === "jobs";
+  const siteUrl = "https://www.caribbeanstarstorett.com";
+  const pageUrl = siteUrl + "/opportunities/" + encodeURIComponent(listing.slug);
+  const listingDescription = [
+    listing.description,
+    isJob && listing.salary_details ? "Compensation: " + listing.salary_details : null,
+    !isJob && listing.property_type ? "Property type: " + (propertyTypes[listing.property_type] || listing.property_type) : null,
+    !isJob && listing.property_price ? "Price details: " + listing.property_price : null,
+  ].filter(Boolean).join("\\n\\n");
+  const publishedEntity = isJob
+    ? {
+        "@type": "JobPosting",
+        title: listing.title,
+        description: listingDescription,
+        datePosted: listing.created_at,
+        hiringOrganization: {
+          "@type": "Organization",
+          name: listing.organization_name,
+          url: listing.website_url || undefined,
+        },
+        jobLocation: { "@type": "Place", name: listing.location },
+        employmentType: listing.employment_type === "full-time" ? "FULL_TIME"
+          : listing.employment_type === "part-time" ? "PART_TIME"
+          : listing.employment_type === "contract" ? "CONTRACTOR"
+          : listing.employment_type === "temporary" ? "TEMPORARY"
+          : listing.employment_type === "internship" ? "INTERN"
+          : undefined,
+      }
+    : {
+        "@type": "CreativeWork",
+        name: listing.title,
+        description: listingDescription,
+        spatialCoverage: { "@type": "Place", name: listing.location },
+        creator: {
+          "@type": "Organization",
+          name: listing.organization_name,
+          url: listing.website_url || undefined,
+        },
+      };
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": pageUrl + "#webpage",
+      url: pageUrl,
+      name: listing.title,
+      description: listingDescription,
+      dateModified: listing.updated_at,
+      mainEntity: publishedEntity,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Jobs & real estate", item: siteUrl + "/opportunities" },
+        { "@type": "ListItem", position: 3, name: listing.title, item: pageUrl },
+      ],
+    },
+  ];
+  const serializedStructuredData = JSON.stringify(structuredData).replace(/</g, "\\u003c");
+
   return (
     <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page opportunity-detail-page">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializedStructuredData }}
+        />
         <p className="workspace-back"><Link href={isJob ? "/opportunities?type=jobs" : "/opportunities?type=real-estate"}>← Back to {isJob ? "jobs" : "real estate"}</Link></p>
         <section className="opportunity-detail-hero">
           <span className="opportunity-type-mark" aria-hidden="true">{isJob ? "↗" : "⌂"}</span>
