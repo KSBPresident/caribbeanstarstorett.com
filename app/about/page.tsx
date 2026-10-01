@@ -57,7 +57,9 @@ export default function AboutPage() {
             <h2>Growing together</h2>
             <p>Caribbean Star Store and participating businesses can bring together a broad range of products and services for customers across the region.</p>
             <p>We appreciate every business that chooses to grow with the marketplace and contribute to its community.</p>
-            <p><Link className="identity-inline-link" href="/business">Create a business workspace →</Link></p>
+            <p>Businesses interested in opening a store can apply for a seller workspace. Community and nonprofit groups can create their own organization workspace.</p>
+            <p><Link className="identity-inline-link" href="/sell">Apply to sell on Caribbean Star Store →</Link></p>
+            <p><Link className="identity-inline-link" href="/business">Create a community or nonprofit workspace →</Link></p>
           </section>
           <section className="identity-panel">
             <h2>Careers</h2>
