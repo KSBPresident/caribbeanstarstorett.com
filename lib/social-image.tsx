@@ -68,7 +68,7 @@ export function createSocialImage() {
               color: "#073f4a",
             }}
           >
-            <span style={{ fontSize: 112, lineHeight: 1, color: "#d83d86" }}>★</span>
+            <span style={{ fontSize: 78, lineHeight: 1, fontWeight: 800, letterSpacing: -4, color: "#d83d86" }}>CSS</span>
             <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: 3 }}>CSS</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", maxWidth: 650 }}>
