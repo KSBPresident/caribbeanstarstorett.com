@@ -7,6 +7,19 @@ export const metadata: Metadata = {
   description:
     "Learn about Caribbean Star Store and our mission to connect shoppers, sellers, and businesses across the Caribbean.",
   alternates: { canonical: "/about" },
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store",
+    title: "About Caribbean Star Store",
+    description:
+      "Learn about Caribbean Star Store and our mission to connect shoppers, sellers, and businesses across the Caribbean.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Caribbean Star Store",
+    description:
+      "Learn about Caribbean Star Store and our mission to connect shoppers, sellers, and businesses across the Caribbean.",
+  },
 };
 
 export default function AboutPage() {

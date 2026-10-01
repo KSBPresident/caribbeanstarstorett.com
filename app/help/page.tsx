@@ -6,6 +6,19 @@ export const metadata: Metadata = {
   title: "Help & Information",
   description: "Learn about Caribbean Star Store, selling, bidding, payments, refunds, shipping, and store policies.",
   alternates: { canonical: "/help" },
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store",
+    title: "Help & Information | Caribbean Star Store",
+    description:
+      "Get help with selling, bidding, payments, refunds, shipping and policies at Caribbean Star Store.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Help & Information | Caribbean Star Store",
+    description:
+      "Get help with selling, bidding, payments, refunds, shipping and policies at Caribbean Star Store.",
+  },
 };
 
 const topics = [
