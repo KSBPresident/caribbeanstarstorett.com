@@ -54,6 +54,9 @@ export default async function SignUpPage({ searchParams }: PageProps) {
           )}
           {notice && <p className="identity-message" role="status">{notice}</p>}
           {error && <p className="identity-message identity-error" role="alert">{error}</p>}
+          <p className="identity-message" role="note">
+            <strong>Privacy notice in progress.</strong> Creating an account submits the name, email address, and password you enter to account services. The current <Link href="/privacy">privacy notice</Link> advises visitors not to submit personal or sensitive information while the full notice is being prepared. You can wait to register until the complete notice is available.
+          </p>
           <form action={signUp} className="identity-form">
             <input type="hidden" name="next" value={nextPath} />
             <label>
