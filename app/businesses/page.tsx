@@ -81,10 +81,49 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
   const totalCount = count ?? profiles.length;
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
+  const siteUrl = "https://www.caribbeanstarstorett.com";
+  const pageUrl = siteUrl + "/businesses";
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Business directory", item: pageUrl },
+      ],
+    },
+    ...(!error && profiles.length ? [{
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Published Caribbean Star Store businesses",
+      numberOfItems: profiles.length,
+      itemListElement: profiles.map((profile, index) => {
+        const profileUrl = siteUrl + "/businesses/" + encodeURIComponent(profile.slug);
+        return {
+          "@type": "ListItem",
+          position: (requestedPage - 1) * PAGE_SIZE + index + 1,
+          url: profileUrl,
+          item: {
+            "@type": "Organization",
+            name: profile.display_name,
+            description: profile.summary,
+            url: profileUrl,
+            areaServed: { "@type": "Place", name: profile.region },
+          },
+        };
+      }),
+    }] : []),
+  ];
+  const serializedStructuredData = JSON.stringify(structuredData).replace(/</g, "\\u003c");
+
   return (
     <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page directory-page">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializedStructuredData }}
+        />
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS DIRECTORY</span>
           <h1>Discover businesses in your community.</h1>

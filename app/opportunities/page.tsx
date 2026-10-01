@@ -67,10 +67,48 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
   const totalCount = count ?? listings.length;
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
+  const siteUrl = "https://www.caribbeanstarstorett.com";
+  const pageUrl = siteUrl + "/opportunities";
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Jobs & real estate", item: pageUrl },
+      ],
+    },
+    ...(!error && listings.length ? [{
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Published jobs and real estate on Caribbean Star Store",
+      numberOfItems: listings.length,
+      itemListElement: listings.map((listing, index) => {
+        const listingUrl = siteUrl + "/opportunities/" + encodeURIComponent(listing.slug);
+        return {
+          "@type": "ListItem",
+          position: (requestedPage - 1) * PAGE_SIZE + index + 1,
+          url: listingUrl,
+          item: {
+            "@type": "Thing",
+            name: listing.title,
+            description: listing.description,
+            url: listingUrl,
+          },
+        };
+      }),
+    }] : []),
+  ];
+  const serializedStructuredData = JSON.stringify(structuredData).replace(/</g, "\\u003c");
+
   return (
     <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page opportunities-page">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializedStructuredData }}
+        />
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · OPPORTUNITIES</span>
           <h1>Find work and places to call home.</h1>
