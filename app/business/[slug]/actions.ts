@@ -22,6 +22,54 @@ function returnTo(slug: string) {
   return slugPattern.test(slug) ? `/business/${slug}` : "/business";
 }
 
+async function canManageOrganizationMember(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  organizationId: string,
+  actorUserId: string,
+  targetUserId: string,
+) {
+  const { data: actorMembership, error: actorMembershipError } = await supabase
+    .from("organization_members")
+    .select("role_id")
+    .eq("organization_id", organizationId)
+    .eq("user_id", actorUserId)
+    .eq("status", "active")
+    .maybeSingle();
+  const { data: targetMembership, error: targetMembershipError } = await supabase
+    .from("organization_members")
+    .select("role_id")
+    .eq("organization_id", organizationId)
+    .eq("user_id", targetUserId)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (actorMembershipError || targetMembershipError || !actorMembership || !targetMembership) return false;
+
+  const { data: roleLinks, error: roleLinksError } = await supabase
+    .from("role_permissions")
+    .select("permission_id")
+    .eq("role_id", actorMembership.role_id);
+  if (roleLinksError) return false;
+
+  const permissionIds = (roleLinks || []).map((link) => link.permission_id);
+  const { data: permissions, error: permissionsError } = permissionIds.length
+    ? await supabase.from("permissions").select("key").in("id", permissionIds)
+    : { data: [], error: null };
+  if (permissionsError) return false;
+
+  const keys = new Set((permissions || []).map((permission) => permission.key));
+  if (!keys.has("member.manage")) return false;
+  if (keys.has("role.manage")) return true;
+
+  const { data: memberRole, error: memberRoleError } = await supabase
+    .from("roles")
+    .select("id")
+    .eq("name", "member")
+    .maybeSingle();
+
+  return !memberRoleError && Boolean(memberRole) && targetMembership.role_id === memberRole.id;
+}
+
 export async function updateOrganizationMemberRole(formData: FormData) {
   const organizationId = String(formData.get("organizationId") || "");
   const memberUserId = String(formData.get("memberUserId") || "");
@@ -38,6 +86,9 @@ export async function updateOrganizationMemberRole(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/sign-in?notice=signin");
   if (memberUserId === user.id) redirect(`${base}?error=self`);
+  if (!(await canManageOrganizationMember(supabase, organizationId, user.id, memberUserId))) {
+    redirect(`${base}?error=permission`);
+  }
 
   const { data, error } = await supabase
     .from("organization_members")
@@ -65,6 +116,9 @@ export async function removeOrganizationMember(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/sign-in?notice=signin");
   if (memberUserId === user.id) redirect(`${base}?error=self`);
+  if (!(await canManageOrganizationMember(supabase, organizationId, user.id, memberUserId))) {
+    redirect(`${base}?error=permission`);
+  }
 
   const { data, error } = await supabase
     .from("organization_members")
