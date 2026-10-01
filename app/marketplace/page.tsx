@@ -15,11 +15,15 @@ export const metadata: Metadata = {
     siteName: "Caribbean Star Store",
     title: "Marketplace | Caribbean Star Store",
     description: "Browse products and discover goods from the Caribbean Star Store marketplace.",
+  
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Marketplace | Caribbean Star Store",
     description: "Browse products and discover goods from the Caribbean Star Store marketplace.",
+  
+    images: ["/twitter-image"],
   },
 };
 

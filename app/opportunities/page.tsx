@@ -12,11 +12,15 @@ export const metadata: Metadata = {
     siteName: "Caribbean Star Store",
     title: "Jobs & Real Estate | Caribbean Star Store",
     description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
+  
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Jobs & Real Estate | Caribbean Star Store",
     description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
+  
+    images: ["/twitter-image"],
   },
 };
 

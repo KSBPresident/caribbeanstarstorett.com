@@ -13,12 +13,16 @@ export const metadata: Metadata = {
     title: "Auctions | Caribbean Star Store",
     description:
       "Explore product auctions and bidding guidance from Caribbean Star Store.",
+  
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Auctions | Caribbean Star Store",
     description:
       "Explore product auctions and bidding guidance from Caribbean Star Store.",
+  
+    images: ["/twitter-image"],
   },
 };
 

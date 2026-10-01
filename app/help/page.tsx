@@ -12,12 +12,16 @@ export const metadata: Metadata = {
     title: "Help & Information | Caribbean Star Store",
     description:
       "Get help with selling, bidding, payments, refunds, shipping and policies at Caribbean Star Store.",
+  
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Help & Information | Caribbean Star Store",
     description:
       "Get help with selling, bidding, payments, refunds, shipping and policies at Caribbean Star Store.",
+  
+    images: ["/twitter-image"],
   },
 };
 

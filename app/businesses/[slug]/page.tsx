@@ -47,8 +47,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: profile.display_name,
     description,
     alternates: { canonical },
-    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description , images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }]},
+    twitter: { card: "summary_large_image", title, description , images: ["/twitter-image"]},
   };
 }
 

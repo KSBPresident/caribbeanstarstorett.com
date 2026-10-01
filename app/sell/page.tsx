@@ -19,12 +19,16 @@ export const metadata: Metadata = {
     title: "Sell on Caribbean Star Store",
     description:
       "Showcase your brand and products and reach shoppers across the Caribbean with Caribbean Star Store.",
+  
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sell on Caribbean Star Store",
     description:
       "Showcase your brand and products and reach shoppers across the Caribbean with Caribbean Star Store.",
+  
+    images: ["/twitter-image"],
   },
 };
 
