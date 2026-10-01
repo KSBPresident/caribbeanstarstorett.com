@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/terms",
-        destination: "/help#full-terms",
+        destination: "/help#terms",
         permanent: false,
       },
       {
