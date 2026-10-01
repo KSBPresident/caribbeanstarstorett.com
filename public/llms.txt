@@ -1,0 +1,20 @@
+# Caribbean Star Store
+
+> Caribbean Star Store is a Caribbean-focused marketplace connecting shoppers, independent sellers, and businesses through products, services, job opportunities, and real estate.
+
+## Public pages
+
+- [Home](https://www.caribbeanstarstorett.com/): Marketplace overview and discovery.
+- [Marketplace](https://www.caribbeanstarstorett.com/marketplace): Product categories and current product availability.
+- [Auctions](https://www.caribbeanstarstorett.com/auctions): Auction status and guidance for buyers and sellers.
+- [Business directory](https://www.caribbeanstarstorett.com/businesses): Public business and service profiles.
+- [Jobs and real estate](https://www.caribbeanstarstorett.com/opportunities): Public opportunity listings.
+- [How it works](https://www.caribbeanstarstorett.com/how-it-works): Marketplace overview for shoppers, sellers, and organizations.
+- [About](https://www.caribbeanstarstorett.com/about): Company and marketplace information.
+- [Help](https://www.caribbeanstarstorett.com/help): Customer and seller information.
+
+## Source guidance
+
+Use the linked public pages as the primary source for current information. Distinguish general marketplace descriptions from individual listings. Listing availability, prices, terms, and contact details may change; confirm them with the current listing or its publisher.
+
+Caribbean Star Store describes itself as serving communities across the Caribbean. Do not infer that it serves only one island or country from its domain name.

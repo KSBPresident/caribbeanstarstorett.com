@@ -1,1 +1,119 @@
-import {SiteHeader} from "../../components/site-header"; export default function BuildABuy(){return <><SiteHeader/><main className="page"><section className="page-hero"><span className="eyebrow">BUILD-A-BUY</span><h1>Tell us what you want. Build the purchase around it.</h1><p>Like assembling a meal from the ingredients you choose, Build-A-Buy will coordinate products, services and providers into one customer-defined request.</p><a className="button primary" href="/sign-in">Create a request</a></section><section className="content"><div className="build-flow">{["Describe what you need","Choose products or providers","Set your budget and preferences","Review the assembled purchase"].map((x,i)=><div className="flow-step" key={x}><span>0{i+1}</span><h2>{x}</h2></div>)}</div></section></main></>}
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { SiteHeader } from "../../components/site-header";
+import { createClient } from "../../lib/supabase/server";
+import { isSupabaseConfigured } from "../../lib/supabase/configured";
+import { cancelPurchaseRequest, createPurchaseRequest } from "./actions";
+import { signInUrl } from "../../lib/auth/return-path";
+
+type PageProps = { searchParams: Promise<{ error?: string; notice?: string; category?: string }> };
+
+const categoryLabels: Record<string, string> = {
+  products: "Products",
+  services: "Services",
+  businesses: "Businesses",
+  jobs: "Jobs",
+  "real-estate": "Real Estate",
+  "multi-item": "Build-A-Buy bundle",
+};
+const categoryKeys = new Set(Object.keys(categoryLabels));
+
+export default async function BuildABuyPage({ searchParams }: PageProps) {
+  if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
+  const [params, supabase] = await Promise.all([searchParams, createClient()]);
+  const { data: { user } } = await supabase.auth.getUser();
+  const requestedCategory = params.category && categoryKeys.has(params.category) ? params.category : null;
+  const nextPath = requestedCategory ? `/build-a-buy?category=${encodeURIComponent(requestedCategory)}` : "/build-a-buy";
+  if (!user) {
+    return (
+      <>
+        <SiteHeader />
+        <main id="main-content" tabIndex={-1} className="identity-page">
+          <header className="identity-heading">
+            <div>
+              <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUILD-A-BUY</span>
+              <h1>Tell us what you need.</h1>
+              <p>Describe a product, service, or combination you are looking for, then save the request to your account.</p>
+              {requestedCategory && <p className="identity-note">Selected section: {categoryLabels[requestedCategory]}.</p>}
+              <div className="directory-hero-actions">
+                <Link className="identity-submit" href={"/sign-up?next=" + encodeURIComponent(nextPath)}>Create an account to post a request</Link>
+                <Link className="directory-secondary" href={signInUrl(nextPath)}>Already have an account? Sign in</Link>
+              </div>
+            </div>
+          </header>
+          <div className="build-request-grid">
+            <section className="identity-panel"><h2>How Build-A-Buy works</h2><p>Tell us what product or service you need, add preferences and timing, and save the request privately to your account.</p><p>Requests can cover products, services, businesses, jobs, real estate, or a combination.</p></section>
+            <section className="identity-panel"><h2>What happens next?</h2><p>Your request is private to your account. Seller matching and fulfillment are not connected yet, so saving a request does not send it to sellers or guarantee a response.</p><p><Link className="identity-inline-link" href="/marketplace">Browse available products →</Link></p></section>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  const selectedCategory = params.category && categoryKeys.has(params.category)
+    ? params.category
+    : "multi-item";
+
+  const { data: requests, error: requestsError } = await supabase
+    .from("purchase_requests")
+    .select("id,title,details,category_key,budget_amount,currency,status,created_at")
+    .eq("requester_user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  const message = params.notice === "created"
+    ? "Your request has been saved to your account."
+    : params.notice === "cancelled"
+      ? "Your open request was cancelled."
+      : params.error === "invalid"
+        ? "Check the request title, details, category, and budget."
+        : params.error === "cancel"
+          ? "This request could not be cancelled. It may already be closed."
+          : params.error === "save"
+            ? "We couldn’t save your request. Please try again."
+            : null;
+
+  return (
+    <>
+      <SiteHeader />
+      <main id="main-content" tabIndex={-1} className="identity-page">
+        <header className="identity-heading">
+          <div>
+            <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUILD-A-BUY</span>
+            <h1>Tell us what you need</h1>
+            <p>Describe a product, service, or combination and save the request to your account.</p>
+          </div>
+        </header>
+        {message && <p className={params.error ? "identity-message identity-error" : "identity-message"} role={params.error ? "alert" : "status"}>{message}</p>}
+        <div className="build-request-grid">
+          <section className="identity-panel">
+            <h2>Create a request</h2>
+            <p>Requests are private to your account. Seller matching and fulfillment are not connected yet.</p>
+            <form action={createPurchaseRequest} className="identity-form">
+              <label>What are you looking for?<input name="title" minLength={4} maxLength={100} placeholder="For example, catering for a family event" required /></label>
+              <label>Section<select name="category" defaultValue={selectedCategory}><option value="products">Products</option><option value="services">Services</option><option value="businesses">Businesses</option><option value="jobs">Jobs</option><option value="real-estate">Real Estate</option><option value="multi-item">Build-A-Buy bundle</option></select></label>
+              <label>Tell us more<textarea name="details" minLength={20} maxLength={3000} rows={6} placeholder="Add details, preferences, timing, or services you need." required /></label>
+              <label>Budget in USD (optional)<input name="budget" type="number" min="0.01" max="1000000000" step="0.01" inputMode="decimal" /></label>
+              <button className="identity-submit" type="submit">Save request</button>
+            </form>
+            <p className="identity-note">Your saved request is visible only to your account until the matching workflow is connected.</p>
+          </section>
+          <section className="identity-panel">
+            <div className="workspace-section-heading"><div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Your requests</h2></div><span className="workspace-count">{requestsError ? "—" : requests?.length || 0} saved</span></div>
+            {requestsError ? (
+              <p className="organization-empty identity-error" role="alert">Your requests could not be loaded. Refresh the page to try again.</p>
+            ) : requests?.length ? <div className="purchase-request-list">{requests.map((request) => (
+              <article className="purchase-request-card" key={request.id}>
+                <div className="purchase-request-top"><span className={`request-status request-status-${request.status}`}>{request.status}</span><span className="catalog-meta">{new Date(request.created_at).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span></div>
+                <h3>{request.title}</h3><p className="request-category">{categoryLabels[request.category_key] || "Marketplace request"}</p><p>{request.details}</p>
+                {request.budget_amount !== null && <strong className="request-budget">{new Intl.NumberFormat("en", { style: "currency", currency: request.currency || "USD" }).format(Number(request.budget_amount))}</strong>}
+                {request.status === "open" && <form action={cancelPurchaseRequest} className="request-cancel-form"><input type="hidden" name="requestId" value={request.id} /><button className="workspace-remove" type="submit">Cancel request</button></form>}
+              </article>
+            ))}</div> : <p className="organization-empty">You haven’t saved a request yet.</p>}
+            <p className="identity-note"><Link className="identity-inline-link" href="/marketplace">Browse available products →</Link></p>
+          </section>
+        </div>
+      </main>
+    </>
+  );
+}

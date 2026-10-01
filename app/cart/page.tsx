@@ -1,2 +1,27 @@
-import {SiteHeader} from "../../components/site-header";import {products,money} from "../../lib/store-data";
-export default function Cart(){const items=products.slice(1,4);const subtotal=items.reduce((sum,item)=>sum+item.price,0);const tax=Math.round(subtotal*.1);return <><SiteHeader/><main className="checkout-page"><section className="cart-panel"><h1>Your Cart <small>({items.length} items)</small></h1>{items.map(item=><div className="cart-item" key={item.slug}><img src={item.image} alt=""/><div><b>{item.name}</b><span>{money(item.price)}</span></div><div className="qty"><button>−</button><span>1</span><button>+</button></div><span>♙</span></div>)}<label className="promo">Apply Promo Code<input placeholder="Enter code"/><button>Apply</button></label><div className="totals"><span>Subtotal <b>{money(subtotal)}</b></span><span>Delivery <b>Free</b></span><span>Tax (10%) <b>{money(tax)}</b></span><strong>Total <b>{money(subtotal+tax)}</b></strong></div></section><section className="checkout-panel"><h2>Checkout</h2><div className="steps"><b>1 Shipping</b><span>2 Payment</span><span>3 Review</span></div><h3>Shipping Address</h3><label className="radio-row">◉ Use my default address</label><label className="radio-row">○ Add new address</label><h3>Delivery Method</h3><label className="radio-row">◉ Standard Delivery (7-10 days) <b>Free</b></label><label className="radio-row">○ Express Delivery (1-3 days) <b>TT$150</b></label><h3>Payment Method</h3><label className="radio-row">○ Credit/Debit Card</label><label className="radio-row">○ Bank Transfer</label><label className="radio-row">○ Mobile Money</label><button className="pay-btn">Continue to Payment</button></section></main></>}
+import type { Metadata } from "next";
+import { SiteHeader } from "../../components/site-header";
+import { CartContents } from "../../components/cart-contents";
+
+export const metadata: Metadata = {
+  title: "Your Cart",
+  description: "Review items selected from the Caribbean Star Store marketplace.",
+  robots: { index: false, follow: true },
+};
+
+export default function Cart() {
+  return (
+    <>
+      <SiteHeader />
+      <main id="main-content" tabIndex={-1} className="identity-page">
+        <header className="identity-heading">
+          <div>
+            <span className="identity-eyebrow">CARIBBEAN STAR STORE</span>
+            <h1>Your cart</h1>
+            <p>Review the items you have added to your marketplace cart.</p>
+          </div>
+        </header>
+        <CartContents />
+      </main>
+    </>
+  );
+}

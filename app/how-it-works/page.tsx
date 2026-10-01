@@ -1,56 +1,91 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { SiteHeader } from "../../components/site-header";
 
-const cardStyle: CSSProperties = {
-  padding: "22px",
-  border: "1px solid #e2e8f0",
-  borderRadius: "14px",
-  background: "#fff",
-  boxShadow: "0 8px 24px #12304b08",
+export const metadata: Metadata = {
+  title: "How It Works",
+  description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+  alternates: { canonical: "/how-it-works" },
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store",
+    title: "How It Works | Caribbean Star Store",
+    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How It Works | Caribbean Star Store",
+    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+  },
 };
 
-const linkStyle: CSSProperties = {
-  display: "inline-block",
-  marginTop: "10px",
-  color: "#0877df",
-  fontSize: "13px",
-  fontWeight: 800,
-};
+const steps = [
+  {
+    number: "01",
+    title: "Find products",
+    description: "Use product search and categories to explore the marketplace. Product listings and checkout are being prepared for launch.",
+    href: "/marketplace",
+    link: "Browse products",
+  },
+  {
+    number: "02",
+    title: "Discover businesses",
+    description: "Browse public profiles and services shared by Caribbean businesses and organizations.",
+    href: "/businesses",
+    link: "Explore businesses",
+  },
+  {
+    number: "03",
+    title: "Look for opportunities",
+    description: "See published job openings and real-estate listings posted by organizations.",
+    href: "/opportunities",
+    link: "View opportunities",
+  },
+  {
+    number: "04",
+    title: "Tell us what you need",
+    description: "Sign in to save a private Build-A-Buy request for a product, service, job, property, or combination.",
+    href: "/build-a-buy",
+    link: "Create a buying request",
+  },
+  {
+    number: "05",
+    title: "Join as a seller or business",
+    description: "Create an account to apply as a seller or set up an organization workspace. Workspace owners can draft and publish business profiles and opportunity listings.",
+    href: "/sell",
+    link: "Start seller onboarding",
+  },
+];
 
 export default function HowItWorksPage() {
   return (
     <>
       <SiteHeader />
-      <main style={{ maxWidth: "1160px", margin: "0 auto", padding: "38px 3% 64px" }}>
-        <header style={{ padding: "38px clamp(22px, 5vw, 56px)", borderRadius: "18px", background: "linear-gradient(115deg,#092d50,#0d6193)", color: "#fff" }}>
-          <span style={{ color: "#9bd9ff", fontSize: "10px", fontWeight: 900, letterSpacing: ".12em" }}>CARIBBEAN STAR STORE · GETTING STARTED</span>
-          <h1 style={{ maxWidth: "720px", margin: "12px 0", fontSize: "clamp(32px,5vw,54px)", lineHeight: 1.05 }}>One marketplace for the Caribbean community.</h1>
-          <p style={{ maxWidth: "680px", color: "#dcecf7", fontSize: "14px", lineHeight: 1.7 }}>Browse the store, ask for what you need, or join as a seller and grow your business with the community.</p>
-          <Link href="/marketplace" style={{ display: "inline-block", marginTop: "12px", borderRadius: "7px", background: "#0877df", color: "#fff", padding: "12px 17px", fontSize: "12px", fontWeight: 800 }}>Explore the marketplace</Link>
+      <main id="main-content" tabIndex={-1} className="identity-page directory-page">
+        <header className="directory-hero">
+          <span className="identity-eyebrow">CARIBBEAN STAR STORE · GETTING STARTED</span>
+          <h1>One marketplace for the Caribbean community.</h1>
+          <p>Explore the marketplace, discover local businesses and opportunities, or create an account to take part in the community.</p>
+          <div className="directory-hero-actions">
+            <Link className="identity-submit" href="/marketplace">Explore the marketplace</Link>
+            <Link className="directory-secondary" href="/sign-up">Create an account</Link>
+          </div>
         </header>
 
-        <section aria-label="How to use the marketplace" style={{ marginTop: "30px" }}>
-          <h2 style={{ margin: "0 0 16px", fontSize: "22px" }}>Choose what you want to do</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: "14px" }}>
-            <article style={cardStyle}>
-              <span style={{ color: "#0877df", fontSize: "11px", fontWeight: 900 }}>01 · SHOP</span>
-              <h3 style={{ margin: "10px 0 6px", fontSize: "17px" }}>Find products</h3>
-              <p style={{ color: "#526071", fontSize: "13px", lineHeight: 1.6 }}>Search product categories and browse available items. Product details, stock, and checkout are handled by the existing store.</p>
-              <Link href="/marketplace" style={linkStyle}>Browse products →</Link>
-            </article>
-            <article style={cardStyle}>
-              <span style={{ color: "#0877df", fontSize: "11px", fontWeight: 900 }}>02 · REQUEST</span>
-              <h3 style={{ margin: "10px 0 6px", fontSize: "17px" }}>Tell us what you need</h3>
-              <p style={{ color: "#526071", fontSize: "13px", lineHeight: 1.6 }}>Sign in to save a private Build-A-Buy request for an item or service you are looking for.</p>
-              <Link href="/build-a-buy" style={linkStyle}>Start a buying request →</Link>
-            </article>
-            <article style={cardStyle}>
-              <span style={{ color: "#0877df", fontSize: "11px", fontWeight: 900 }}>03 · SELL</span>
-              <h3 style={{ margin: "10px 0 6px", fontSize: "17px" }}>Join as a seller</h3>
-              <p style={{ color: "#526071", fontSize: "13px", lineHeight: 1.6 }}>Create an account and begin seller onboarding to apply to sell through the marketplace.</p>
-              <Link href="/sell" style={linkStyle}>Start seller onboarding →</Link>
-            </article>
+        <section className="directory-results" aria-label="How to use the marketplace">
+          <div className="directory-results-heading">
+            <div><span className="identity-eyebrow">GET STARTED</span><h2>Choose what you want to do</h2></div>
+            <span>Products · People · Opportunities</span>
+          </div>
+          <div className="directory-grid">
+            {steps.map((step) => (
+              <article className="directory-card" key={step.number}>
+                <div className="directory-card-meta"><span>STEP {step.number}</span></div>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+                <Link className="directory-card-link" href={step.href}>{step.link} →</Link>
+              </article>
+            ))}
           </div>
         </section>
       </main>
