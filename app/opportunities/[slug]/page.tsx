@@ -32,15 +32,16 @@ const getPublishedOpportunity = cache(async (slug: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const canonical = `/opportunities/${encodeURIComponent(slug)}`;
   const { data: listing, error } = await getPublishedOpportunity(slug);
   if (error || !listing) {
     return {
       title: "Opportunity listing",
       description: "Explore published jobs and real estate listings on Caribbean Star Store.",
-      alternates: { canonical },
+      robots: { index: false, follow: true },
     };
   }
+
+  const canonical = `/opportunities/${encodeURIComponent(slug)}`;
 
   const details = [listing.description, listing.location, listing.organization_name].filter(Boolean).join(" · ");
   const description = details.replace(/\s+/g, " ").slice(0, 160);

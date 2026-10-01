@@ -8,15 +8,16 @@ import { AddToCartButton } from "../../../components/add-to-cart-button";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const canonical = `/product/${encodeURIComponent(slug)}`;
   const { product } = await getStoreProductBySlug(slug);
   if (!product) {
     return {
       title: "Product details",
       description: "Product listings are temporarily unavailable here.",
-      alternates: { canonical },
+      robots: { index: false, follow: true },
     };
   }
+
+  const canonical = `/product/${encodeURIComponent(slug)}`;
 
   const description = (product.description || `Shop ${product.name} through Caribbean Star Store. See this page for current product details and checkout availability.`)
     .replace(/\s+/g, " ")
