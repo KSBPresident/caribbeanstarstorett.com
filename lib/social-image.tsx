@@ -88,6 +88,8 @@ export function createSocialImage() {
             </div>
             <div
               style={{
+                display: "flex",
+                flexDirection: "column",
                 marginTop: 22,
                 fontSize: 76,
                 fontWeight: 800,
@@ -95,9 +97,8 @@ export function createSocialImage() {
                 letterSpacing: -3,
               }}
             >
-              Caribbean
-              <br />
-              Star Store
+              <span>Caribbean</span>
+              <span>Star Store</span>
             </div>
             <div
               style={{
