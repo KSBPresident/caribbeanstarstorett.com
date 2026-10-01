@@ -329,6 +329,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                 {memberships.map((membership) => {
                   const role = roleById.get(membership.role_id);
                   const isSelf = membership.user_id === user.id;
+                  const canManageTarget = canManageRoles || role?.name === "member";
                   return (
                     <article className="workspace-member" key={membership.user_id}>
                       <div className="workspace-member-person">
@@ -340,7 +341,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                       </div>
                       <div className="workspace-member-controls">
                         <span className="organization-role">{role?.name || "member"}</span>
-                        {canManageMembers && !isSelf && assignableRoles.length > 0 && (
+                        {canManageMembers && canManageTarget && !isSelf && assignableRoles.length > 0 && (
                           <form action={updateOrganizationMemberRole} className="workspace-role-form">
                             <input type="hidden" name="organizationId" value={organization.id} />
                             <input type="hidden" name="organizationSlug" value={organization.slug} />
@@ -353,7 +354,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                             <button type="submit" className="identity-secondary">Save role</button>
                           </form>
                         )}
-                        {canManageMembers && !isSelf && (
+                        {canManageMembers && canManageTarget && !isSelf && (
                           <form action={removeOrganizationMember}>
                             <input type="hidden" name="organizationId" value={organization.id} />
                             <input type="hidden" name="organizationSlug" value={organization.slug} />
