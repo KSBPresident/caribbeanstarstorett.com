@@ -52,12 +52,15 @@ async function canManageOrganizationMember(
   if (roleLinksError) return false;
 
   const permissionIds = (roleLinks || []).map((link) => link.permission_id);
-  const { data: permissions, error: permissionsError } = permissionIds.length
-    ? await supabase.from("permissions").select("key").in("id", permissionIds)
-    : { data: [], error: null };
-  if (permissionsError) return false;
-
-  const keys = new Set((permissions || []).map((permission) => permission.key));
+  const keys = new Set<string>();
+  if (permissionIds.length) {
+    const { data: permissions, error: permissionsError } = await supabase
+      .from("permissions")
+      .select("key")
+      .in("id", permissionIds);
+    if (permissionsError) return false;
+    for (const permission of permissions || []) keys.add(permission.key);
+  }
   if (!keys.has("member.manage")) return false;
   if (keys.has("role.manage")) return true;
 
