@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 
-const organizationTypes = new Set(["business", "individual", "nonprofit", "community"]);
+const workspaceTypes = new Set(["nonprofit", "community"]);
+const sellerWorkspaceTypes = new Set(["business", "individual"]);
 
 function makeSlug(value: string) {
   return value
@@ -25,11 +26,15 @@ export async function createOrganization(formData: FormData) {
   const organizationType = String(formData.get("organizationType") || "business");
   const slug = makeSlug(name);
 
+  if (sellerWorkspaceTypes.has(organizationType)) {
+    redirect("/business?error=seller-review");
+  }
+
   if (
     name.length < 2 ||
     name.length > 80 ||
     slug.length < 2 ||
-    !organizationTypes.has(organizationType)
+    !workspaceTypes.has(organizationType)
   ) {
     redirect("/business?error=invalid");
   }

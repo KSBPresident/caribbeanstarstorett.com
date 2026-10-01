@@ -29,11 +29,12 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
         <main id="main-content" tabIndex={-1} className="identity-page">
           <header className="identity-heading">
             <div>
-              <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS</span>
-              <h1>Bring your business to the Caribbean marketplace.</h1>
-              <p>Create an organization workspace, then build and publish a public business profile when you are ready.</p>
+              <span className="identity-eyebrow">COMMUNITY &amp; ORGANIZATION SPACES</span>
+              <h1>Build a community or nonprofit workspace.</h1>
+              <p>Your personal account stays separate. Community and nonprofit groups can create a workspace; seller stores begin with an application and review.</p>
               <div className="directory-hero-actions">
-                <Link className="identity-submit" href={"/sign-up?next=" + encodeURIComponent("/business")}>Create a business workspace</Link>
+                <Link className="identity-submit" href={"/sign-up?next=" + encodeURIComponent("/business")}>Create a community workspace</Link>
+                <Link className="directory-secondary" href="/sell">Apply to sell</Link>
                 <Link className="directory-secondary" href={signInUrl("/business")}>Already have an account? Sign in</Link>
               </div>
             </div>
@@ -93,7 +94,9 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
   const notice =
     params.notice === "created"
       ? "Your organization was created and you were assigned as its owner."
-      : params.error === "invalid"
+      : params.error === "seller-review"
+        ? "Store-owner workspaces are opened after seller application approval. Start or review your application."
+        : params.error === "invalid"
         ? "Enter a valid organization name."
         : params.error === "create"
           ? "We couldn’t create that workspace. Its name may already be in use."
@@ -106,21 +109,21 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
         <header className="identity-heading">
           <div>
             <span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span>
-            <h1>Your workspaces</h1>
-            <p>Use one account to work with your businesses, community groups, and other organizations.</p>
+            <h1>Community and organization workspaces</h1>
+            <p>Your personal shopping account stays separate from organization access. Approved seller stores appear in your store-owner space.</p>
           </div>
         </header>
 
         {notice && (
           <p className={params.error ? "identity-message identity-error" : "identity-message"} role={params.error ? "alert" : "status"}>
-            {notice}
+            {notice} {params.error === "seller-review" && <Link href="/sell">Open seller applications →</Link>}
           </p>
         )}
 
         <div className="organization-layout">
           <section className="identity-panel">
-            <h2>Create an organization</h2>
-            <p>Creating a workspace makes you its first owner. Open a workspace to review members and manage access.</p>
+            <h2>Create a nonprofit or community workspace</h2>
+            <p>Creating a workspace makes you its first owner. Store-owner workspaces are available through the seller application and review process.</p>
             <PrivacyStatusNote submittedData="This form sends the organization name and type to account services and associates the organization with your signed-in account." />
             <form action={createOrganization} className="identity-form">
               <label>
@@ -129,11 +132,9 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
               </label>
               <label>
                 Organization type
-                <select name="organizationType" defaultValue="business">
-                  <option value="business">Business</option>
-                  <option value="individual">Individual seller</option>
-                  <option value="nonprofit">Nonprofit</option>
+                <select name="organizationType" defaultValue="community">
                   <option value="community">Community group</option>
+                  <option value="nonprofit">Nonprofit organization</option>
                 </select>
               </label>
               <button className="identity-submit" type="submit">Create workspace</button>
