@@ -9,7 +9,11 @@ import { getStoreProducts } from "../../lib/store-catalog";
 type SearchParams = Promise<{ q?: string }>;
 
 function marketplaceSearchFilter(query: string, columns: string[]) {
-  const safeQuery = query.replace(/[^a-zA-Z0-9 -]/g, "");
+  const safeQuery = query
+    .normalize("NFC")
+    .replace(/[^\p{L}\p{N} '-]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
   const pattern = '"%' + safeQuery + '%"';
   return columns.map((column) => column + ".ilike." + pattern).join(",");
 }
