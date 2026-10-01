@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
@@ -5,6 +6,26 @@ import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { submitSellerApplication } from "./actions";
 import { signInUrl } from "../../lib/auth/return-path";
+
+export const metadata: Metadata = {
+  title: "Sell on Caribbean Star Store",
+  description:
+    "Open your Caribbean Star Store presence, showcase your brand and products, and reach shoppers across the Caribbean.",
+  alternates: { canonical: "/sell" },
+  openGraph: {
+    type: "website",
+    siteName: "Caribbean Star Store",
+    title: "Sell on Caribbean Star Store",
+    description:
+      "Showcase your brand and products and reach shoppers across the Caribbean with Caribbean Star Store.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sell on Caribbean Star Store",
+    description:
+      "Showcase your brand and products and reach shoppers across the Caribbean with Caribbean Star Store.",
+  },
+};
 
 type SearchParams = Promise<{ error?: string; notice?: string }>;
 
