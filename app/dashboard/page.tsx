@@ -10,6 +10,10 @@ type PageProps = {
   searchParams: Promise<{ error?: string; notice?: string }>;
 };
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default async function DashboardPage({ searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
 

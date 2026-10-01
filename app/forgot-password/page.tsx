@@ -6,6 +6,10 @@ import { safeNextPath } from "../../lib/auth/return-path";
 
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string; next?: string }> };
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default async function ForgotPasswordPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const nextPath = safeNextPath(params.next);

@@ -12,6 +12,10 @@ function dateLabel(value: string) {
   return new Date(value).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" });
 }
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default async function Admin({ searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const supabase = await createClient();

@@ -28,6 +28,10 @@ function WorkspaceLoadError({ message }: { message: string }) {
   );
 }
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default async function OrganizationWorkspacePage({ params, searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const [{ slug }, query] = await Promise.all([params, searchParams]);

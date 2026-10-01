@@ -18,6 +18,10 @@ const categoryLabels: Record<string, string> = {
 };
 const categoryKeys = new Set(Object.keys(categoryLabels));
 
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default async function BuildABuyPage({ searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const [params, supabase] = await Promise.all([searchParams, createClient()]);
