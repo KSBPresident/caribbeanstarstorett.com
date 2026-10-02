@@ -4,6 +4,7 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
+import { getSafeExternalWebsite } from "../../../lib/external-website";
 
 const jobTypes: Record<string, string> = {
   "full-time": "Full-time",
@@ -77,6 +78,7 @@ export default async function OpportunityDetail({ params }: { params: Promise<{ 
   }
   if (!listing) notFound();
 
+  const publisherWebsite = getSafeExternalWebsite(listing.website_url);
   const isJob = listing.listing_type === "jobs";
   const siteUrl = "https://www.caribbeanstarstorett.com";
   const pageUrl = siteUrl + "/opportunities/" + encodeURIComponent(listing.slug);
@@ -95,7 +97,7 @@ export default async function OpportunityDetail({ params }: { params: Promise<{ 
         hiringOrganization: {
           "@type": "Organization",
           name: listing.organization_name,
-          url: listing.website_url || undefined,
+          url: publisherWebsite?.href || undefined,
         },
         jobLocation: { "@type": "Place", name: listing.location },
         employmentType: listing.employment_type === "full-time" ? "FULL_TIME"
@@ -170,7 +172,7 @@ export default async function OpportunityDetail({ params }: { params: Promise<{ 
             <span className="identity-eyebrow">PUBLISHED BY</span><h2>{listing.organization_name}</h2>
             {listing.phone && <a href={`tel:${listing.phone}`}>Call {listing.phone}</a>}
             {listing.contact_email && <a href={`mailto:${listing.contact_email}`}>Email {listing.contact_email}</a>}
-            {listing.website_url && <a href={listing.website_url} target="_blank" rel="noopener noreferrer">Visit publisher website ↗</a>}
+            {publisherWebsite && <a href={publisherWebsite.href} target="_blank" rel="noopener noreferrer">Visit {publisherWebsite.hostname} ↗</a>}
           </aside>
         </div>
       </main>
