@@ -7,6 +7,5 @@ export const supabaseUrl = selectedSupabaseUrl;
 export const supabasePublishableKey = selectedSupabasePublishableKey;
 
 export function isSupabaseConfigured() {
-  return Boolean(supabaseUrl && supabasePublishableKey) &&
-    supabasePublishableKey !== "replace-with-supabase-publishable-key";
+  return Boolean(supabaseUrl && supabasePublishableKey);
 }
