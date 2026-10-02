@@ -90,7 +90,7 @@ export default function Home() {
         </section>
         <section className="quick-grid">
           {[["🛒","Products","Browse marketplace products","/marketplace"],["♧","Services","Find local services","/businesses?category=professional"],["▦","Businesses","Support local & regional","/businesses"],["♙","Jobs","Find work or hire","/opportunities?type=jobs"],["⌂","Real Estate","Buy, rent, invest","/opportunities?type=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
-            <Link href={href} className="quick-card" key={label}><span>{icon}</span><b>{label}</b><small>{description}</small></Link>
+            <Link href={href} className="quick-card" key={label}><span aria-hidden="true">{icon}</span><b>{label}</b><small>{description}</small></Link>
           ))}
         </section>
         <section className="store-section">
