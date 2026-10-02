@@ -28,7 +28,7 @@ export default async function Admin({ searchParams }: PageProps) {
         <SiteHeader />
         <main id="main-content" tabIndex={-1} className="identity-page">
           <header className="identity-heading">
-            <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Caribbean Star Store</p></div>
+            <div><span className="identity-eyebrow">ADMINISTRATION</span><h1>Platform administration</h1><p>Caribbean Star Store</p></div>
           </header>
           <section className="identity-panel exec-setup-panel">
             <span className="exec-setup-icon" aria-hidden="true">✦</span>
@@ -94,7 +94,7 @@ export default async function Admin({ searchParams }: PageProps) {
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading account-heading">
-          <div><span className="identity-eyebrow">TOP · EXECUTIVE OS</span><h1>Platform administration</h1><p>Platform activity, seller onboarding, and marketplace requests.</p></div>
+          <div><span className="identity-eyebrow">ADMINISTRATION</span><h1>Platform administration</h1><p>Platform activity, seller onboarding, and marketplace requests.</p></div>
           <span className="organization-role">Platform administrator</span>
         </header>
         {notice && <p className="identity-message" role="status">{notice}</p>}
@@ -128,7 +128,7 @@ export default async function Admin({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel">
-            <div className="account-panel-title"><div><span className="identity-eyebrow">FRONT OS · BUILD-A-BUY</span><h2>Active buying requests</h2></div><span>{requests.error ? "Count unavailable" : requests.data?.length || 0}</span></div>
+            <div className="account-panel-title"><div><span className="identity-eyebrow">BUYER REQUESTS</span><h2>Active buying requests</h2></div><span>{requests.error ? "Count unavailable" : requests.data?.length || 0}</span></div>
             {requests.error ? <p className="organization-empty">Buying requests are temporarily unavailable.</p> : requests.data?.length ? (
               <div className="admin-review-list">
                 {requests.data.map((request) => (
@@ -153,7 +153,7 @@ export default async function Admin({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide">
-            <div className="account-panel-title"><div><span className="identity-eyebrow">BACK OS · TRUST</span><h2>Recent platform audit</h2></div><span>{audit.error ? "Count unavailable" : `${audit.data?.length || 0} events`}</span></div>
+            <div className="account-panel-title"><div><span className="identity-eyebrow">AUDIT ACTIVITY</span><h2>Recent platform audit</h2></div><span>{audit.error ? "Count unavailable" : `${audit.data?.length || 0} events`}</span></div>
             {audit.error ? <p className="organization-empty">Audit events are temporarily unavailable.</p> : audit.data?.length ? (
               <div className="account-activity-list">
                 {audit.data.map((entry) => <article key={entry.id}><div><strong>{entry.action.replaceAll("_", " ").replaceAll(".", " ")}</strong><span>{entry.resource_type || "platform"} · {entry.resource_id || "—"} · {dateLabel(entry.created_at)}</span></div></article>)}

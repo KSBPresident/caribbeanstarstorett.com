@@ -35,7 +35,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-auth-page">
         <section className="identity-auth-card">
-          <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
+          <span className="identity-eyebrow">JOIN THE MARKETPLACE</span>
           <h1>Create your account</h1>
           <p>Create a standard marketplace account for your profile and requests. Seller and organization capabilities have separate access requirements.</p>
           <section className="identity-panel identity-access-guide" aria-labelledby="account-access-title">

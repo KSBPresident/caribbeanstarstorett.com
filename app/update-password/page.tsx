@@ -32,7 +32,7 @@ export default async function UpdatePasswordPage({ searchParams }: PageProps) {
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-auth-page">
         <section className="identity-auth-card">
-          <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
+          <span className="identity-eyebrow">PASSWORD UPDATE</span>
           <h1>Choose a new password</h1>
           <p>Enter a new password for your Caribbean Star Store account.</p>
           {notice && <p className="identity-message" role="status">{notice}</p>}

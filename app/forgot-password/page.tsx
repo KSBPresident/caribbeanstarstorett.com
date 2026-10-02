@@ -28,7 +28,7 @@ export default async function ForgotPasswordPage({ searchParams }: PageProps) {
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-auth-page">
         <section className="identity-auth-card">
-          <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
+          <span className="identity-eyebrow">PASSWORD RECOVERY</span>
           <h1>Reset your password</h1>
           <p>Enter the email address for your Caribbean Star Store account. We’ll send a secure reset link if it can receive one.</p>
           {!isSupabaseConfigured() && <p className="identity-message" role="status">Account services are not configured yet.</p>}

@@ -54,7 +54,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading account-heading">
           <div>
-            <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
+            <span className="identity-eyebrow">YOUR ACCOUNT</span>
             <h1>Welcome, {displayName}</h1>
             <p>Your account, workspaces, buying requests, and seller activity in one place.</p>
           </div>
@@ -114,7 +114,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide account-workspace-link">
-            <div><span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span><h2>Your organizations</h2><p>Manage business and community workspaces, member access, and account roles.</p></div>
+            <div><span className="identity-eyebrow">YOUR ORGANIZATIONS</span><h2>Your organizations</h2><p>Manage business and community workspaces, member access, and account roles.</p></div>
             <Link className="identity-submit" href="/business">Open your workspaces →</Link>
           </section>
 

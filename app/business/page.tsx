@@ -108,7 +108,7 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
       <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading">
           <div>
-            <span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span>
+            <span className="identity-eyebrow">WORKSPACES</span>
             <h1>Community and organization workspaces</h1>
             <p>Your personal shopping account stays separate from organization access. Approved seller stores appear in your store-owner space.</p>
           </div>

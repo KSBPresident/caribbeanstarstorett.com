@@ -32,7 +32,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-auth-page">
         <section className="identity-auth-card">
-          <span className="identity-eyebrow">MIDDLE OS · IDENTITY</span>
+          <span className="identity-eyebrow">ACCOUNT ACCESS</span>
           <h1>Sign in</h1>
           <p>Welcome back to Caribbean Star Store.</p>
           <p className="catalog-meta">Use your account for marketplace requests, seller applications, and organization workspaces.</p>

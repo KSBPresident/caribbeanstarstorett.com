@@ -18,7 +18,7 @@ function WorkspaceLoadError({ message }: { message: string }) {
       <main id="main-content" tabIndex={-1} className="identity-page">
         <p className="workspace-back"><Link href="/business">← All workspaces</Link></p>
         <section className="identity-panel">
-          <span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span>
+          <span className="identity-eyebrow">ORGANIZATION WORKSPACE</span>
           <h1>Workspace temporarily unavailable</h1>
           <p role="alert">{message}</p>
           <p>Please refresh the page to try again.</p>
@@ -153,7 +153,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
         <p className="workspace-back"><Link href="/business">← All workspaces</Link></p>
         <header className="identity-heading">
           <div>
-            <span className="identity-eyebrow">MIDDLE OS · ORGANIZATIONS</span>
+            <span className="identity-eyebrow">ORGANIZATION WORKSPACE</span>
             <h1>{organization.name}</h1>
             <p>{organization.organization_type} workspace · Member access and roles</p>
           </div>
@@ -165,7 +165,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
 
         <div className="workspace-grid">
           <section className="identity-panel workspace-listing-panel">
-            <span className="identity-eyebrow">FRONT OS · BUSINESS DIRECTORY</span>
+            <span className="identity-eyebrow">PUBLIC PROFILE</span>
             <h2>Public business profile</h2>
             <p>Share an organization profile in the public directory. Only published profiles are visible to visitors.</p>
             {publicProfileResult.error ? (
@@ -205,7 +205,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
 
           <section className="identity-panel">
             <div className="workspace-section-heading">
-              <div><span className="identity-eyebrow">FRONT OS · JOBS &amp; REAL ESTATE</span><h2>Marketplace listings</h2></div>
+              <div><span className="identity-eyebrow">YOUR LISTINGS</span><h2>Marketplace listings</h2></div>
               <span className="workspace-count">{marketplaceListingsResult.error ? "Count unavailable" : `${marketplaceListings.length} ${marketplaceListings.length === 1 ? "listing" : "listings"}`}</span>
             </div>
             <p>Job openings and property listings managed by this organization.</p>
