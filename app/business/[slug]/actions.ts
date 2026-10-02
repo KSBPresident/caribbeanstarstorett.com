@@ -3,20 +3,12 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
+import { getSafeExternalWebsite } from "../../../lib/external-website";
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const profileCategories = new Set(["food", "home", "retail", "professional", "transport", "beauty", "community", "other"]);
 
-function secureWebsite(value: string) {
-  if (!value) return null;
-  try {
-    const normalized = new URL(value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`);
-    return normalized.protocol === "https:" ? normalized.toString() : null;
-  } catch {
-    return null;
-  }
-}
 
 function returnTo(slug: string) {
   return slugPattern.test(slug) ? `/business/${slug}` : "/business";
@@ -94,7 +86,7 @@ export async function saveOrganizationPublicProfile(formData: FormData) {
   const contactEmail = String(formData.get("contactEmail") || "").trim().toLowerCase();
   const phone = String(formData.get("phone") || "").trim();
   const websiteInput = String(formData.get("website") || "").trim();
-  const website = secureWebsite(websiteInput);
+  const website = getSafeExternalWebsite(websiteInput)?.href ?? null;
   const isPublished = String(formData.get("visibility") || "draft") === "published";
 
   if (
@@ -151,7 +143,7 @@ export async function createOrganizationMarketplaceListing(formData: FormData) {
   const contactEmail = String(formData.get("contactEmail") || "").trim().toLowerCase();
   const phone = String(formData.get("phone") || "").trim();
   const websiteInput = String(formData.get("website") || "").trim();
-  const website = secureWebsite(websiteInput);
+  const website = getSafeExternalWebsite(websiteInput)?.href ?? null;
   const isPublished = String(formData.get("visibility") || "draft") === "published";
 
   if (
@@ -242,7 +234,7 @@ export async function updateOrganizationMarketplaceListing(formData: FormData) {
   const contactEmail = String(formData.get("contactEmail") || "").trim().toLowerCase();
   const phone = String(formData.get("phone") || "").trim();
   const websiteInput = String(formData.get("website") || "").trim();
-  const website = secureWebsite(websiteInput);
+  const website = getSafeExternalWebsite(websiteInput)?.href ?? null;
 
   if (
     !slugPattern.test(slug) || slug.length > 80 ||
