@@ -9,7 +9,7 @@ import { submitSellerApplication } from "./actions";
 import { signInUrl } from "../../lib/auth/return-path";
 
 export const metadata: Metadata = {
-  title: "Sell,
+  title: "Sell",
   description:
     "Open your Caribbean Star Store presence, showcase your brand and products, and reach shoppers across the Caribbean.",
   alternates: { canonical: "/sell" },
