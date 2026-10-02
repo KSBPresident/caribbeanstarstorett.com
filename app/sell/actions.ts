@@ -3,19 +3,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
+import { getSafeExternalWebsite } from "../../lib/external-website";
 
 const sellerTypes = new Set(["individual", "business", "nonprofit", "community"]);
 const categories = new Set(["products", "services", "businesses", "jobs", "real-estate", "other"]);
 
-function safeWebsite(value: string) {
-  if (!value) return null;
-  try {
-    const url = new URL(value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`);
-    return url.protocol === "https:" ? url.toString() : null;
-  } catch {
-    return null;
-  }
-}
 
 export async function submitSellerApplication(formData: FormData) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
@@ -26,7 +18,7 @@ export async function submitSellerApplication(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const phone = String(formData.get("phone") || "").trim();
   const websiteInput = String(formData.get("website") || "").trim();
-  const website = safeWebsite(websiteInput);
+  const website = getSafeExternalWebsite(websiteInput)?.href ?? null;
   const description = String(formData.get("description") || "").trim();
 
   if (
