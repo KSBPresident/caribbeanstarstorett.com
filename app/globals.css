@@ -381,3 +381,6 @@
 .shopping-cart-summary .catalog-meta{display:block;margin-top:10px}
 @media(max-width:760px){.shopping-cart-layout{grid-template-columns:1fr}.shopping-cart-summary{position:static}}
 @media(max-width:520px){.shopping-cart-line{grid-template-columns:64px minmax(0,1fr);gap:10px}.shopping-cart-image{width:64px;height:64px}.shopping-cart-line-total{grid-column:2;text-align:left}.shopping-cart-controls{grid-column:2}}
+
+/* Keep marketplace search available across phone-sized screens. */
+@media(max-width:560px){.store-top{height:auto;min-height:70px;flex-wrap:wrap;column-gap:8px;row-gap:8px;padding:8px 3%}.store-brand{min-width:0;flex:1 1 auto;gap:6px}.company-logo{width:44px;height:44px}.store-brand b{font-size:12px}.store-brand small{font-size:7px}.header-actions{gap:7px;font-size:9px;white-space:nowrap}.header-search{display:flex;order:3;flex:0 0 100%;max-width:none}.header-search input{min-width:0;padding:11px 13px;font-size:14px}.header-search button{width:44px}.store-nav{height:42px;gap:20px}}
