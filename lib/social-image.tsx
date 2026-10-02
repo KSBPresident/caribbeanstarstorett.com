@@ -58,18 +58,35 @@ export function createSocialImage() {
               height: 330,
               flexShrink: 0,
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: 8,
               borderRadius: 165,
               backgroundColor: "#fffdf6",
               border: "8px solid #f4cd59",
-              color: "#073f4a",
             }}
           >
-            <span style={{ fontSize: 78, lineHeight: 1, fontWeight: 800, letterSpacing: -4, color: "#d83d86" }}>CSS</span>
-            <span style={{ fontSize: 18, fontWeight: 800, letterSpacing: 3 }}>CSS</span>
+            <svg width="270" height="270" viewBox="0 0 240 240">
+              <g opacity={0.94}>
+                <circle cx="59" cy="103" r="5" fill="#e8177d" />
+                <circle cx="72" cy="84" r="4" fill="#f1cf2f" />
+                <circle cx="91" cy="72" r="4" fill="#158cd1" />
+                <circle cx="148" cy="70" r="5" fill="#ef4939" />
+                <circle cx="169" cy="82" r="4" fill="#a23bc5" />
+                <circle cx="181" cy="101" r="5" fill="#10a98c" />
+                <circle cx="62" cy="137" r="4" fill="#118fd0" />
+                <circle cx="176" cy="141" r="5" fill="#ffd32e" />
+                <circle cx="81" cy="162" r="5" fill="#ef167f" />
+                <circle cx="158" cy="163" r="4" fill="#159aaf" />
+              </g>
+              <path d="M120 67 133 94 163 91 143 113 153 143 120 128 89 146 97 114 75 94 106 92Z" fill="#168cd2" stroke="#fff" strokeWidth="4" strokeLinejoin="round" />
+              <path d="m120 67 13 27-13 14-17-16Z" fill="#f5d432" />
+              <path d="m133 94 30-3-20 22h-23Z" fill="#e72b75" />
+              <path d="m143 113 10 30-33-15v-15Z" fill="#16a9a0" />
+              <path d="m120 128-31 18 8-32 23-3Z" fill="#178dd1" />
+              <path d="m97 114-22-20 31-2 14 13Z" fill="#9b3fc3" />
+              <path d="m106 92 14-25v41Z" fill="#f05a35" />
+              <path d="M116 102 128 99 136 110 127 122 114 119 108 110Z" fill="#e73382" stroke="#fff" strokeWidth="2" />
+            </svg>
           </div>
           <div style={{ display: "flex", flexDirection: "column", maxWidth: 650 }}>
             <div
