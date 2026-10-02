@@ -4,6 +4,7 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
+import { getSafeExternalWebsite } from "../../../lib/external-website";
 
 const categoryLabels: Record<string, string> = {
   food: "Food & groceries",
@@ -74,6 +75,7 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
 
   if (!profile) notFound();
 
+  const businessWebsite = getSafeExternalWebsite(profile.website_url);
   const siteUrl = "https://www.caribbeanstarstorett.com";
   const pageUrl = siteUrl + "/businesses/" + encodeURIComponent(profile.slug);
   const structuredData = [
@@ -85,7 +87,7 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
       url: pageUrl,
       description: profile.summary,
       areaServed: { "@type": "Place", name: profile.region },
-      sameAs: profile.website_url || undefined,
+      sameAs: businessWebsite?.href || undefined,
       contactPoint: profile.contact_email || profile.phone
         ? [{
             "@type": "ContactPoint",
@@ -132,7 +134,7 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
             <h2>Contact the business</h2>
             {profile.phone && <a href={`tel:${profile.phone}`}>Call {profile.phone}</a>}
             {profile.contact_email && <a href={`mailto:${profile.contact_email}`}>Email {profile.contact_email}</a>}
-            {profile.website_url && <a href={profile.website_url} target="_blank" rel="noopener noreferrer">Visit business website ↗</a>}
+            {businessWebsite && <a href={businessWebsite.href} target="_blank" rel="noopener noreferrer">Visit {businessWebsite.hostname} ↗</a>}
             <p>Confirm availability and terms directly with the business.</p>
           </aside>
         </div>
