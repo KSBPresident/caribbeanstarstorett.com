@@ -24,15 +24,16 @@ The foundational build order is Identity → Organizations → Roles → Authori
 
 ## Current site work
 
-The `middle-os-identity-phase-1` branch and draft PR #5 contain the marketplace and account experience, including:
+The `main` branch is the source for the current production deployment on Vercel at [www.caribbeanstarstorett.com](https://www.caribbeanstarstorett.com). Production now includes:
 
 - Public marketplace, business directory, jobs, and real-estate pages
 - Search, product-detail, cart, and seller onboarding screens
 - Account identity, organization workspaces, buyer requests, and platform-operations groundwork
 - Responsive styling, the company logo, and Caribbean-inspired typography
 - Search metadata, page canonicals, organization and website structured data, a sitemap, and `/llms.txt`
+- A category browser on the marketplace page when product listings are unavailable
 
-Review changes in the Vercel preview before production promotion or merging into `main`.
+Use the latest successful Vercel production deployment to confirm the live state. Preview deployments are for reviewing changes before they are promoted to production.
 
 ## Data and launch boundaries
 
