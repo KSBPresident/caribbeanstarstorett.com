@@ -10,6 +10,7 @@ type PageProps = {
 };
 
 export const metadata = {
+  title: "Create your account",
   robots: { index: false, follow: false },
 };
 

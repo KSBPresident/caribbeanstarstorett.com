@@ -9,6 +9,7 @@ import { safeNextPath } from "../../lib/auth/return-path";
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string; next?: string }> };
 
 export const metadata = {
+  title: "Choose a new password",
   robots: { index: false, follow: false },
 };
 
