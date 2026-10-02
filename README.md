@@ -7,9 +7,9 @@ A Next.js marketplace application for Caribbean Star Store.
 ```text
 GitHub → Vercel application
                  ↓
-       Supabase (later phase)
+       Supabase (CSS project)
                  ↓
-          n8n (after Supabase)
+       n8n (later phase)
 ```
 
 The application is organized into five layers:
@@ -38,14 +38,15 @@ Use the latest successful Vercel production deployment to confirm the live state
 ## Data and launch boundaries
 
 - WordPress and WooCommerce are not part of the selected application architecture.
-- Product listing, cart, checkout, purchases, and order history are not connected yet. The storefront must not show invented products, prices, sales totals, or seller metrics.
-- The repository contains Supabase account and data-layer groundwork. The owner will connect the intended Supabase account after the site experience is finished; do not apply database changes before that phase.
-- Connect n8n only after the Supabase phase is complete and the owner connects the intended account.
-- Account-type limits and a separate platform-owner role must be enforced by trusted authorization controls in the later Supabase phase, not by user-editable profile fields.
+- The selected Supabase project is `CSS` in the Caribbean Star Store organization. Its initial migrations establish profiles, organizations, roles and permissions, audit history, seller applications, buyer requests, public business profiles, and jobs/real-estate listings. All exposed application tables have row-level security enabled.
+- Product inventory, cart, checkout, purchases, and order history are not connected yet. The storefront must not show invented products, prices, sales totals, or seller metrics.
+- Account-type limits and a separate platform-owner role must be enforced by trusted authorization controls, not by user-editable profile fields.
+- Connect n8n only after the Supabase work is complete and the owner connects the intended account.
+- A later move to a different Supabase account must update the URL and publishable key together.
 
 ## Security
 
-- Do not commit secrets.
-- Supabase publishable credentials may be used by the browser; privileged credentials stay server-side.
+- Do not commit secret or service-role keys.
+- Supabase publishable credentials may be used by the browser when RLS is enabled; privileged credentials stay server-side.
 - Authorization must use trusted database/application controls, not user-editable metadata.
 - Keep preview deployments separate from production promotion.

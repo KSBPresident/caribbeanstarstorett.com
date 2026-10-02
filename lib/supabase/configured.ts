@@ -1,9 +1,10 @@
-const defaultSupabaseUrl = "https://ebibqndafoutvpwhivex.supabase.co";
-const defaultSupabasePublishableKey = "sb_publishable_257XANT1c1mApcUB2_5X9A_tK-NHq4w";
+const selectedSupabaseUrl = "https://rbmzggvzmniapsmfnpwk.supabase.co";
+const selectedSupabasePublishableKey = "sb_publishable_nXeorBrGY_dHjDuTbcgTfg_shsKFDHl";
 
-export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || defaultSupabaseUrl;
-export const supabasePublishableKey =
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || defaultSupabasePublishableKey;
+// Bind the application to the Caribbean Star Store project. Update these values
+// together only when the owner is ready to move to a different Supabase project.
+export const supabaseUrl = selectedSupabaseUrl;
+export const supabasePublishableKey = selectedSupabasePublishableKey;
 
 export function isSupabaseConfigured() {
   return Boolean(supabaseUrl && supabasePublishableKey) &&
