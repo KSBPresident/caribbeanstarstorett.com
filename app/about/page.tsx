@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "../../components/site-header";
 
 export const metadata: Metadata = {
-  title: "About Caribbean Star Store",
+  title: "About Us",
   description:
     "Learn about Caribbean Star Store and our mission to connect shoppers, sellers, and businesses across the Caribbean.",
   alternates: { canonical: "/about" },
