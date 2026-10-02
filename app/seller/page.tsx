@@ -132,6 +132,7 @@ export default async function SellerWorkspacePage() {
                   </div>
                   <p>{application.category_key.replaceAll("-", " ")} · {organization.organization_type} workspace</p>
                   <Link className="directory-card-link" href={`/business/${organization.slug}`}>Open store workspace →</Link>
+                  <p><Link className="directory-card-link" href="/seller/inventory">Manage product inventory →</Link></p>
                 </article>
               ))}
             </div>
