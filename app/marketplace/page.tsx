@@ -68,12 +68,26 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
         <div className="catalog-empty">
           <p>{catalog.status === "unavailable" ? "Product listings are being prepared. You can explore Caribbean businesses, jobs, and real estate in the meantime." : catalog.status === "not-found" && category ? "This category is not available in the marketplace yet." : query || category ? "No published products match this search." : "No published products are available yet."}</p>
           {catalog.status === "unavailable" && (
-            <div className="cart-empty-actions">
-              <Link className="identity-submit" href="/businesses">Explore businesses</Link>
-              <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
-              <Link className="identity-secondary" href="/sell">Learn how to sell</Link>
-              
-            </div>
+            <>
+              <div className="cart-empty-actions">
+                <Link className="identity-submit" href="/businesses">Explore businesses</Link>
+                <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
+                <Link className="identity-secondary" href="/sell">Learn how to sell</Link>
+              </div>
+              <div className="store-section">
+                <div className="section-title">
+                  <div><span>EXPLORE</span><h2>Browse product categories</h2></div>
+                </div>
+                <div className="category-grid">
+                  {categories.map((item) => (
+                    <Link className="category-card" href={"/marketplace?category=" + encodeURIComponent(item.name)} key={item.name}>
+                      <img src={item.image} alt="" loading="lazy" decoding="async" />
+                      <div><b>{item.name}</b></div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </div>
       )}
