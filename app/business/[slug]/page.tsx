@@ -184,7 +184,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                 <label>Directory address<input name="listingSlug" defaultValue={publicProfile?.slug || organization.slug} pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /><small>Use lowercase letters, numbers, and hyphens.</small></label>
                 <div className="seller-form-row">
                   <label>Category<select name="category" defaultValue={publicProfile?.category_key || "other"}><option value="food">Food &amp; groceries</option><option value="home">Home &amp; living</option><option value="retail">Retail</option><option value="professional">Professional services</option><option value="transport">Transport</option><option value="beauty">Beauty &amp; wellness</option><option value="community">Community</option><option value="other">Other</option></select></label>
-                  <label>Area or region<input name="region" defaultValue={publicProfile?.region || "Trinidad and Tobago"} minLength={2} maxLength={80} required /></label>
+                  <label>Area or region<input name="region" defaultValue={publicProfile?.region || ""} placeholder="e.g. Jamaica, Barbados, or Caribbean-wide" minLength={2} maxLength={80} required /></label>
                 </div>
                 <label>About the business<textarea name="summary" defaultValue={publicProfile?.summary || ""} minLength={40} maxLength={1200} rows={5} required /></label>
                 <div className="seller-form-row">
