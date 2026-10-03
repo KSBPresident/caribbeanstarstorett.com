@@ -289,7 +289,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                     <label>Phone (optional)<input name="phone" type="tel" maxLength={40} /></label>
                     <label>Website (optional)<input name="website" type="url" maxLength={300} /></label>
                   </div>
-                  <button className="identity-submit" type="submit">Save job as draft</button>
+                  <button className="identity-submit" type="submit">Save job draft</button>
                 </form>
                 <h3>Post a property listing</h3>
                 <form action={createOrganizationMarketplaceListing} className="identity-form">
@@ -310,7 +310,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                     <label>Phone (optional)<input name="phone" type="tel" maxLength={40} /></label>
                     <label>Website (optional)<input name="website" type="url" maxLength={300} /></label>
                   </div>
-                  <button className="identity-submit" type="submit">Save property as draft</button>
+                  <button className="identity-submit" type="submit">Save property draft</button>
                 </form>
               </div>
             )}

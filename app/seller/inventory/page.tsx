@@ -7,6 +7,7 @@ import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
 import { categories, money } from "../../../lib/store-data";
 import { signInUrl } from "../../../lib/auth/return-path";
+import { ProductCategoryField } from "../../../components/product-category-field";
 
 export const metadata: Metadata = {
   title: "Seller inventory",
@@ -120,15 +121,15 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                           <input type="hidden" name="itemId" value={item.id} />
                           <input type="hidden" name="organizationId" value={item.organization_id} />
                           <label>Product name<input name="name" defaultValue={item.name} minLength={2} maxLength={140} required /></label>
-                          <label>Category<select name="categoryKey" defaultValue={item.category_key}>{categories.map((value) => <option key={value.key} value={value.key}>{value.name}</option>)}</select></label>
-                          <label>Description<textarea name="description" defaultValue={item.description} minLength={30} maxLength={3000} rows={3} required /></label>
+                          <ProductCategoryField defaultValue={item.category_key} />
+                          <label>Description<textarea name="description" defaultValue={item.description} placeholder="Describe the item, condition, what is included, and the details prompted above." minLength={30} maxLength={3000} rows={3} required /></label>
                           <div className="seller-form-row">
                             <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" defaultValue={item.price} required /></label>
                             <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue={item.quantity_available} required /></label>
                           </div>
                           <label>Product image URL<input name="imageUrl" type="url" defaultValue={item.image_url} maxLength={2048} required /><small>Use an HTTPS image address. Product image uploads are not connected yet.</small></label>
-                          <label>Listing status<select name="status" defaultValue={item.status}><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label>
-                          <button className="identity-submit" type="submit">Save product</button>
+                          <label>Listing status<select name="status" defaultValue={item.status}><option value="draft">Save as draft</option><option value="published">Publish listing</option><option value="archived">Archive listing</option></select></label>
+                          <button className="identity-submit" type="submit">Save product listing</button>
                         </form> : <p>Your assigned workspace role allows you to view this product, but not change it.</p>}
                       </article>
                     );
@@ -145,15 +146,15 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                 <form action={createInventoryItem} className="identity-form seller-form">
                   <label>Store<select name="organizationId" required>{visibleOrganizations.filter((organization) => organization.canManage).map((organization) => <option key={organization.id} value={organization.id}>{organization.name}</option>)}</select></label>
                   <label>Product name<input name="name" minLength={2} maxLength={140} required /></label>
-                  <label>Category<select name="categoryKey" defaultValue={categories[0].key}>{categories.map((value) => <option key={value.key} value={value.key}>{value.name}</option>)}</select></label>
-                  <label>Description<textarea name="description" minLength={30} maxLength={3000} rows={5} required /></label>
+                  <ProductCategoryField defaultValue={categories[0].key} />
+                  <label>Description<textarea name="description" placeholder="Describe the item, condition, what is included, and the details prompted above." minLength={30} maxLength={3000} rows={5} required /></label>
                   <div className="seller-form-row">
                     <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" required /></label>
                     <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue="0" required /></label>
                   </div>
                   <label>Product image URL<input name="imageUrl" type="url" placeholder="https://…" maxLength={2048} required /><small>Use an HTTPS image address. Image upload storage will be added with the media service.</small></label>
-                  <label>Listing status<select name="status" defaultValue="draft"><option value="draft">Save as draft</option><option value="published">Publish now</option></select></label>
-                  <button className="identity-submit" type="submit">Save product</button>
+                  <label>Listing status<select name="status" defaultValue="draft"><option value="draft">Save as draft</option><option value="published">Publish listing</option></select></label>
+                  <button className="identity-submit" type="submit">Save product listing</button>
                 </form>
               ) : (
                 <p>Your role allows you to view this inventory. Ask a store owner or administrator to add or update products.</p>

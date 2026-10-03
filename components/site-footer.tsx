@@ -31,8 +31,8 @@ export function SiteFooter() {
           <section className="site-footer-group">
             <h2>Join the marketplace</h2>
             <nav aria-label="Join Caribbean Star Store">
-              <Link href="/sell">Sell products</Link>
-              <Link href="/sell">Grow your business</Link>
+              <Link href="/create">Create a post</Link>
+              <Link href="/sell">Become a seller</Link>
               <Link href="/build-a-buy">Post a buying request</Link>
               <Link href="/sign-up">Create an account</Link>
             </nav>

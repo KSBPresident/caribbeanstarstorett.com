@@ -66,7 +66,8 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <div className="seller-steps" aria-label="Seller onboarding steps">
               <div><span>1</span><b>Apply</b><small>Share your details</small></div>
               <div><span>2</span><b>Review</b><small>We check your request</small></div>
-              <div><span>3</span><b>Set up</b><small>Prepare your storefront</small></div>
+              <div><span>3</span><b>Prepare</b><small>Add your business and listing details</small></div>
+              <div><span>4</span><b>Publish</b><small>Save a draft or publish when ready</small></div>
             </div>
           </div>
           <div className="seller-layout">
@@ -138,7 +139,8 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
           <div className="seller-steps" aria-label="Seller onboarding steps">
             <div><span>1</span><b>Apply</b><small>Share your details</small></div>
             <div><span>2</span><b>Review</b><small>We check your request</small></div>
-            <div><span>3</span><b>Set up</b><small>Prepare your storefront</small></div>
+            <div><span>3</span><b>Prepare</b><small>Add your business and listing details</small></div>
+              <div><span>4</span><b>Publish</b><small>Save a draft or publish when ready</small></div>
           </div>
         </div>
 

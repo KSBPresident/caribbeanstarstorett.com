@@ -30,7 +30,7 @@ export async function SiteHeader() {
           <button type="submit" aria-label="Search">⌕</button>
         </form>
         <div className="header-actions">
-          <Link href="/sell">Sell</Link>
+          <Link className="header-create-link" href="/create">Create post</Link>
           {user ? <Link href="/dashboard">My Account</Link> : <Link href="/sign-in">Sign In</Link>}
           {isPlatformAdmin && <Link href="/admin">Platform Admin</Link>}
           <Link href="/cart" aria-label="Shopping cart">Cart <CartCount /></Link>
