@@ -5,7 +5,17 @@ import { money } from "../lib/store-data";
 import { useCart } from "./cart-provider";
 
 export function CartContents() {
-  const { items, ready, setQuantity, removeItem } = useCart();
+  const { items, ready, syncStatus, setQuantity, removeItem } = useCart();
+  const syncNotice = syncStatus === "syncing"
+    ? "Syncing your signed-in cart…"
+    : syncStatus === "synced"
+      ? "Your cart is saved to your account."
+      : syncStatus === "unavailable"
+        ? "Account sync is unavailable. Your cart remains saved on this device."
+        : null;
+  const syncNoticeElement = syncNotice
+    ? <p className={syncStatus === "unavailable" ? "identity-message identity-error" : "identity-message"} role="status">{syncNotice}</p>
+    : null;
 
   if (!ready) {
     return <section className="identity-panel cart-empty-state" role="status">Loading your cart…</section>;
@@ -13,6 +23,8 @@ export function CartContents() {
 
   if (!items.length) {
     return (
+      <>
+      {syncNoticeElement}
       <section className="identity-panel cart-empty-state">
         <span className="cart-empty-icon" aria-hidden="true">🛒</span>
         <h2>Your cart is empty</h2>
@@ -22,6 +34,7 @@ export function CartContents() {
           <Link className="identity-secondary" href="/businesses">Discover businesses</Link>
         </div>
       </section>
+      </>
     );
   }
 
@@ -35,6 +48,8 @@ export function CartContents() {
   }
 
   return (
+    <>
+    {syncNoticeElement}
     <div className="shopping-cart-layout">
       <section className="identity-panel" aria-label="Items in your cart">
         <ul className="shopping-cart-list">
@@ -50,7 +65,7 @@ export function CartContents() {
                 <div className="shopping-cart-controls" aria-label={`Quantity for ${product.name}`}>
                   <button type="button" aria-label={`Decrease ${product.name} quantity`} onClick={() => setQuantity(product.slug, quantity - 1)}>−</button>
                   <span>{quantity}</span>
-                  <button type="button" aria-label={`Increase ${product.name} quantity`} disabled={quantity >= 99} onClick={() => setQuantity(product.slug, quantity + 1)}>+</button>
+                  <button type="button" aria-label={`Increase ${product.name} quantity`} disabled={quantity >= Math.min(99, product.quantityAvailable ?? 99)} onClick={() => setQuantity(product.slug, quantity + 1)}>+</button>
                   <button type="button" aria-label={`Remove ${product.name} from cart`} onClick={() => removeItem(product.slug)}>Remove</button>
                 </div>
               </div>
@@ -71,5 +86,6 @@ export function CartContents() {
         <p className="catalog-meta">Prices and availability will be confirmed again when checkout is connected.</p>
       </aside>
     </div>
+    </>
   );
 }

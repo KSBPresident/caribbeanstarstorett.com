@@ -1,38 +1,11 @@
 import type { Product } from "./store-data";
 import { categories } from "./store-data";
+import { inventoryRowToProduct, type InventoryProductRow } from "./store-product";
 import { createClient } from "./supabase/server";
 
 type CatalogStatus = "available" | "unavailable" | "not-found";
 
-type InventoryRow = {
-  id: string;
-  slug: string;
-  name: string;
-  category_key: string;
-  price: number | string;
-  currency: string;
-  quantity_available: number;
-  image_url: string;
-  description: string;
-};
-
-function toProduct(row: InventoryRow): Product {
-  return {
-    id: row.id,
-    slug: row.slug,
-    name: row.name,
-    category: categories.find((category) => category.key === row.category_key)?.name || "Marketplace",
-    price: Number(row.price),
-    currency: row.currency,
-    currencyMinorUnit: 2,
-    rating: 0,
-    reviews: 0,
-    image: row.image_url,
-    inStock: row.quantity_available > 0,
-    quantityAvailable: row.quantity_available,
-    description: row.description,
-  };
-}
+type InventoryRow = InventoryProductRow;
 
 function isSafePage(page: number) {
   return Number.isInteger(page) && page > 0 ? Math.min(page, 9999) : 1;
@@ -70,7 +43,7 @@ export async function getStoreProducts(options: {
     if (error) throw error;
     const totalProducts = count || 0;
     return {
-      products: (data || []).map((row) => toProduct(row as InventoryRow)),
+      products: (data || []).map((row) => inventoryRowToProduct(row as InventoryRow)),
       status: "available" as CatalogStatus,
       totalProducts,
       totalPages: Math.max(1, Math.ceil(totalProducts / perPage)),
@@ -91,7 +64,7 @@ export async function getStoreProductBySlug(slug: string) {
       .maybeSingle();
     if (error) throw error;
     return {
-      product: data ? toProduct(data as InventoryRow) : null,
+      product: data ? inventoryRowToProduct(data as InventoryRow) : null,
       status: data ? "available" as CatalogStatus : "not-found" as CatalogStatus,
     };
   } catch {
