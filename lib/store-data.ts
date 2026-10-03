@@ -15,11 +15,11 @@ export type Product = {
 };
 
 export const categories = [
-  { key: "electronics-appliances", name: "Electronics & Appliances", icon: "▣", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80" },
-  { key: "home-living", name: "Home & Living", icon: "⌂", image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=800&q=80" },
-  { key: "clothing-fashion", name: "Clothing & Fashion", icon: "◈", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80" },
-  { key: "beauty-wellness", name: "Beauty & Wellness", icon: "✿", image: "https://images.unsplash.com/photo-1596462502278-27bfdc40348?auto=format&fit=crop&w=800&q=80" },
-  { key: "vehicles-parts", name: "Vehicles & Parts", icon: "⌁", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80" },
+  { key: "electronics-appliances", name: "Electronics & Appliances", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80" },
+  { key: "home-living", name: "Home & Living", image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=800&q=80" },
+  { key: "clothing-fashion", name: "Clothing & Fashion", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80" },
+  { key: "beauty-wellness", name: "Beauty & Wellness", image: "https://images.unsplash.com/photo-1596462502278-27bfdc40348?auto=format&fit=crop&w=800&q=80" },
+  { key: "vehicles-parts", name: "Vehicles & Parts", image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80" },
 ];
 
 export const money = (amount: number, currency = "USD", minorUnit = 2) => {
