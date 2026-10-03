@@ -7,7 +7,6 @@ import { createClient } from "../../../lib/supabase/server";
 import { getSafeExternalWebsite } from "../../../lib/external-website";
 
 const categoryLabels: Record<string, string> = {
-  food: "Food & groceries",
   home: "Home & living",
   retail: "Retail",
   professional: "Professional services",
