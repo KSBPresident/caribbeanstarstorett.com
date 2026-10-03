@@ -8,6 +8,11 @@ import { getSafeExternalWebsite } from "../../lib/external-website";
 const sellerTypes = new Set(["individual", "business", "nonprofit", "community"]);
 const categories = new Set(["products", "services", "businesses", "jobs", "real-estate", "other"]);
 
+function sellerApplicationUrl(category: string, state: "error=invalid" | "error=submit" | "notice=submitted") {
+  const selectedCategory = categories.has(category) ? category : "products";
+  return `/sell?category=${encodeURIComponent(selectedCategory)}&${state}`;
+}
+
 
 export async function submitSellerApplication(formData: FormData) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
@@ -27,7 +32,7 @@ export async function submitSellerApplication(formData: FormData) {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 ||
     phone.length > 40 || description.length < 30 || description.length > 2000 ||
     (websiteInput && !website)
-  ) redirect("/sell?error=invalid");
+  ) redirect(sellerApplicationUrl(category, "error=invalid"));
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -45,5 +50,5 @@ export async function submitSellerApplication(formData: FormData) {
     status: "submitted",
   });
 
-  redirect(error ? "/sell?error=submit" : "/sell?notice=submitted");
+  redirect(error ? sellerApplicationUrl(category, "error=submit") : sellerApplicationUrl(category, "notice=submitted"));
 }
