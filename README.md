@@ -39,7 +39,7 @@ Use the latest successful Vercel production deployment to confirm the live state
 
 - WordPress and WooCommerce are not part of the selected application architecture.
 - The selected Supabase project is `CSS` in the Caribbean Star Store organization. Its initial migrations establish profiles, organizations, roles and permissions, audit history, seller applications, buyer requests, public business profiles, and jobs/real-estate listings. All exposed application tables have row-level security enabled.
-- Seller inventory and the public product catalog are connected to Supabase `inventory_items`. The cart is browser-local; checkout, payment processing, purchases, and order history are not connected yet. No products are currently published, and the storefront must not show invented products, prices, sales totals, or seller metrics.
+- Seller inventory and the public product catalog use Supabase `inventory_items`. Approved sellers can upload JPEG, PNG, or WebP product photos to a public Storage bucket under organization-scoped RLS policies, or provide an HTTPS image URL. The cart is browser-local; checkout, payment processing, purchases, and order history are not connected yet. No products are currently published, and the storefront must not show invented products, prices, sales totals, or seller metrics.
 - Account-type limits and a separate platform-owner role must be enforced by trusted authorization controls, not by user-editable profile fields.
 - Connect n8n only after the Supabase work is complete and the owner connects the intended account.
 - A later move to a different Supabase account must update the URL and publishable key together.
