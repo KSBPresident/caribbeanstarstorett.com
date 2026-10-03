@@ -4,20 +4,20 @@ import { SiteHeader } from "../../components/site-header";
 
 export const metadata: Metadata = {
   title: "How It Works",
-  description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+  description: "Learn how shoppers, buyers, sellers, and organizations around the world use Caribbean Star Store.",
   alternates: { canonical: "/how-it-works" },
   openGraph: {
     type: "website",
     siteName: "Caribbean Star Store",
     title: "How It Works | Caribbean Star Store",
-    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+    description: "Learn how shoppers, buyers, sellers, and organizations around the world use Caribbean Star Store.",
   
-    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "How It Works | Caribbean Star Store",
-    description: "Learn how shoppers, buyers, sellers, and Caribbean organizations use Caribbean Star Store.",
+    description: "Learn how shoppers, buyers, sellers, and organizations around the world use Caribbean Star Store.",
   
     images: ["/twitter-image"],
   },
@@ -34,7 +34,7 @@ const steps = [
   {
     number: "02",
     title: "Discover businesses",
-    description: "Browse public profiles and services shared by Caribbean businesses and organizations.",
+    description: "Browse public profiles and services shared by businesses and organizations.",
     href: "/businesses",
     link: "Explore businesses",
   },
@@ -68,7 +68,7 @@ export default function HowItWorksPage() {
       <main id="main-content" tabIndex={-1} className="identity-page directory-page">
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · GETTING STARTED</span>
-          <h1>One marketplace for the Caribbean community.</h1>
+          <h1>One marketplace for communities around the world.</h1>
           <p>Explore the marketplace, discover local businesses and opportunities, or create an account to take part in the community.</p>
           <div className="directory-hero-actions">
             <Link className="identity-submit" href="/marketplace">Explore the marketplace</Link>

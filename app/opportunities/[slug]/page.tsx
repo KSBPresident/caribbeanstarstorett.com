@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: listing.title,
     description,
     alternates: { canonical },
-    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description , images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }]},
+    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description , images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }]},
     twitter: { card: "summary_large_image", title, description , images: ["/twitter-image"]},
   };
 }

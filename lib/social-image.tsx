@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const socialImageAlt =
-  "Caribbean Star Store — Connecting the community across the Caribbean";
+  "Caribbean Star Store — Connecting communities worldwide";
 export const socialImageSize = { width: 1200, height: 630 };
 export const socialImageContentType = "image/png";
 
@@ -101,7 +101,7 @@ export function createSocialImage() {
               }}
             >
               <span style={{ width: 38, height: 3, backgroundColor: "#f4cd59" }} />
-              CARIBBEAN MARKETPLACE
+              INTERNATIONAL MARKETPLACE
             </div>
             <div
               style={{
@@ -114,7 +114,7 @@ export function createSocialImage() {
                 letterSpacing: -3,
               }}
             >
-              <span>Caribbean</span>
+              <span>Worldwide</span>
               <span>Star Store</span>
             </div>
             <div
@@ -125,7 +125,7 @@ export function createSocialImage() {
                 lineHeight: 1.35,
               }}
             >
-              Connecting the community across the Caribbean.
+              Connecting communities worldwide.
             </div>
             <div
               style={{

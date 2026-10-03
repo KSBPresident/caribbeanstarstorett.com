@@ -46,7 +46,7 @@ export default async function OrganizationsPage({ searchParams }: PageProps) {
             </section>
             <section className="identity-panel">
               <h2>Reach more customers</h2>
-              <p>Help shoppers discover your business across the Caribbean. You control when your public profile is ready to appear in the directory.</p>
+              <p>Help shoppers around the world discover your business through Caribbean Star Store. You control when your public profile is ready to appear in the directory.</p>
               <p><Link className="identity-inline-link" href="/sell">Learn about selling on Caribbean Star Store →</Link></p>
             </section>
           </div>

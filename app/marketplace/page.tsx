@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Marketplace | Caribbean Star Store",
     description: "Browse products and discover goods from the Caribbean Star Store marketplace.",
   
-    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }],
   },
   twitter: {
     card: "summary_large_image",

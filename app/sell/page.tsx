@@ -11,22 +11,22 @@ import { signInUrl } from "../../lib/auth/return-path";
 export const metadata: Metadata = {
   title: "Sell",
   description:
-    "Open your Caribbean Star Store presence, showcase your brand and products, and reach shoppers across the Caribbean.",
+    "Open your Caribbean Star Store presence, showcase your brand and products, and reach shoppers around the world.",
   alternates: { canonical: "/sell" },
   openGraph: {
     type: "website",
     siteName: "Caribbean Star Store",
     title: "Sell on Caribbean Star Store",
     description:
-      "Showcase your brand and products and reach shoppers across the Caribbean with Caribbean Star Store.",
+      "Showcase your brand and products and reach shoppers through the international Caribbean Star Store marketplace.",
   
-    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sell on Caribbean Star Store",
     description:
-      "Showcase your brand and products and reach shoppers across the Caribbean with Caribbean Star Store.",
+      "Showcase your brand and products and reach shoppers through the international Caribbean Star Store marketplace.",
   
     images: ["/twitter-image"],
   },
@@ -56,7 +56,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <div>
               <span className="identity-eyebrow">MAKE MONEY WITH US</span>
               <h1>Sell and advertise on Caribbean Star Store.</h1>
-              <p>Introduce your business and products to shoppers across the Caribbean marketplace.</p>
+              <p>Introduce your business and products to shoppers through our international marketplace.</p>
               {!accountServicesReady && <p className="identity-message" role="status">Seller information is available now. Account registration and applications will open after account services are configured.</p>}
               <div className="directory-hero-actions">
                 <Link className="identity-submit" href="/sign-up?next=%2Fsell">Start your seller application</Link>
@@ -132,7 +132,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
         <div className="seller-intro">
           <div>
             <span className="identity-eyebrow">SELL ON CARIBBEAN STAR STORE</span>
-            <h1>Bring your business to the Caribbean marketplace.</h1>
+            <h1>Bring your business to the international marketplace.</h1>
             <p>Tell us what you want to offer. After approval, your account gets a private workspace to manage its public profile and listings.</p>
           </div>
           <div className="seller-steps" aria-label="Seller onboarding steps">

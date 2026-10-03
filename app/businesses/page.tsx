@@ -5,20 +5,20 @@ import { createClient } from "../../lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Business Directory",
-  description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
+  description: "Discover independent businesses and services through Caribbean Star Store.",
   alternates: { canonical: "/businesses" },
   openGraph: {
     type: "website",
     siteName: "Caribbean Star Store",
     title: "Business Directory | Caribbean Star Store",
-    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
+    description: "Discover independent businesses and services through Caribbean Star Store.",
   
-    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Business Directory | Caribbean Star Store",
-    description: "Discover Caribbean businesses and services in your community through Caribbean Star Store.",
+    description: "Discover independent businesses and services through Caribbean Star Store.",
   
     images: ["/twitter-image"],
   },
@@ -127,7 +127,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS DIRECTORY</span>
           <h1>Discover businesses in your community.</h1>
-          <p>Browse public profiles published by local businesses and organizations across the Caribbean.</p>
+          <p>Browse public profiles published by businesses and organizations around the world.</p>
           <div className="directory-hero-actions">
             <Link className="identity-submit" href="/sell">Apply to list your business</Link>
             <Link className="directory-secondary" href="/marketplace">Shop products</Link>

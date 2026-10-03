@@ -7,9 +7,9 @@ import { categories } from "../lib/store-data";
 import { getStoreProducts } from "../lib/store-catalog";
 
 export const metadata: Metadata = {
-  title: "The Caribbean's Digital Marketplace",
+  title: "The Global Marketplace | Caribbean Star Store",
   description:
-    "Discover products, services, Caribbean businesses, jobs, and real estate in one marketplace connecting communities across the Caribbean.",
+    "Discover products, services, businesses, jobs, and real estate in one international marketplace.",
   alternates: { canonical: "/" },
 };
 
@@ -21,8 +21,8 @@ const structuredData = [
     url: "https://www.caribbeanstarstorett.com",
     logo: "https://www.caribbeanstarstorett.com/caribbean-star-store-logo.svg",
     description:
-      "A Caribbean marketplace for products, services, businesses, jobs, and real-estate opportunities.",
-    areaServed: { "@type": "Place", name: "Caribbean" },
+      "An international marketplace for products, services, businesses, jobs, and real-estate opportunities.",
+    areaServed: { "@type": "Place", name: "International" }
   },
   {
     "@context": "https://schema.org",
@@ -50,7 +50,7 @@ async function FeaturedProducts() {
         <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
       ) : (
         <div className="catalog-empty">
-          <p>{catalog.status === "unavailable" ? "Product listings are being prepared. You can explore Caribbean businesses, jobs, and real estate in the meantime." : "There are no published product listings yet."}</p>
+          <p>{catalog.status === "unavailable" ? "Product listings are being prepared. You can explore businesses, jobs, and real estate in the meantime." : "There are no published product listings yet."}</p>
           {catalog.status === "unavailable" && (
             <div className="cart-empty-actions">
               <Link className="identity-submit" href="/businesses">Explore businesses</Link>
@@ -79,7 +79,7 @@ export default function Home() {
         <section className="home-hero">
           <div className="hero-overlay">
             <span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span>
-            <h1>The Caribbean&apos;s<br />Digital Marketplace</h1>
+            <h1>A Global<br />Marketplace</h1>
             <p>Buy · Sell · Work · Grow Together</p>
             <form className="hero-search" role="search" action="/search">
               <input name="q" maxLength={80} placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
@@ -89,7 +89,7 @@ export default function Home() {
           </div>
         </section>
         <section className="quick-grid">
-          {[["🛒","Products","Browse marketplace products","/marketplace"],["♧","Services","Find local services","/businesses?category=professional"],["▦","Businesses","Support local & regional","/businesses"],["♙","Jobs","Find work or hire","/opportunities?type=jobs"],["⌂","Real Estate","Buy, rent, invest","/opportunities?type=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
+          {[["🛒","Products","Browse marketplace products","/marketplace"],["♧","Services","Find services","/businesses?category=professional"],["▦","Businesses","Discover businesses","/businesses"],["♙","Jobs","Find work or hire","/opportunities?type=jobs"],["⌂","Real Estate","Buy, rent, invest","/opportunities?type=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
             <Link href={href} className="quick-card" key={label}><span aria-hidden="true">{icon}</span><b>{label}</b><small>{description}</small></Link>
           ))}
         </section>

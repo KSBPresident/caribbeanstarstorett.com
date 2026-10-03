@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | Caribbean Star Store",
   },
   description:
-    "Discover products, services, Caribbean businesses, jobs, and real estate with Caribbean Star Store — connecting the community across the Caribbean.",
+    "Discover products, services, businesses, jobs, and real estate with Caribbean Star Store, an international marketplace connecting communities worldwide.",
   icons: {
     icon: [{ url: brandLogo, type: "image/svg+xml" }],
     shortcut: [{ url: brandLogo, type: "image/svg+xml" }],

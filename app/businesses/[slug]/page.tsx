@@ -33,14 +33,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (error || !profile) {
     return {
       title: "Business profile",
-      description: "Explore published Caribbean businesses and services on Caribbean Star Store.",
+      description: "Explore published businesses and services on Caribbean Star Store.",
       robots: { index: false, follow: true },
     };
   }
 
   const canonical = `/businesses/${encodeURIComponent(slug)}`;
 
-  const description = (profile.summary || `Discover ${profile.display_name}, a Caribbean business on Caribbean Star Store.`)
+  const description = (profile.summary || `Discover ${profile.display_name} on Caribbean Star Store.`)
     .replace(/\s+/g, " ")
     .slice(0, 160);
   const title = `${profile.display_name} | Caribbean Star Store`;
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: profile.display_name,
     description,
     alternates: { canonical },
-    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description , images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }]},
+    openGraph: { type: "website", siteName: "Caribbean Star Store", title, description , images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }]},
     twitter: { card: "summary_large_image", title, description , images: ["/twitter-image"]},
   };
 }

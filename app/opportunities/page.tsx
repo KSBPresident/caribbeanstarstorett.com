@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Jobs & Real Estate | Caribbean Star Store",
     description: "Explore job openings and real estate listings published by organizations on Caribbean Star Store.",
   
-    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting the community across the Caribbean" }],
+    images: [{ url: "/opengraph-image", alt: "Caribbean Star Store — Connecting communities worldwide" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -112,7 +112,7 @@ export default async function OpportunitiesPage({ searchParams }: { searchParams
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · OPPORTUNITIES</span>
           <h1>Find work and places to call home.</h1>
-          <p>Explore jobs and real estate posted by Caribbean organizations. Contact each publisher directly for current details.</p>
+          <p>Explore jobs and real estate posted by organizations on Caribbean Star Store. Contact each publisher directly for current details.</p>
           <div className="directory-hero-actions"><Link className="identity-submit" href="/build-a-buy?category=jobs">Request what you need</Link><Link className="directory-secondary" href="/sell">Apply to post listings</Link></div>
         </header>
 
