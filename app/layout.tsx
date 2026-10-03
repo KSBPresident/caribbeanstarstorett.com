@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     siteName: "Caribbean Star Store",
     title: "Caribbean Star Store",
     description:
-      "Discover products, services, Caribbean businesses, jobs, and real estate. Connecting the community.",
+      "Discover products, services, businesses, jobs, and real estate with Caribbean Star Store, an international marketplace.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Caribbean Star Store",
     description:
-      "Discover products, services, Caribbean businesses, jobs, and real estate. Connecting the community.",
+      "Discover products, services, businesses, jobs, and real estate with Caribbean Star Store, an international marketplace.",
   },
 };
 
