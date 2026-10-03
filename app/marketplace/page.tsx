@@ -100,6 +100,36 @@ async function MarketplaceResults({ query, category, page }: MarketplaceResultsP
   );
 }
 
+function ProductCategoryIcon({ categoryKey }: { categoryKey: string }) {
+  const common = {
+    width: 18,
+    height: 18,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true as const,
+    focusable: false as const,
+  };
+
+  switch (categoryKey) {
+    case "electronics-appliances":
+      return <svg {...common}><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>;
+    case "home-living":
+      return <svg {...common}><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" /></svg>;
+    case "clothing-fashion":
+      return <svg {...common}><path d="m8 4 4 2 4-2 4 3-2 5-3-1v9H9v-9l-3 1-2-5 4-3Z" /></svg>;
+    case "beauty-wellness":
+      return <svg {...common}><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1" /><circle cx="12" cy="12" r="4" /></svg>;
+    case "vehicles-parts":
+      return <svg {...common}><path d="m5 11 1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11l2 2v5h-2v-2H5v2H3v-5l2-2Z" /><path d="M5 11h14M7 13h.01M17 13h.01" /></svg>;
+    default:
+      return <svg {...common}><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M8 9h8M8 13h8M8 17h5" /></svg>;
+  }
+}
+
 function MarketplaceFallback({ query, category }: Pick<MarketplaceResultsProps, "query" | "category">) {
   return (
     <section className="listing-area" aria-busy="true">
@@ -132,7 +162,7 @@ export default async function Marketplace({ searchParams }: PageProps) {
         <aside className="category-sidebar">
           <b>Product categories</b>
           <Link href="/marketplace">All products</Link>
-          {categories.map((item) => <Link href={"/marketplace?category=" + encodeURIComponent(item.name)} key={item.name}>{item.icon} {item.name}</Link>)}
+          {categories.map((item) => <Link href={"/marketplace?category=" + encodeURIComponent(item.name)} key={item.name} style={{ display: "flex", alignItems: "center", gap: 8 }}><ProductCategoryIcon categoryKey={item.key} />{item.name}</Link>)}
         </aside>
         <Suspense fallback={<MarketplaceFallback query={query} category={category} />}>
           <MarketplaceResults query={query} category={category} page={page} />
