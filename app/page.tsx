@@ -49,15 +49,12 @@ async function FeaturedProducts() {
         <div className="product-grid">{catalog.products.slice(0, 4).map((product) => <ProductCard product={product} key={product.slug} />)}</div>
       ) : (
         <div className="catalog-empty">
-          <p>{catalog.status === "unavailable" ? "Product listings are being prepared. You can explore businesses, jobs, and real estate in the meantime." : "There are no published product listings yet."}</p>
-          {catalog.status === "unavailable" && (
-            <div className="cart-empty-actions">
-              <Link className="identity-submit" href="/businesses">Explore businesses</Link>
-              <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
-              <Link className="identity-secondary" href="/sell">Learn how to sell</Link>
-              
-            </div>
-          )}
+          <p>{catalog.status === "unavailable" ? "Product listings are temporarily unavailable. You can still explore businesses, jobs, and real estate." : "No product listings have been published yet. Sellers can apply to add the first products to the marketplace."}</p>
+          <div className="cart-empty-actions">
+            <Link className="identity-submit" href="/sell">Start selling products</Link>
+            <Link className="identity-secondary" href="/businesses">Explore businesses</Link>
+            <Link className="identity-secondary" href="/opportunities">View jobs &amp; real estate</Link>
+          </div>
         </div>
       )}
     </section>
