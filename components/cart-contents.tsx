@@ -83,7 +83,7 @@ export function CartContents() {
             <strong>{money(total.amount, currency, total.minorUnit)}</strong>
           </div>
         ))}
-        <button className="identity-submit" type="button" disabled>Checkout will be available after launch</button>
+        <button className="identity-submit" type="button" disabled>Online checkout is not available yet</button>
         <p className="catalog-meta">Prices and availability will be confirmed again when checkout is connected.</p>
       </aside>
     </div>
