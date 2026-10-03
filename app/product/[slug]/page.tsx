@@ -98,10 +98,10 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
                 {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <p className="catalog-meta">No customer reviews yet</p>}
                 <strong className="detail-price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
                 <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available" : "Check availability"}</p>
-                <div className="seller-box"><b>Caribbean Star Store product listing</b><small>Product information and checkout will be available here after launch.</small></div>
-                <p className="catalog-meta">Delivery, warranty, and return information will appear with each listing.</p>
+                <div className="seller-box"><b>Caribbean Star Store product listing</b><small>This published listing shows seller-provided product details. Online ordering and payment are not available yet.</small></div>
+                <p className="catalog-meta">Delivery, warranty, and return details are not available on this listing yet.</p>
                 <AddToCartButton product={product} className="buy-now" />
-                <p className="catalog-meta">Checkout will be available after the marketplace checkout service is connected.</p>
+                <p className="catalog-meta">This item can stay in your saved cart, but you can’t place an order or pay here yet.</p>
               </div>
             </section>
             <section className="detail-tabs"><b>Product details</b><div><p>{product.description || "No additional product details are available yet."}</p></div></section>
