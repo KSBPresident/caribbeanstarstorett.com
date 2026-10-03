@@ -3,6 +3,26 @@ import { CartCount } from "./cart-count";
 import { createClient } from "../lib/supabase/server";
 import { isSupabaseConfigured } from "../lib/supabase/configured";
 
+export function SearchIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="10.8" cy="10.8" r="6.8" />
+      <path d="m16 16 5 5" />
+    </svg>
+  );
+}
+
 export async function SiteHeader() {
   let user: Awaited<ReturnType<Awaited<ReturnType<typeof createClient>>["auth"]["getUser"]>>["data"]["user"] = null;
 
@@ -27,7 +47,7 @@ export async function SiteHeader() {
         </Link>
         <form action="/search" className="header-search" role="search" aria-label="Search the marketplace">
           <input name="q" maxLength={80} placeholder="Search products, services, businesses..." aria-label="Search products, services, businesses" />
-          <button type="submit" aria-label="Search">⌕</button>
+          <button type="submit" aria-label="Search"><SearchIcon /></button>
         </form>
         <div className="header-actions">
           <Link className="header-create-link" href="/create">Create post</Link>
