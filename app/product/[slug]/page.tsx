@@ -50,6 +50,43 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
   return (
     <>
       <SiteHeader />
+      {product ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Product",
+                  name: product.name,
+                  description: product.description || undefined,
+                  image: product.image,
+                  category: product.category,
+                  offers: {
+                    "@type": "Offer",
+                    url: `https://www.caribbeanstarstorett.com/product/${encodeURIComponent(product.slug)}`,
+                    price: product.price,
+                    priceCurrency: product.currency.toUpperCase(),
+                    availability: product.inStock
+                      ? "https://schema.org/InStock"
+                      : "https://schema.org/OutOfStock",
+                  },
+                },
+                {
+                  "@type": "BreadcrumbList",
+                  itemListElement: [
+                    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.caribbeanstarstorett.com/" },
+                    { "@type": "ListItem", position: 2, name: "Marketplace", item: "https://www.caribbeanstarstorett.com/marketplace" },
+                    { "@type": "ListItem", position: 3, name: product.category, item: `https://www.caribbeanstarstorett.com/marketplace?category=${encodeURIComponent(product.category)}` },
+                    { "@type": "ListItem", position: 4, name: product.name, item: `https://www.caribbeanstarstorett.com/product/${encodeURIComponent(product.slug)}` },
+                  ],
+                },
+              ],
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
+      ) : null}
       <main id="main-content" tabIndex={-1} className="product-detail">
         {product ? (
           <>
