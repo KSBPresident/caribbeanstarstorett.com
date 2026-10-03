@@ -6,7 +6,7 @@ export const socialImageSize = { width: 1200, height: 630 };
 export const socialImageContentType = "image/png";
 
 const marketplacePhoto =
-  "https://images.unsplash.com/photo-1538952749095-49b788a5078a?fit=crop&w=1200&h=630&q=85&fm=jpg";
+  "https://images.pexels.com/photos/5585793/pexels-photo-5585793.jpeg?auto=compress&cs=tinysrgb&w=1200";
 
 export function createSocialImage() {
   return new ImageResponse(
