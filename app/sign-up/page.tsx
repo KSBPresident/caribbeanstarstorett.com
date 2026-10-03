@@ -46,7 +46,7 @@ export default async function SignUpPage({ searchParams }: PageProps) {
               <li><strong>Organization member:</strong> Access is limited to the organization and actions allowed by the role assigned by its owner.</li>
               <li><strong>Platform owner:</strong> Trusted site-wide administrator access is provisioned separately. Public sign-up cannot grant it.</li>
             </ul>
-            <p className="catalog-meta">Account privileges are assigned through approval and trusted roles; choosing a label or changing profile details cannot raise access. Product publishing and checkout will be enabled as the marketplace services are completed.</p>
+            <p className="catalog-meta">Account privileges are assigned through approval and trusted roles; choosing a label or changing profile details cannot raise access. Product publishing is available to approved sellers. Online checkout is not available yet.</p>
           </section>
           <p className="identity-switch"><Link href="/how-it-works">Learn how the marketplace works</Link></p>
           {!isSupabaseConfigured() && (
