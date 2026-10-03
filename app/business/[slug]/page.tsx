@@ -270,7 +270,7 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
             {canManageOrganization && (
               <div className="workspace-new-listing">
                 <h3>Post a job opening</h3>
-                <p className="catalog-meta">New listings start as drafts. Add a public contact email before publishing.</p>
+                <p className="catalog-meta">Start with a draft, then publish it when it is ready. Describe the responsibilities, qualifications, schedule, and how applicants should apply. Include a clear location or say if the role is remote, and add pay details with currency and pay period when available. A public contact email is required before publishing.</p>
                 <form action={createOrganizationMarketplaceListing} className="identity-form">
                   <input type="hidden" name="organizationId" value={organization.id} />
                   <input type="hidden" name="organizationSlug" value={organization.slug} />
@@ -280,18 +280,19 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                   <label>Listing address<input name="listingSlug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /><small>Lowercase letters, numbers, and hyphens.</small></label>
                   <label>Job description<textarea name="description" minLength={40} maxLength={3000} rows={5} required /></label>
                   <div className="seller-form-row">
-                    <label>Area or region<input name="location" minLength={2} maxLength={120} required /></label>
+                    <label>Area or region<input name="location" minLength={2} maxLength={120} required /><small>Enter a city, region, or “Remote”.</small></label>
                     <label>Employment type<select name="employmentType"><option value="">Not specified</option><option value="full-time">Full-time</option><option value="part-time">Part-time</option><option value="contract">Contract</option><option value="temporary">Temporary</option><option value="internship">Internship</option></select></label>
                   </div>
-                  <label>Salary details<input name="salaryDetails" maxLength={120} /></label>
+                  <label>Salary details<input name="salaryDetails" maxLength={120} placeholder="e.g. USD 18 per hour or negotiable" /><small>Include currency and pay period when possible.</small></label>
                   <label>Public contact email<input name="contactEmail" type="email" maxLength={254} required /></label>
                   <div className="seller-form-row">
                     <label>Phone (optional)<input name="phone" type="tel" maxLength={40} /></label>
                     <label>Website (optional)<input name="website" type="url" maxLength={300} /></label>
                   </div>
-                  <button className="identity-submit" type="submit">Save job draft</button>
+                  <button className="identity-submit" type="submit">Save job as draft</button>
                 </form>
                 <h3>Post a property listing</h3>
+                <p className="catalog-meta">Start with a draft, then publish it when it is ready. Include the property’s key features, condition, availability, and whether it is for sale or rent. Add the price and currency, plus the rental period if applicable. A public contact email is required before publishing.</p>
                 <form action={createOrganizationMarketplaceListing} className="identity-form">
                   <input type="hidden" name="organizationId" value={organization.id} />
                   <input type="hidden" name="organizationSlug" value={organization.slug} />
@@ -301,16 +302,16 @@ export default async function OrganizationWorkspacePage({ params, searchParams }
                   <label>Listing address<input name="listingSlug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={80} required /><small>Lowercase letters, numbers, and hyphens.</small></label>
                   <label>Property description<textarea name="description" minLength={40} maxLength={3000} rows={5} required /></label>
                   <div className="seller-form-row">
-                    <label>Area or region<input name="location" minLength={2} maxLength={120} required /></label>
+                    <label>Area or region<input name="location" minLength={2} maxLength={120} required /><small>Enter the neighborhood, town, or region.</small></label>
                     <label>Property type<select name="propertyType"><option value="">Not specified</option><option value="house">House</option><option value="apartment">Apartment</option><option value="commercial">Commercial</option><option value="land">Land</option><option value="room">Room</option><option value="other">Other</option></select></label>
                   </div>
-                  <label>Price details<input name="propertyPrice" maxLength={120} /></label>
+                  <label>Price details<input name="propertyPrice" maxLength={120} placeholder="e.g. USD 250,000 sale or USD 1,200/month rent" /><small>Include currency and rental period when applicable.</small></label>
                   <label>Public contact email<input name="contactEmail" type="email" maxLength={254} required /></label>
                   <div className="seller-form-row">
                     <label>Phone (optional)<input name="phone" type="tel" maxLength={40} /></label>
                     <label>Website (optional)<input name="website" type="url" maxLength={300} /></label>
                   </div>
-                  <button className="identity-submit" type="submit">Save property draft</button>
+                  <button className="identity-submit" type="submit">Save property as draft</button>
                 </form>
               </div>
             )}
