@@ -6,6 +6,7 @@ import { useCart } from "./cart-provider";
 
 export function CartContents() {
   const { items, ready, syncStatus, setQuantity, removeItem } = useCart();
+  const cartBusy = syncStatus === "syncing";
   const syncNotice = syncStatus === "syncing"
     ? "Syncing your signed-in cart…"
     : syncStatus === "synced"
@@ -26,7 +27,7 @@ export function CartContents() {
       <>
       {syncNoticeElement}
       <section className="identity-panel cart-empty-state">
-        <span className="cart-empty-icon" aria-hidden="true">🛒</span>
+        <span className="cart-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.4a2 2 0 0 0 2-1.6L20 8H6" /><circle cx="10" cy="20" r="1" /><circle cx="18" cy="20" r="1" /></svg></span>
         <h2>Your cart is empty</h2>
         <p>When products are available, add the items you want and review them here.</p>
         <div className="cart-empty-actions">
@@ -63,10 +64,10 @@ export function CartContents() {
                 <span>{product.category}</span>
                 <small>{money(product.price, product.currency, product.currencyMinorUnit)} each</small>
                 <div className="shopping-cart-controls" aria-label={`Quantity for ${product.name}`}>
-                  <button type="button" aria-label={`Decrease ${product.name} quantity`} onClick={() => setQuantity(product.slug, quantity - 1)}>−</button>
+                  <button type="button" disabled={cartBusy} aria-label={`Decrease ${product.name} quantity`} onClick={() => setQuantity(product.slug, quantity - 1)}>−</button>
                   <span>{quantity}</span>
-                  <button type="button" aria-label={`Increase ${product.name} quantity`} disabled={quantity >= Math.min(99, product.quantityAvailable ?? 99)} onClick={() => setQuantity(product.slug, quantity + 1)}>+</button>
-                  <button type="button" aria-label={`Remove ${product.name} from cart`} onClick={() => removeItem(product.slug)}>Remove</button>
+                  <button type="button" disabled={cartBusy || quantity >= Math.min(99, product.quantityAvailable ?? 99)} aria-label={`Increase ${product.name} quantity`} onClick={() => setQuantity(product.slug, quantity + 1)}>+</button>
+                  <button type="button" disabled={cartBusy} aria-label={`Remove ${product.name} from cart`} onClick={() => removeItem(product.slug)}>Remove</button>
                 </div>
               </div>
               <strong className="shopping-cart-line-total">{money(product.price * quantity, product.currency, product.currencyMinorUnit)}</strong>

@@ -19,9 +19,22 @@ type CartContextValue = {
 
 const STORAGE_KEY = "caribbean-star-store-cart-v1";
 const STORAGE_USER_KEY = "caribbean-star-store-cart-user-v1";
+const STORAGE_SYNCED_USER_KEY = "caribbean-star-store-cart-synced-user-v1";
 const MAX_QUANTITY = 99;
 const productIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const CartContext = createContext<CartContextValue | null>(null);
+
+function readCartStorage(key: string) {
+  try { return window.localStorage.getItem(key); } catch { return null; }
+}
+
+function writeCartStorage(key: string, value: string) {
+  try { window.localStorage.setItem(key, value); } catch { /* Keep the current in-memory cart. */ }
+}
+
+function removeCartStorage(key: string) {
+  try { window.localStorage.removeItem(key); } catch { /* Keep the current in-memory cart. */ }
+}
 
 function isProduct(value: unknown): value is Product {
   if (!value || typeof value !== "object") return false;
@@ -78,19 +91,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     async function hydrateCart(userId: string | null) {
       const run = ++hydrationRun.current;
-      const storedOwner = window.localStorage.getItem(STORAGE_USER_KEY);
-      const localCart = storedOwner === null
+      const storedOwner = readCartStorage(STORAGE_USER_KEY);
+      const storedSyncedOwner = readCartStorage(STORAGE_SYNCED_USER_KEY);
+      const localCart = storedOwner === null || (storedOwner === userId && storedSyncedOwner !== userId)
         ? readCart()
-        : storedOwner === userId
-          ? readCart()
-          : [];
+        : [];
 
       if (!userId) {
         userIdRef.current = null;
         setSignedInUserId(null);
         if (storedOwner) {
-          window.localStorage.removeItem(STORAGE_KEY);
-          window.localStorage.removeItem(STORAGE_USER_KEY);
+          removeCartStorage(STORAGE_KEY);
+          removeCartStorage(STORAGE_USER_KEY);
+          removeCartStorage(STORAGE_SYNCED_USER_KEY);
           setItems([]);
         } else {
           setItems(localCart);
@@ -100,9 +113,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      if (userIdRef.current && userIdRef.current !== userId) {
+        userIdRef.current = null;
+        setSignedInUserId(null);
+      }
       if (storedOwner && storedOwner !== userId) {
-        window.localStorage.removeItem(STORAGE_KEY);
-        window.localStorage.removeItem(STORAGE_USER_KEY);
+        removeCartStorage(STORAGE_KEY);
+        removeCartStorage(STORAGE_USER_KEY);
+        removeCartStorage(STORAGE_SYNCED_USER_KEY);
         setItems([]);
       }
       setSyncStatus("syncing");
@@ -114,8 +132,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (!active || run !== hydrationRun.current) return;
 
       if (savedError) {
-        userIdRef.current = userId;
-        setSignedInUserId(userId);
         setItems(localCart);
         setSyncStatus("unavailable");
         setReady(true);
@@ -123,7 +139,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
 
       const localQuantities = new Map<string, number>();
-      if (storedOwner === null) {
+      if (storedOwner === null || (storedOwner === userId && storedSyncedOwner !== userId)) {
         for (const line of localCart) {
           if (typeof line.product.id === "string" && productIdPattern.test(line.product.id)) {
             localQuantities.set(line.product.id, line.quantity);
@@ -147,8 +163,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           .eq("status", "published");
         if (!active || run !== hydrationRun.current) return;
         if (error) {
-          userIdRef.current = userId;
-          setSignedInUserId(userId);
           setItems(localCart);
           setSyncStatus("unavailable");
           setReady(true);
@@ -159,16 +173,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       const mergedItems = productRows.flatMap((row) => {
         const product = inventoryRowToProduct(row);
-        const requested = (savedQuantities.get(row.id) || 0) + (localQuantities.get(row.id) || 0);
+        const savedQuantity = savedQuantities.get(row.id) || 0;
+        const localQuantity = localQuantities.get(row.id) || 0;
+        const requested = storedOwner === null
+          ? savedQuantity + localQuantity
+          : Math.max(savedQuantity, localQuantity);
         const quantity = Math.min(MAX_QUANTITY, product.quantityAvailable ?? MAX_QUANTITY, requested);
         return product.inStock && quantity > 0 ? [{ product, quantity }] : [];
       });
 
       userIdRef.current = userId;
-      window.localStorage.setItem(STORAGE_USER_KEY, userId);
+      writeCartStorage(STORAGE_USER_KEY, userId);
       setSignedInUserId(userId);
       setItems(mergedItems);
-      setSyncStatus("synced");
+      setSyncStatus("syncing");
       setReady(true);
     }
 
@@ -200,14 +218,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       if (signedInUserId) window.localStorage.setItem(STORAGE_USER_KEY, signedInUserId);
-      else if (syncStatus === "guest") window.localStorage.removeItem(STORAGE_USER_KEY);
+      else if (syncStatus === "guest") removeCartStorage(STORAGE_USER_KEY);
     } catch {
       // The cart still works for this page if browser storage is unavailable.
     }
   }, [items, ready, signedInUserId, syncStatus]);
 
   useEffect(() => {
-    if (!ready || !signedInUserId || syncStatus !== "synced") return;
+    if (!ready || !signedInUserId) return;
     const userId = signedInUserId;
     const revision = ++writeRevision.current;
     const rows = items.flatMap(({ product, quantity }) =>
@@ -216,9 +234,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         : []
     );
     const productIds = rows.map((row) => row.product_id);
+    removeCartStorage(STORAGE_SYNCED_USER_KEY);
+    setSyncStatus("syncing");
 
     writeQueue.current = writeQueue.current.catch(() => undefined).then(async () => {
-      if (userIdRef.current !== userId) return;
+      if (userIdRef.current !== userId || writeRevision.current !== revision) return;
       if (rows.length) {
         const { error } = await supabase.from("cart_items").upsert(rows, { onConflict: "user_id,product_id" });
         if (error) {
@@ -231,10 +251,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (productIds.length) deletion = deletion.not("product_id", "in", `(${productIds.join(",")})`);
       const { error } = await deletion;
       if (userIdRef.current === userId && writeRevision.current === revision) {
-        setSyncStatus(error ? "unavailable" : "synced");
+        if (error) {
+          setSyncStatus("unavailable");
+        } else {
+          writeCartStorage(STORAGE_SYNCED_USER_KEY, userId);
+          setSyncStatus("synced");
+        }
       }
     });
-  }, [items, ready, signedInUserId, supabase, syncStatus]);
+  }, [items, ready, signedInUserId, supabase]);
 
   const value = useMemo<CartContextValue>(() => ({
     items,
@@ -253,7 +278,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
     },
     setQuantity(slug, quantity) {
-      if (!Number.isFinite(quantity)) return;
+      if (!ready || syncStatus === "syncing" || !Number.isFinite(quantity)) return;
       const nextQuantity = Math.min(MAX_QUANTITY, Math.floor(quantity));
       setItems((current) => nextQuantity < 1
         ? current.filter((line) => line.product.slug !== slug)
@@ -262,6 +287,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           : line));
     },
     removeItem(slug) {
+      if (!ready || syncStatus === "syncing") return;
       setItems((current) => current.filter((line) => line.product.slug !== slug));
     },
   }), [items, ready, syncStatus]);
