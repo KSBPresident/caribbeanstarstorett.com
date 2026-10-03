@@ -7,7 +7,7 @@ import { getSafeExternalWebsite } from "../../../lib/external-website";
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const profileCategories = new Set(["food", "home", "retail", "professional", "transport", "beauty", "community", "other"]);
+const profileCategories = new Set(["home", "retail", "professional", "transport", "beauty", "community", "other"]);
 
 
 function returnTo(slug: string) {
