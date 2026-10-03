@@ -11,6 +11,7 @@ export function SiteFooter() {
               <span><strong>CARIBBEAN STAR STORE</strong><span>Connecting the community</span></span>
             </Link>
             <p>A Caribbean marketplace bringing products, local services, businesses, job opportunities, and real estate together in one place.</p>
+            <p className="site-footer-contact">Need help? <a href="tel:+13472018734">+1 (347) 201-8734</a><br /><a href="mailto:caribbeanstarstore@gmail.com">caribbeanstarstore@gmail.com</a></p>
           </section>
           <section className="site-footer-group">
             <h2>Explore</h2>

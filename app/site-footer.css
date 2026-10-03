@@ -7,6 +7,7 @@
 .site-footer-brand strong{font-size:14px;letter-spacing:.04em}
 .site-footer-brand span{margin-top:4px;color:#b9d8ef;font-size:11px}
 .site-footer-about p{max-width:340px;color:#d3e2ee;font-size:13px;line-height:1.7}
+.site-footer-contact a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px}.site-footer-contact a:hover{color:#9bd9ff}
 .site-footer-group h2{margin:4px 0 13px;color:#9bd9ff;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
 .site-footer-group nav{display:grid;gap:10px}
 .site-footer-group a{width:max-content;max-width:100%;color:#eef6fc;font-size:13px}

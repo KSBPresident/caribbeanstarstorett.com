@@ -161,14 +161,14 @@ export default function HelpPage() {
           <h3>Site policies, modification and severability</h3>
           <p>Please review other policies, such as Caribbean Star Store's Shipping and Returns Policy, posted on this site. These policies also govern your visit. We reserve the right to change our policies and conditions of use at any time. If any condition is deemed invalid, it shall be severable and shall not affect the validity and enforceability of any remaining condition.</p>
           <h3>Questions and help</h3>
-          <p>Questions regarding these Conditions of Use, Privacy Policy or other policy material can be directed to support by clicking the “Contact Us” link in the side menu, emailing caribbeanstarstore@gmail.com, or calling (239) 330-8955.</p>
+          <p>Questions regarding these Conditions of Use, Privacy Policy or other policy material can be directed to support by clicking the “Contact Us” link in the side menu, emailing caribbeanstarstore@gmail.com, or calling +1 (347) 201-8734.</p>
         </details>
       </section>
               
 <section id="contact" className="help-section help-contact">
         <span className="identity-eyebrow">WE’RE HERE TO HELP</span><h2>Contact Caribbean Star Store</h2>
         <p>For order, seller, refund or account questions, include the relevant order or item details when you contact CSS.</p>
-        <div className="directory-hero-actions"><a className="identity-submit" href="mailto:caribbeanstarstore@gmail.com">Email CSS</a><a className="directory-secondary" href="tel:+12393308955">Call (239) 330-8955</a></div>
+        <div className="directory-hero-actions"><a className="identity-submit" href="mailto:caribbeanstarstore@gmail.com">Email CSS</a><a className="directory-secondary" href="tel:+13472018734">Call +1 (347) 201-8734</a></div>
       </section>
     </main>
   </>;
