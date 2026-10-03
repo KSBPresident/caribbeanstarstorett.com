@@ -65,7 +65,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               {!accountServicesReady && <p className="identity-message" role="status">Seller information is available now. Account registration and applications will open after account services are configured.</p>}
               <div className="directory-hero-actions">
                 <Link className="identity-submit" href={signUpHref}>Start your seller application</Link>
-                <Link className="directory-secondary" href={signInUrl("/sell")}>Already have an account? Sign in</Link>
+                <Link className="directory-secondary" href={signInUrl(sellerApplicationPath)}>Already have an account? Sign in</Link>
               </div>
             </div>
             <div className="seller-steps" aria-label="Seller onboarding steps">
