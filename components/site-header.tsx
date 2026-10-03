@@ -22,7 +22,7 @@ export async function SiteHeader() {
     <header className="store-header">
       <div className="store-top">
         <Link className="store-brand" href="/" aria-label="Caribbean Star Store home">
-          <img className="company-logo" src="/caribbean-star-store-logo.svg" alt="Caribbean Star Store — Connecting The Community" />
+          <img className="company-logo" src="/caribbean-star-store-logo.svg" alt="Caribbean Star Store — Connecting The Communities" />
           <span><b>CARIBBEAN STAR STORE</b><small>INTERNATIONAL MARKETPLACE</small></span>
         </Link>
         <form action="/search" className="header-search" role="search" aria-label="Search the marketplace">
