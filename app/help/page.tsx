@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { SiteHeader } from "../../components/site-header";
 
 export const metadata: Metadata = {
@@ -31,6 +32,29 @@ const topics = [
   ["shipping", "Shipping"], ["orders", "Orders"], ["terms", "Terms & conditions"],
 ] as const;
 
+type HelpMarkName = "business" | "community" | "career" | "shipping" | "discover" | "store" | "brand" | "search";
+
+const helpIconContent: Record<HelpMarkName, ReactNode> = {
+  business: <><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6" /><path d="M8 9h.01M16 9h.01" /></>,
+  community: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-1a6 6 0 0 1 12 0v1M16 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1" /></>,
+  career: <><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2" /></>,
+  shipping: <><path d="m3 7 9-4 9 4-9 4-9-4Z" /><path d="M3 7v10l9 4 9-4V7M12 11v10M7.5 5 16.5 9" /></>,
+  discover: <><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5M8.5 11l1.6 1.6 3.2-3.5" /></>,
+  store: <><path d="M4 10v10h16V10M3 10l2-6h14l2 6M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 20v-6h6v6" /></>,
+  brand: <><path d="M4 7V4h3l11 11-5 5L2 9l2-2Z" /><circle cx="6.5" cy="6.5" r=".7" /></>,
+  search: <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 5 5M8 10.5h5M10.5 8v5" /></>,
+};
+
+function HelpMark({ name }: { name: HelpMarkName }) {
+  return (
+    <div className="directory-card-mark" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" focusable="false">
+        {helpIconContent[name]}
+      </svg>
+    </div>
+  );
+}
+
 export default function HelpPage() {
   return <>
     <SiteHeader />
@@ -51,21 +75,21 @@ export default function HelpPage() {
         <span className="identity-eyebrow">GET TO KNOW US</span><h2>About Caribbean Star Store</h2>
         <div className="help-card"><p>Caribbean Star Store is a retail platform where business owners can sell a variety of new and used products. We strive to create a positive impact on customers, employees, small businesses and the communities where we operate. Our team of passionate builders shares a desire to offer customers quality and innovative products.</p><p>At Caribbean Star Store, our customers are our priority.</p></div>
         <div className="directory-grid help-grid">
-          <article className="directory-card"><div className="directory-card-mark">✦</div><h3>Supporting businesses</h3><p>CSS helps businesses reach customers through the marketplace, giving them an opportunity to compete and showcase their products and services.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">↗</div><h3>Our impact</h3><p>We bring businesses and shoppers together around a variety of products, choice and convenient online discovery.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">★</div><h3>Careers</h3><p>We do not have company career opportunities to share right now. We will post information here when opportunities become available.</p></article>
+          <article className="directory-card"><HelpMark name="business" /><h3>Supporting businesses</h3><p>CSS helps businesses reach customers through the marketplace, giving them an opportunity to compete and showcase their products and services.</p></article>
+          <article className="directory-card"><HelpMark name="community" /><h3>Our impact</h3><p>We bring businesses and shoppers together around a variety of products, choice and convenient online discovery.</p></article>
+          <article className="directory-card"><HelpMark name="career" /><h3>Careers</h3><p>We do not have company career opportunities to share right now. We will post information here when opportunities become available.</p></article>
         </div>
       </section>
 
       <section id="sell" className="help-section">
         <span className="identity-eyebrow">MAKE MONEY WITH US</span><h2>Sell and advertise on CSS</h2>
         <div className="directory-grid help-grid">
-          <article className="directory-card"><div className="directory-card-mark">◎</div><h3>Reach more clients</h3><p>Introduce your business and products to shoppers using Caribbean Star Store.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">▣</div><h3>Focus on your business</h3><p>Sellers manage their products, packing, shipping, customer service and returns.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">↗</div><h3>Get your products seen</h3><p>Use relevant product titles and keywords to improve visibility in search. Advertising can help increase product reach.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">⌂</div><h3>Your own store</h3><p>Build customer loyalty with a store on Caribbean Star Store and present your business in one place.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">✧</div><h3>Showcase your brand</h3><p>Customize your store page and logo, then organize your inventory for shoppers.</p></article>
-          <article className="directory-card"><div className="directory-card-mark">⌕</div><h3>Promote products</h3><p>Clear product information and useful keywords help shoppers discover individual listings.</p></article>
+          <article className="directory-card"><HelpMark name="community" /><h3>Reach more clients</h3><p>Introduce your business and products to shoppers using Caribbean Star Store.</p></article>
+          <article className="directory-card"><HelpMark name="shipping" /><h3>Focus on your business</h3><p>Sellers manage their products, packing, shipping, customer service and returns.</p></article>
+          <article className="directory-card"><HelpMark name="discover" /><h3>Get your products seen</h3><p>Use relevant product titles and keywords to improve visibility in search. Advertising can help increase product reach.</p></article>
+          <article className="directory-card"><HelpMark name="store" /><h3>Your own store</h3><p>Build customer loyalty with a store on Caribbean Star Store and present your business in one place.</p></article>
+          <article className="directory-card"><HelpMark name="brand" /><h3>Showcase your brand</h3><p>Customize your store page and logo, then organize your inventory for shoppers.</p></article>
+          <article className="directory-card"><HelpMark name="search" /><h3>Promote products</h3><p>Clear product information and useful keywords help shoppers discover individual listings.</p></article>
         </div>
         <p className="help-callout">Seller registration and store access are subject to CSS review and platform availability. <Link href="/sell">Learn about selling</Link>.</p>
       </section>
