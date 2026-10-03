@@ -64,6 +64,47 @@ async function FeaturedProducts() {
   );
 }
 
+const quickLinks = [
+  { icon: "products", label: "Products", description: "Browse marketplace products", href: "/marketplace" },
+  { icon: "services", label: "Services", description: "Find services", href: "/businesses?category=professional" },
+  { icon: "businesses", label: "Businesses", description: "Discover businesses", href: "/businesses" },
+  { icon: "jobs", label: "Jobs", description: "Find work or hire", href: "/opportunities?type=jobs" },
+  { icon: "property", label: "Real Estate", description: "Buy, rent, invest", href: "/opportunities?type=real-estate" },
+  { icon: "more", label: "More", description: "Explore all categories", href: "/marketplace" },
+] as const;
+
+type QuickIconName = (typeof quickLinks)[number]["icon"];
+
+function QuickIcon({ name }: { name: QuickIconName }) {
+  const common = {
+    width: 30,
+    height: 30,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true as const,
+    focusable: false as const,
+  };
+
+  switch (name) {
+    case "products":
+      return <svg {...common}><path d="M3 4h2l2.2 10.8a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.5L22 8H6" /><circle cx="10" cy="20" r="1.2" /><circle cx="18" cy="20" r="1.2" /></svg>;
+    case "services":
+      return <svg {...common}><path d="M4 19.5 14.6 8.9" /><path d="m13.3 5.4 2-2a4 4 0 0 0 5.3 5.3l-2 2-4.1.6-5.2 5.2a2.1 2.1 0 0 1-3-3l5.2-5.2.8-2.9Z" /></svg>;
+    case "businesses":
+      return <svg {...common}><path d="M3 21h18M5 21V8l7-4 7 4v13M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-3h4v3" /></svg>;
+    case "jobs":
+      return <svg {...common}><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2" /></svg>;
+    case "property":
+      return <svg {...common}><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" /><path d="M8 9h.01M16 9h.01" /></svg>;
+    case "more":
+      return <svg {...common}><rect x="3.5" y="3.5" width="6" height="6" rx="1" /><rect x="14.5" y="3.5" width="6" height="6" rx="1" /><rect x="3.5" y="14.5" width="6" height="6" rx="1" /><rect x="14.5" y="14.5" width="6" height="6" rx="1" /></svg>;
+  }
+}
+
 export default function Home() {
   return (
     <>
@@ -88,8 +129,12 @@ export default function Home() {
           </div>
         </section>
         <section className="quick-grid">
-          {[["🛒","Products","Browse marketplace products","/marketplace"],["♧","Services","Find services","/businesses?category=professional"],["▦","Businesses","Discover businesses","/businesses"],["♙","Jobs","Find work or hire","/opportunities?type=jobs"],["⌂","Real Estate","Buy, rent, invest","/opportunities?type=real-estate"],["✦","More","Explore all categories","/marketplace"]].map(([icon,label,description,href]) => (
-            <Link href={href} className="quick-card" key={label}><span aria-hidden="true">{icon}</span><b>{label}</b><small>{description}</small></Link>
+          {quickLinks.map(({ icon, label, description, href }) => (
+            <Link href={href} className="quick-card" key={label}>
+              <QuickIcon name={icon} />
+              <b>{label}</b>
+              <small>{description}</small>
+            </Link>
           ))}
         </section>
         <section className="store-section">
