@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 const postTypes = [
   { eyebrow: "FOR SELLERS", title: "Product listing", text: "List a product with its category, accurate details, price, available quantity, and a clear photo.", href: "/seller/inventory", action: "Open product inventory" },
-  { eyebrow: "FOR BUSINESSES", title: "Business or service profile", text: "Set up your organization profile so customers can discover your business and the services you offer.", href: "/business", action: "Open business workspace" },
-  { eyebrow: "FOR EMPLOYERS", title: "Job opportunity", text: "Publish a clear role with its location, work arrangement, requirements, and application contact.", href: "/business", action: "Open employer workspace" },
-  { eyebrow: "FOR PROPERTY OWNERS", title: "Property listing", text: "Share a property with its location, price or rent, key features, and accurate availability.", href: "/business", action: "Open property workspace" },
+  { eyebrow: "FOR BUSINESSES", title: "Business or service profile", text: "Apply to create a business presence and help customers discover your services.", href: "/sell?category=businesses", action: "Apply to list your business" },
+  { eyebrow: "FOR EMPLOYERS", title: "Job opportunity", text: "Apply for an employer workspace, then publish roles with clear locations, requirements, and application details.", href: "/sell?category=jobs", action: "Start an employer application" },
+  { eyebrow: "FOR PROPERTY OWNERS", title: "Property listing", text: "Apply for a workspace to publish property details, location, price or rent, and availability.", href: "/sell?category=real-estate", action: "Start a property application" },
   { eyebrow: "FOR BUYERS", title: "Buying request", text: "Tell sellers what you are looking for and the category that best matches your request.", href: "/build-a-buy", action: "Open buying request form" },
 ];
 
