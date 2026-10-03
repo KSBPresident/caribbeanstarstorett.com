@@ -119,7 +119,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide account-workspace-link">
-            <div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Purchases and order history</h2><p>Order history will appear here after product checkout is available on Caribbean Star Store.</p></div>
+            <div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Purchases and order history</h2><p>Online order placement is not active yet. Your order history will appear here once checkout is enabled.</p></div>
             <Link className="identity-submit" href="/cart">View your cart →</Link>
           </section>
         </div>
