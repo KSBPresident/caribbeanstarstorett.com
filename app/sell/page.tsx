@@ -6,6 +6,7 @@ import { PrivacyStatusNote } from "../../components/privacy-status-note";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { submitSellerApplication } from "./actions";
+import { SellerOfferIntake } from "../../components/seller-offer-intake";
 import { signInUrl } from "../../lib/auth/return-path";
 
 export const metadata: Metadata = {
@@ -154,16 +155,14 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <PrivacyStatusNote submittedData="This form sends your store details, contact information, and description to account services for seller review." />
             <form action={submitSellerApplication} className="identity-form seller-form">
               <label>Store or seller name<input name="sellerName" autoComplete="organization" minLength={2} maxLength={100} required /></label>
-              <div className="seller-form-row">
-                <label>Seller type<select name="sellerType" defaultValue="individual" required><option value="individual">Individual seller</option><option value="business">Registered business</option><option value="nonprofit">Nonprofit</option><option value="community">Community group</option></select></label>
-                <label>What do you offer?<select name="category" defaultValue="products" required><option value="products">Products</option><option value="services">Services</option><option value="businesses">Business listing</option><option value="jobs">Jobs</option><option value="real-estate">Real estate</option><option value="other">Other</option></select></label>
-              </div>
+              <label>Seller type<select name="sellerType" defaultValue="individual" required><option value="individual">Individual seller</option><option value="business">Registered business</option><option value="nonprofit">Nonprofit</option><option value="community">Community group</option></select></label>
+              <SellerOfferIntake />
               <label>Contact email<input name="email" type="email" autoComplete="email" defaultValue={user.email || ""} maxLength={254} required /></label>
               <div className="seller-form-row">
                 <label>Phone (optional)<input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>
                 <label>Website (optional)<input name="website" type="url" placeholder="https://example.com" maxLength={300} /></label>
               </div>
-              <label>What would you like to sell or offer?<textarea name="description" minLength={30} maxLength={2000} rows={5} placeholder="Describe your products or services, where you operate, and what customers can expect." required /></label>
+              
               <button className="identity-submit" type="submit">Submit seller application</button>
             </form>
           </section>

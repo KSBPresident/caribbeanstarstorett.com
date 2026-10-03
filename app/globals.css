@@ -395,3 +395,5 @@
 .product-category-guidance{margin:-2px 0 4px;padding:12px 13px;border-left:3px solid #0670c8;border-radius:0 8px 8px 0;background:#f2f8fd;color:#405267;font-size:11px;line-height:1.6}
 .product-category-guidance strong{display:block;margin-bottom:3px;color:#17324d;font-size:11px}
 @media(max-width:700px){.create-post-grid{grid-template-columns:1fr}.header-actions .header-create-link{padding:8px 10px}}
+
+.seller-intake-guidance{margin:2px 0 4px;padding:14px 16px}.seller-intake-guidance p{margin:6px 0 0}
