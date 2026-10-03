@@ -47,7 +47,6 @@ function directoryUrl(query: string, category: string, page: number) {
 }
 
 const categoryLabels: Record<string, string> = {
-  food: "Food & groceries",
   home: "Home & living",
   retail: "Retail",
   professional: "Professional services",
