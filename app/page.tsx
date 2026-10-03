@@ -22,7 +22,6 @@ const structuredData = [
     logo: "https://www.caribbeanstarstorett.com/caribbean-star-store-logo.svg",
     description:
       "An international marketplace for products, services, businesses, jobs, and real-estate opportunities.",
-    areaServed: { "@type": "Place", name: "International" }
   },
   {
     "@context": "https://schema.org",
