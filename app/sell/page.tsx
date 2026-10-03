@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
 };
 
-type SearchParams = Promise<{ error?: string; notice?: string }>;
+type SearchParams = Promise<{ error?: string; notice?: string; category?: string }>;
 
 const statusCopy: Record<string, string> = {
   submitted: "Submitted",
@@ -44,6 +44,10 @@ const statusCopy: Record<string, string> = {
 
 export default async function SellPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
+  const categories = ["products", "services", "businesses", "jobs", "real-estate", "other"] as const;
+  const initialOfferCategory = categories.find((category) => category === params.category) || "products";
+  const sellerApplicationPath = "/sell?category=" + encodeURIComponent(initialOfferCategory);
+  const signUpHref = "/sign-up?next=" + encodeURIComponent(sellerApplicationPath);
   const accountServicesReady = isSupabaseConfigured();
   const supabase = accountServicesReady ? await createClient() : null;
   const auth = supabase ? await supabase.auth.getUser() : null;
@@ -60,7 +64,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               <p>Introduce your business and products to shoppers through our international marketplace.</p>
               {!accountServicesReady && <p className="identity-message" role="status">Seller information is available now. Account registration and applications will open after account services are configured.</p>}
               <div className="directory-hero-actions">
-                <Link className="identity-submit" href="/sign-up?next=%2Fsell">Start your seller application</Link>
+                <Link className="identity-submit" href={signUpHref}>Start your seller application</Link>
                 <Link className="directory-secondary" href={signInUrl("/sell")}>Already have an account? Sign in</Link>
               </div>
             </div>
@@ -89,7 +93,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
                 <h2>Promote individual products</h2>
                 <p>Clear product information and useful keywords help shoppers discover your listings in search.</p>
                 <p className="catalog-meta">{accountServicesReady ? "Seller registration and store access are subject to CSS review and platform availability." : "Account registration and seller applications will open after account services are configured."}</p>
-                <Link className="identity-submit" href="/sign-up?next=%2Fsell">Create an account to apply</Link>
+                <Link className="identity-submit" href={signUpHref}>Create an account to apply</Link>
               </section>
               <section className="seller-note"><strong>How it works</strong><p>After approval, your account gets a private workspace to manage your public profile and listings. Product publishing and payments will be enabled when the store connection is ready.</p><Link href="/help#sell">Read seller help →</Link></section>
             </aside>
@@ -156,7 +160,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <form action={submitSellerApplication} className="identity-form seller-form">
               <label>Store or seller name<input name="sellerName" autoComplete="organization" minLength={2} maxLength={100} required /></label>
               <label>Seller type<select name="sellerType" defaultValue="individual" required><option value="individual">Individual seller</option><option value="business">Registered business</option><option value="nonprofit">Nonprofit</option><option value="community">Community group</option></select></label>
-              <SellerOfferIntake />
+              <SellerOfferIntake defaultCategory={initialOfferCategory} />
               <label>Contact email<input name="email" type="email" autoComplete="email" defaultValue={user.email || ""} maxLength={254} required /></label>
               <div className="seller-form-row">
                 <label>Phone (optional)<input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>
