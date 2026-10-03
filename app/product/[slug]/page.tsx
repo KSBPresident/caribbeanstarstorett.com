@@ -61,7 +61,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
                   "@type": "Product",
                   name: product.name,
                   description: product.description || undefined,
-                  image: product.image,
+                  image: new URL(product.image, "https://www.caribbeanstarstorett.com").toString(),
                   category: product.category,
                   offers: {
                     "@type": "Offer",
