@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 };
 
 const postTypes = [
-  { eyebrow: "FOR SELLERS", title: "Product listing", text: "List a product with its category, accurate details, price, available quantity, and a clear photo.", href: "/seller/inventory", action: "Manage product listings" },
+  { eyebrow: "FOR SELLERS", title: "Product listing", text: "List a product with its category, accurate details, price, available quantity, and a clear photo.", href: "/seller/inventory", action: "Open product inventory" },
   { eyebrow: "FOR BUSINESSES", title: "Business or service profile", text: "Set up your organization profile so customers can discover your business and the services you offer.", href: "/business", action: "Open business workspace" },
-  { eyebrow: "FOR EMPLOYERS", title: "Job opportunity", text: "Publish a clear role with its location, work arrangement, requirements, and application contact.", href: "/business", action: "Post from a workspace" },
-  { eyebrow: "FOR PROPERTY OWNERS", title: "Property listing", text: "Share a property with its location, price or rent, key features, and accurate availability.", href: "/business", action: "Post from a workspace" },
-  { eyebrow: "FOR BUYERS", title: "Buying request", text: "Tell sellers what you are looking for and the category that best matches your request.", href: "/build-a-buy", action: "Create a buying request" },
+  { eyebrow: "FOR EMPLOYERS", title: "Job opportunity", text: "Publish a clear role with its location, work arrangement, requirements, and application contact.", href: "/business", action: "Open employer workspace" },
+  { eyebrow: "FOR PROPERTY OWNERS", title: "Property listing", text: "Share a property with its location, price or rent, key features, and accurate availability.", href: "/business", action: "Open property workspace" },
+  { eyebrow: "FOR BUYERS", title: "Buying request", text: "Tell sellers what you are looking for and the category that best matches your request.", href: "/build-a-buy", action: "Open buying request form" },
 ];
 
 export default function CreatePostPage() {
