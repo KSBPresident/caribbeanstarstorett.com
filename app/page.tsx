@@ -113,14 +113,14 @@ export default function Home() {
         }}
       />
       <main id="main-content" tabIndex={-1}>
-        <section className="home-hero">
+        <section className="home-hero" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,43,78,.92),rgba(3,43,78,.18)),url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1800&q=85")` }}>
           <div className="hero-overlay">
             <span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span>
             <h1>A Global<br />Marketplace</h1>
             <p>Buy · Sell · Work · Grow Together</p>
             <form className="hero-search" role="search" action="/search">
               <input name="q" maxLength={80} placeholder="Search products, services, businesses..." aria-label="Search the marketplace" />
-              <button type="submit">Search</button>
+              <button className="identity-submit" type="submit">Search</button>
             </form>
             <Link href="/how-it-works" className="identity-submit" style={{ display: "inline-block", marginTop: 14 }}>New here? See how it works →</Link>
           </div>
