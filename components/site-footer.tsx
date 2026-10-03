@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div className="site-footer-main">
           <section className="site-footer-about" aria-label="About Caribbean Star Store">
             <Link className="site-footer-brand" href="/" aria-label="Caribbean Star Store home">
-              <img src="/caribbean-star-store-logo.svg" alt="" />
+              <img src="/caribbean-star-store-logo.png" alt="" />
               <span><strong>CARIBBEAN STAR STORE</strong><span>Connecting The Communities</span></span>
             </Link>
             <p>An international marketplace bringing products, services, businesses, job opportunities, and real estate together in one place.</p>

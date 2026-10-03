@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Lora, Nunito_Sans } from "next/font/google";
+import { Outfit, Nunito_Sans } from "next/font/google";
 import { SiteFooter } from "../components/site-footer";
 import { CartProvider } from "../components/cart-provider";
 import "./globals.css";
 import "./site-footer.css";
 
-const islandDisplay = Lora({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap", variable: "--font-island-display" });
+const islandDisplay = Outfit({ subsets: ["latin"], display: "swap", variable: "--font-island-display" });
 const islandSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-island-sans" });
 
-const brandLogo = "/caribbean-star-store-logo.svg";
+const brandLogo = "/caribbean-star-store-logo.png";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.caribbeanstarstorett.com"),
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     "Discover products, services, businesses, jobs, and real estate with Caribbean Star Store, an international marketplace connecting communities worldwide.",
   icons: {
-    icon: [{ url: brandLogo, type: "image/svg+xml" }],
+    icon: [{ url: brandLogo, type: "image/png" }],
     shortcut: [{ url: brandLogo, type: "image/svg+xml" }],
   },
   openGraph: {

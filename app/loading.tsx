@@ -6,7 +6,7 @@ export default function Loading() {
       <header className="store-header">
         <div className="store-top">
           <Link className="store-brand" href="/" aria-label="Caribbean Star Store home">
-            <img className="company-logo" src="/caribbean-star-store-logo.svg" alt="" />
+            <img className="company-logo" src="/caribbean-star-store-logo.png" alt="" />
             <span><b>CARIBBEAN STAR STORE</b><small>INTERNATIONAL MARKETPLACE</small></span>
           </Link>
         </div>

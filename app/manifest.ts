@@ -12,9 +12,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0670c8",
     icons: [
       {
-        src: "/caribbean-star-store-logo.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/caribbean-star-store-logo.png",
+        sizes: "120x120",
+        type: "image/png",
       },
     ],
   };

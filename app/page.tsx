@@ -19,7 +19,7 @@ const structuredData = [
     "@type": "Organization",
     name: "Caribbean Star Store",
     url: "https://www.caribbeanstarstorett.com",
-    logo: "https://www.caribbeanstarstorett.com/caribbean-star-store-logo.svg",
+    logo: "https://www.caribbeanstarstorett.com/caribbean-star-store-logo.png",
     description:
       "An international marketplace for products, services, businesses, jobs, and real-estate opportunities.",
   },
