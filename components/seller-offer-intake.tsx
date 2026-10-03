@@ -44,8 +44,8 @@ const categories = [
   ["other", "Other"],
 ] as const;
 
-export function SellerOfferIntake() {
-  const [category, setCategory] = useState("products");
+export function SellerOfferIntake({ defaultCategory = "products" }: { defaultCategory?: keyof typeof offers }) {
+  const [category, setCategory] = useState(defaultCategory);
   const selected = offers[category];
 
   return (
