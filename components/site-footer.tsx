@@ -8,7 +8,7 @@ export function SiteFooter() {
           <section className="site-footer-about" aria-label="About Caribbean Star Store">
             <Link className="site-footer-brand" href="/" aria-label="Caribbean Star Store home">
               <img src="/caribbean-star-store-logo.svg" alt="" />
-              <span><strong>CARIBBEAN STAR STORE</strong><span>Connecting the community</span></span>
+              <span><strong>CARIBBEAN STAR STORE</strong><span>Connecting The Communities</span></span>
             </Link>
             <p>An international marketplace bringing products, services, businesses, job opportunities, and real estate together in one place.</p>
             <p className="site-footer-contact">Need help? <a href="tel:+13472018734">+1 (347) 201-8734</a><br /><a href="mailto:caribbeanstarstore@gmail.com">caribbeanstarstore@gmail.com</a></p>
@@ -47,7 +47,7 @@ export function SiteFooter() {
         </div>
         <div className="site-footer-bottom">
           <span>© {new Date().getFullYear()} Caribbean Star Store</span>
-          <span>Connecting communities worldwide.</span>
+          <span>Connecting The Communities</span>
           <span className="site-footer-credit">Website Designed &amp; Developed by <strong>Nebula Interstellar Networking Economy LLC.</strong></span>
         </div>
       </div>
