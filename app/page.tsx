@@ -113,7 +113,7 @@ export default function Home() {
         }}
       />
       <main id="main-content" tabIndex={-1}>
-        <section className="home-hero" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,43,78,.92),rgba(3,43,78,.18)),url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1800&q=85")` }}>
+        <section className="home-hero" style={{ backgroundImage: `linear-gradient(90deg,rgba(3,43,78,.92),rgba(3,43,78,.18)),url("https://images.unsplash.com/photo-1557428028-32f72be0f811?auto=format&fit=crop&w=1800&q=85")` }}>
           <div className="hero-overlay">
             <span className="hero-kicker">BUY · SELL · WORK · GROW TOGETHER</span>
             <h1>A Global<br />Marketplace</h1>
