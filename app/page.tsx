@@ -7,7 +7,7 @@ import { categories } from "../lib/store-data";
 import { getStoreProducts } from "../lib/store-catalog";
 
 export const metadata: Metadata = {
-  title: "The Global Marketplace | Caribbean Star Store",
+  title: "Caribbean Star Store | Global Marketplace",
   description:
     "Discover products, services, businesses, jobs, and real estate in one international marketplace.",
   alternates: { canonical: "/" },
