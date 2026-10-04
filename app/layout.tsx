@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "Discover products, services, businesses, jobs, and real estate with Caribbean Star Store, an international marketplace connecting communities worldwide.",
   icons: {
     icon: [{ url: brandLogo, type: "image/png" }],
-    shortcut: [{ url: brandLogo, type: "image/svg+xml" }],
+    shortcut: [{ url: brandLogo, type: "image/png" }],
   },
   openGraph: {
     type: "website",
