@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Outfit, Nunito_Sans } from "next/font/google";
+import { Baloo_2, Nunito_Sans } from "next/font/google";
 import { SiteFooter } from "../components/site-footer";
 import { CartProvider } from "../components/cart-provider";
 import "./globals.css";
 import "./site-footer.css";
 
-const islandDisplay = Outfit({ subsets: ["latin"], display: "swap", variable: "--font-island-display" });
+const islandDisplay = Baloo_2({ subsets: ["latin"], display: "swap", variable: "--font-island-display" });
 const islandSans = Nunito_Sans({ subsets: ["latin"], display: "swap", variable: "--font-island-sans" });
 
 const brandLogo = "/caribbean-star-store-logo.png";
