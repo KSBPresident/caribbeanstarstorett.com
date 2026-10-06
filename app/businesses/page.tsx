@@ -125,7 +125,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
         />
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · BUSINESS DIRECTORY</span>
-          <h1>Discover businesses in your community.</h1>
+          <h1>Discover businesses from around the world.</h1>
           <p>Browse public profiles published by businesses and organizations around the world.</p>
           <div className="directory-hero-actions">
             <Link className="identity-submit" href="/sell">Apply to list your business</Link>
@@ -147,7 +147,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
         </section>
 
         <section className="directory-results">
-          <div className="directory-results-heading"><div><span className="identity-eyebrow">LOCAL &amp; REGIONAL</span><h2>{category ? categoryLabels[category] : "Public business profiles"}</h2></div><span>{error ? "Count unavailable" : `${totalCount} ${totalCount === 1 ? "listing" : "listings"} · Page ${requestedPage} of ${pageCount}`}</span></div>
+          <div className="directory-results-heading"><div><span className="identity-eyebrow">GLOBAL BUSINESS DIRECTORY</span><h2>{category ? categoryLabels[category] : "Public business profiles"}</h2></div><span>{error ? "Count unavailable" : `${totalCount} ${totalCount === 1 ? "listing" : "listings"} · Page ${requestedPage} of ${pageCount}`}</span></div>
           {error ? (
             <div className="catalog-empty"><strong>Directory connection is unavailable.</strong><br />Please try again shortly.</div>
           ) : profiles.length ? (
