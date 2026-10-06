@@ -69,7 +69,7 @@ export default function HowItWorksPage() {
         <header className="directory-hero">
           <span className="identity-eyebrow">CARIBBEAN STAR STORE · GETTING STARTED</span>
           <h1>One marketplace for communities around the world.</h1>
-          <p>Explore the marketplace, discover local businesses and opportunities, or create an account to take part in the community.</p>
+          <p>Explore the marketplace, discover businesses and opportunities from around the world, or create an account to take part.</p>
           <div className="directory-hero-actions">
             <Link className="identity-submit" href="/marketplace">Explore the marketplace</Link>
             <Link className="directory-secondary" href="/sign-up">Create an account</Link>
