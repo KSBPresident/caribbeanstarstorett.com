@@ -3,7 +3,9 @@ import type { ReactNode } from "react";
 import { Baloo_2, Nunito_Sans } from "next/font/google";
 import { SiteFooter } from "../components/site-footer";
 import { CartProvider } from "../components/cart-provider";
+import { ComingSoonBanner } from "../components/coming-soon-banner";
 import "./globals.css";
+import "./coming-soon.css";
 import "./site-footer.css";
 
 const islandDisplay = Baloo_2({ subsets: ["latin"], display: "swap", variable: "--font-island-display" });
@@ -48,6 +50,7 @@ export default function RootLayout({
       <body>
         <a className="skip-to-content" href="#main-content">Skip to content</a>
         <CartProvider>
+          <ComingSoonBanner />
           {children}
           <SiteFooter />
         </CartProvider>
