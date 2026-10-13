@@ -33,6 +33,10 @@ export default async function SellerWorkspacePage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const broadcastsResult = await supabase.from("seller_broadcasts")
+    .select("id, subject, body, created_at")
+    .order("created_at", { ascending: false }).limit(20);
+
   const applications = applicationsResult.data || [];
   const approvedApplications = applications.filter(
     (application) => application.status === "approved" && Boolean(application.organization_id),
@@ -94,6 +98,25 @@ export default async function SellerWorkspacePage() {
             We couldn’t load your seller applications. Refresh the page to try again.
           </p>
         )}
+        {approvedApplications.length > 0 && (
+          <section className="identity-panel">
+            <span className="identity-eyebrow">SELLER UPDATES</span>
+            <h2>Announcements from Caribbean Star Store</h2>
+            {broadcastsResult.error ? (
+              <p className="identity-message identity-error" role="alert">Seller announcements could not be loaded.</p>
+            ) : broadcastsResult.data?.length ? (
+              <div className="seller-app-list">
+                {broadcastsResult.data.map((item) => (
+                  <article className="seller-app-card" key={item.id}>
+                    <div className="seller-app-heading"><strong>{item.subject}</strong><span className="seller-status">{new Date(item.created_at).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span></div>
+                    <p>{item.body}</p>
+                  </article>
+                ))}
+              </div>
+            ) : <p className="organization-empty">No new seller announcements.</p>}
+          </section>
+        )}
+
         {accessError && (
           <p className="identity-message identity-error" role="alert">
             We couldn’t confirm workspace access. Refresh the page to try again.
