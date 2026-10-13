@@ -9,15 +9,22 @@ export function SalesPieChart({ counts }: { counts: Record<string, number> }) {
     offset += (count / total) * 100;
     return { category, count, color: palette[index % palette.length], start, end: offset };
   });
-  const gradient = stops.map((slice) => `${slice.color} ${slice.start}% ${slice.end}%`).join(", ");
+  const gradient = stops.length
+    ? `conic-gradient(${stops.map((slice) => `${slice.color} ${slice.start}% ${slice.end}%`).join(", ")})`
+    : "conic-gradient(#e7edf3 0% 100%)";
+  const label = total
+    ? `Sales by category: ${entries.map(([category, count]) => `${category.replaceAll("-", " ")} ${count}`).join(", ")}`
+    : "No completed sales recorded yet";
   return (
     <figure className="sales-chart">
-      <div className="sales-donut" role="img" aria-label={`Sales by category: ${entries.map(([category, count]) => `${category.replaceAll("-", " ")} ${count}`).join(", ")}`} style={{ background: `conic-gradient(${gradient})` }}>
-        <span>{total}<small>sales</small></span>
+      <div className="sales-donut" role="img" aria-label={label} style={{ background: gradient }}>
+        <span>{total}<small>{total === 1 ? "sale" : "sales"}</small></span>
       </div>
       <figcaption>
         <strong>Recorded sales by category</strong>
-        <ul>{stops.map((slice) => <li key={slice.category}><span style={{ backgroundColor: slice.color }} aria-hidden="true" />{slice.category.replaceAll("-", " ")}<b>{slice.count}</b></li>)}</ul>
+        {stops.length ? (
+          <ul>{stops.map((slice) => <li key={slice.category}><span style={{ backgroundColor: slice.color }} aria-hidden="true" />{slice.category.replaceAll("-", " ")}<b>{slice.count}</b></li>)}</ul>
+        ) : <p className="organization-empty">Your chart will show each category after your first completed sale.</p>}
       </figcaption>
     </figure>
   );
