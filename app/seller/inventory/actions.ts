@@ -20,7 +20,7 @@ function safeImageUrl(value: string) {
 }
 
 type ServerSupabaseClient = Awaited<ReturnType<typeof createClient>>;
-const MAX_PRODUCT_IMAGE_BYTES = 3 * 1024 * 1024;
+const MAX_PRODUCT_IMAGE_BYTES = 10 * 1024 * 1024;
 
 function isImageFile(value: FormDataEntryValue | null): value is File {
   return typeof File !== "undefined" && value instanceof File && value.size > 0;
