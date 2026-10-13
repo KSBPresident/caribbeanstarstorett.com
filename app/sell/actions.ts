@@ -18,6 +18,7 @@ export async function submitSellerApplication(formData: FormData) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
 
   const sellerName = String(formData.get("sellerName") || "").trim();
+  const contactName = String(formData.get("contactName") || "").trim();
   const sellerType = String(formData.get("sellerType") || "");
   const category = String(formData.get("category") || "");
   const email = String(formData.get("email") || "").trim().toLowerCase();
@@ -28,6 +29,7 @@ export async function submitSellerApplication(formData: FormData) {
 
   if (
     sellerName.length < 2 || sellerName.length > 100 ||
+    contactName.length < 2 || contactName.length > 100 ||
     !sellerTypes.has(sellerType) || !categories.has(category) ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 ||
     phone.length > 40 || description.length < 30 || description.length > 2000 ||
@@ -41,6 +43,7 @@ export async function submitSellerApplication(formData: FormData) {
   const { error } = await supabase.from("seller_applications").insert({
     applicant_user_id: user.id,
     seller_name: sellerName,
+    contact_person_name: contactName,
     seller_type: sellerType,
     category_key: category,
     contact_email: email,
