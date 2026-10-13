@@ -7,7 +7,7 @@ import { updateProfile } from "./actions";
 import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = {
-  searchParams: Promise<{ error?: string; notice?: string }>;
+  searchParams: Promise<{ continue?: string; error?: string; notice?: string }>;
 };
 
 export const metadata = {
@@ -34,14 +34,17 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     profile?.display_name ||
     (typeof user.user_metadata?.display_name === "string" ? user.user_metadata.display_name : "") ||
     (user.email || "").split("@")[0];
+  const continuePath = safeNextPath(params.continue);
   const notice =
-    params.notice === "saved"
-      ? "Your profile has been updated."
-      : params.error === "profile"
-        ? "Enter a name between 2 and 60 characters."
-        : params.error === "save"
-          ? "We couldn’t save that change. Please try again."
-          : null;
+    params.notice === "confirmed"
+      ? "Your email has been confirmed successfully. Your account is ready."
+      : params.notice === "saved"
+        ? "Your profile has been updated."
+        : params.error === "profile"
+          ? "Enter a name between 2 and 60 characters."
+          : params.error === "save"
+            ? "We couldn’t save that change. Please try again."
+            : null;
 
   const accountDataError = profileResult.error || workspaceCount.error || requestResult.error || sellerResult.error;
   const requestCount = requestResult.error ? null : requestResult.data?.length || 0;
@@ -63,7 +66,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </form>
         </header>
 
-        {notice && <p className="identity-message" role="status">{notice}</p>}
+        {notice && (
+          <p className="identity-message" role="status">
+            {notice}
+            {params.notice === "confirmed" && continuePath !== "/dashboard" && (
+              <> <Link href={continuePath}>Continue →</Link></>
+            )}
+          </p>
+        )}
         {accountDataError && <p className="identity-message identity-error" role="alert">Some account information could not be loaded. Refresh the page to try again.</p>}
 
         <section className="account-overview" aria-label="Account activity summary">
