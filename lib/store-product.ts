@@ -3,6 +3,7 @@ import { categories } from "./store-data";
 
 export type InventoryProductRow = {
   id: string;
+  organization_id: string;
   slug: string;
   name: string;
   category_key: string;
@@ -16,6 +17,7 @@ export type InventoryProductRow = {
 export function inventoryRowToProduct(row: InventoryProductRow): Product {
   return {
     id: row.id,
+    organizationId: row.organization_id,
     slug: row.slug,
     name: row.name,
     category: categories.find((category) => category.key === row.category_key)?.name || "Marketplace",
