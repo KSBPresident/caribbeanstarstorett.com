@@ -62,6 +62,10 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               <span className="identity-eyebrow">MAKE MONEY WITH US</span>
               <h1>Sell and advertise on Caribbean Star Store.</h1>
               <p>Introduce your business and products to shoppers through our international marketplace.</p>
+              <section className="seller-note seller-commission-note" aria-label="Seller commission">
+                <strong>Seller commission</strong>
+                <p>Caribbean Star Store charges a 12% commission on every completed sale. Sellers receive the remaining 88% as seller proceeds.</p>
+              </section>
               {!accountServicesReady && <p className="identity-message" role="status">Seller information is available now. Account registration and applications will open after account services are configured.</p>}
               <div className="directory-hero-actions">
                 <Link className="identity-submit" href={signUpHref}>Start your seller application</Link>
@@ -140,6 +144,10 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <span className="identity-eyebrow">SELL ON CARIBBEAN STAR STORE</span>
             <h1>Bring your business to the international marketplace.</h1>
             <p>Tell us what you want to offer. After approval, your account gets a private workspace to manage its public profile and listings.</p>
+            <section className="seller-note seller-commission-note" aria-label="Seller commission">
+              <strong>Seller commission</strong>
+              <p>Caribbean Star Store charges a 12% commission on every completed sale. Sellers receive the remaining 88% as seller proceeds.</p>
+            </section>
           </div>
           <div className="seller-steps" aria-label="Seller onboarding steps">
             <div><span>1</span><b>Apply</b><small>Share your details</small></div>
