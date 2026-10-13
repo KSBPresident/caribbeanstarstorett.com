@@ -44,7 +44,7 @@ export default async function Admin({ searchParams }: PageProps) {
     );
   }
 
-  const [params, profileCount, organizationCount, memberCount, sellerCount, requestCount, businessCount, opportunityCount, sellers, requests, audit] = await Promise.all([
+  const [params, profileCount, organizationCount, memberCount, sellerCount, requestCount, businessCount, opportunityCount, sellers, requests, audit, broadcastsResult] = await Promise.all([
     searchParams,
     supabase.from("profiles").select("user_id", { count: "exact", head: true }),
     supabase.from("organizations").select("id", { count: "exact", head: true }),
@@ -62,10 +62,13 @@ export default async function Admin({ searchParams }: PageProps) {
     supabase.from("audit_log")
       .select("id, action, resource_type, resource_id, metadata, created_at")
       .order("created_at", { ascending: false }).limit(20),
+    supabase.from("seller_broadcasts")
+      .select("id, subject, body, created_at")
+      .order("created_at", { ascending: false }).limit(20),
   ]);
 
   const queryError = profileCount.error || organizationCount.error || memberCount.error || sellerCount.error ||
-    requestCount.error || businessCount.error || opportunityCount.error || sellers.error || requests.error || audit.error;
+    requestCount.error || businessCount.error || opportunityCount.error || sellers.error || requests.error || audit.error || broadcastsResult.error;
   const notice = params.notice === "seller-reviewed"
     ? "Seller application status updated and recorded in the audit log."
     : params.notice === "request-updated"
@@ -110,8 +113,8 @@ export default async function Admin({ searchParams }: PageProps) {
             <button className="identity-submit" type="submit">Send to all approved sellers</button>
           </form>
           <h3>Recent broadcasts</h3>
-          {broadcastsResult.data?.length ? <div className="account-activity-list">
-            {broadcastsResult.data.map((item) => <article key={item.id}><div><strong>{item.subject}</strong><span>{dateLabel(item.created_at)} · {item.body}</span></div></article>)}
+          {((broadcastsResult.data || []) as Array<{ id: string; subject: string; body: string; created_at: string }>).length ? <div className="account-activity-list">
+            {((broadcastsResult.data || []) as Array<{ id: string; subject: string; body: string; created_at: string }>).map((item) => <article key={item.id}><div><strong>{item.subject}</strong><span>{dateLabel(item.created_at)} · {item.body}</span></div></article>)}
           </div> : <p className="organization-empty">No seller updates have been sent yet.</p>}
         </section>
 
