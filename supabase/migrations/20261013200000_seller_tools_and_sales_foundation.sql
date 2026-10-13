@@ -7,6 +7,27 @@ ALTER TABLE public.seller_applications
 ALTER TABLE public.organization_public_profiles
   ADD COLUMN seller_verified boolean NOT NULL DEFAULT false;
 
+CREATE OR REPLACE FUNCTION public.guard_seller_verified_status()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $function$
+BEGIN
+  IF NEW.seller_verified IS DISTINCT FROM OLD.seller_verified
+    AND NOT COALESCE(((SELECT auth.jwt()) -> 'app_metadata' ->> 'platform_role') = 'admin', false)
+  THEN
+    RAISE EXCEPTION 'platform administrator access required' USING ERRCODE = '42501';
+  END IF;
+  RETURN NEW;
+END;
+$function$;
+REVOKE ALL ON FUNCTION public.guard_seller_verified_status() FROM PUBLIC, anon, authenticated;
+DROP TRIGGER IF EXISTS guard_seller_verified_status ON public.organization_public_profiles;
+CREATE TRIGGER guard_seller_verified_status
+  BEFORE UPDATE ON public.organization_public_profiles
+  FOR EACH ROW EXECUTE FUNCTION public.guard_seller_verified_status();
+
 -- A platform administrator records the provider's outcome. The application stores
 -- only the status; identity documents and selfies stay with the verification provider.
 CREATE OR REPLACE FUNCTION public.platform_set_seller_verification(
@@ -145,13 +166,13 @@ CREATE POLICY seller_coupons_public_active_read
   USING (is_active AND starts_at <= now() AND (expires_at IS NULL OR expires_at > now())
     AND EXISTS (SELECT 1 FROM public.organizations o
       JOIN public.organization_public_profiles p ON p.organization_id = o.id
-      WHERE o.id = organization_id AND o.status = 'active' AND p.is_published));
+      WHERE o.id = public.seller_coupons.organization_id AND o.status = 'active' AND p.is_published));
 CREATE POLICY seller_coupons_authenticated_read
   ON public.seller_coupons FOR SELECT TO authenticated
   USING ((is_active AND starts_at <= now() AND (expires_at IS NULL OR expires_at > now())
       AND EXISTS (SELECT 1 FROM public.organizations o
         JOIN public.organization_public_profiles p ON p.organization_id = o.id
-        WHERE o.id = organization_id AND o.status = 'active' AND p.is_published))
+        WHERE o.id = public.seller_coupons.organization_id AND o.status = 'active' AND p.is_published))
     OR private.has_organization_permission(organization_id, 'organization.read'));
 CREATE POLICY seller_coupons_manage_insert
   ON public.seller_coupons FOR INSERT TO authenticated
