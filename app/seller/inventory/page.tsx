@@ -154,7 +154,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                     <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" required /></label>
                     <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue="0" required /></label>
                   </div>
-                  <DirectProductImageUpload organizationId={item.organization_id} /><label>Or use an HTTPS image URL<input name="imageUrl" type="url" placeholder="https://…" maxLength={2048} /><small>Choose a photo or enter an image address.</small></label>
+                  <DirectProductImageUpload organizationSelect /><label>Or use an HTTPS image URL<input name="imageUrl" type="url" placeholder="https://…" maxLength={2048} /><small>Choose a photo or enter an image address.</small></label>
                   <label>Listing status<select name="status" defaultValue="draft"><option value="draft">Save as draft</option><option value="published">Publish listing</option></select></label>
                   <button className="identity-submit" type="submit">Save product listing</button>
                 </form>

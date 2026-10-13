@@ -27,7 +27,13 @@ async function hasValidImageSignature(file: File) {
   return false;
 }
 
-export function DirectProductImageUpload({ organizationId }: { organizationId: string }) {
+export function DirectProductImageUpload({
+  organizationId,
+  organizationSelect = false,
+}: {
+  organizationId?: string;
+  organizationSelect?: boolean;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const pathRef = useRef<HTMLInputElement>(null);
   const uploadingRef = useRef(false);
@@ -60,8 +66,16 @@ export function DirectProductImageUpload({ organizationId }: { organizationId: s
     uploadingRef.current = true;
     setStatus("Uploading photo directly to secure storage…");
     try {
+      const selectedOrganizationId = organizationId ||
+        (organizationSelect
+          ? inputRef.current?.form?.querySelector<HTMLSelectElement>('select[name="organizationId"]')?.value
+          : "");
+      if (!selectedOrganizationId || !/^[0-9a-f-]{36}$/i.test(selectedOrganizationId)) {
+        setStatus("Choose a store workspace before uploading a photo.");
+        return;
+      }
       const supabase = createClient();
-      const path = organizationId + "/" + crypto.randomUUID() + "." + extension;
+      const path = selectedOrganizationId + "/" + crypto.randomUUID() + "." + extension;
       const { error } = await supabase.storage.from("product-images").upload(path, file, {
         cacheControl: "31536000",
         contentType: file.type,
