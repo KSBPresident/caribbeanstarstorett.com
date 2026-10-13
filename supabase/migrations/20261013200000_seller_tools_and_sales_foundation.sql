@@ -183,6 +183,7 @@ CREATE POLICY seller_coupons_manage_update
   WITH CHECK (private.has_organization_permission(organization_id, 'organization.manage'));
 
 -- Paid sales can only be written by trusted payment/webhook code using the service role.
+-- The platform commission is fixed at 12% of the recorded sale amount.
 CREATE TABLE public.seller_sales (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id uuid NOT NULL REFERENCES public.organizations(id) ON DELETE RESTRICT,
@@ -192,22 +193,7 @@ CREATE TABLE public.seller_sales (
     'electronics-appliances','groceries-food','home-living','clothing-fashion','beauty-wellness','vehicles-parts'
   )),
   amount numeric(12,2) NOT NULL CHECK (amount >= 0),
-  currency text NOT NULL DEFAULT 'USD' CHECK (currency ~ '^[A-Z]{3}
-  created_at timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (order_reference, inventory_item_id)
-);
-ALTER TABLE public.seller_sales ENABLE ROW LEVEL SECURITY;
-REVOKE ALL ON public.seller_sales FROM PUBLIC, anon, authenticated;
-GRANT SELECT ON public.seller_sales TO authenticated;
-GRANT INSERT, UPDATE ON public.seller_sales TO service_role;
-CREATE INDEX seller_sales_org_date_idx ON public.seller_sales(organization_id, created_at DESC);
-CREATE POLICY seller_sales_seller_read
-  ON public.seller_sales FOR SELECT TO authenticated
-  USING (private.has_organization_permission(organization_id, 'organization.read'));
-CREATE POLICY seller_sales_admin_read
-  ON public.seller_sales FOR SELECT TO authenticated
-  USING ((SELECT public.is_platform_admin()));
-),
+  currency text NOT NULL DEFAULT 'USD' CHECK (currency ~ '^[A-Z]{3}$'),
   commission_rate numeric(5,4) NOT NULL DEFAULT 0.12 CHECK (commission_rate = 0.12),
   commission_amount numeric(12,2) GENERATED ALWAYS AS (round(amount * commission_rate, 2)) STORED,
   seller_net_amount numeric(12,2) GENERATED ALWAYS AS (amount - round(amount * commission_rate, 2)) STORED,
