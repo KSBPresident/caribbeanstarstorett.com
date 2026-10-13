@@ -1,3 +1,4 @@
+import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../../lib/supabase/configured";
@@ -21,36 +22,68 @@ function callbackErrorRedirect(request: NextRequest) {
   return NextResponse.redirect(signInUrl);
 }
 
-
 export async function GET(request: NextRequest) {
+  const nextPath = safeNextPath(request.nextUrl.searchParams.get("next"));
+
   if (!isSupabaseConfigured()) {
     const setupUrl = new URL("/sign-in", request.url);
     setupUrl.searchParams.set("notice", "setup");
-    setupUrl.searchParams.set("next", safeNextPath(request.nextUrl.searchParams.get("next")));
+    setupUrl.searchParams.set("next", nextPath);
     return NextResponse.redirect(setupUrl);
   }
 
-  const code = request.nextUrl.searchParams.get("code");
-  if (!code) return callbackErrorRedirect(request);
+  const params = request.nextUrl.searchParams;
+  const code = params.get("code");
+  const tokenHash = params.get("token_hash");
+  const rawType = params.get("type");
+  const isSupportedOtpType = (value: string | null): value is EmailOtpType =>
+    value !== null &&
+    ["email", "signup", "invite", "magiclink", "recovery", "email_change"].includes(value);
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (error) return callbackErrorRedirect(request);
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    const displayName =
-      typeof user.user_metadata?.display_name === "string"
-        ? user.user_metadata.display_name
-        : (user.email || "").split("@")[0];
-
-    await supabase.from("profiles").upsert(
-      { user_id: user.id, display_name: displayName },
-      { onConflict: "user_id" },
-    );
+  if (!code && (!tokenHash || !isSupportedOtpType(rawType))) {
+    return callbackErrorRedirect(request);
   }
 
-  return NextResponse.redirect(
-    new URL(safeNextPath(request.nextUrl.searchParams.get("next")), request.url),
+  const supabase = await createClient();
+  const authResult = code
+    ? await supabase.auth.exchangeCodeForSession(code)
+    : await supabase.auth.verifyOtp({
+        token_hash: tokenHash!,
+        type: rawType as EmailOtpType,
+      });
+
+  if (authResult.error) return callbackErrorRedirect(request);
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) return callbackErrorRedirect(request);
+
+  const displayName =
+    typeof user.user_metadata?.display_name === "string"
+      ? user.user_metadata.display_name
+      : (user.email || "").split("@")[0];
+
+  await supabase.from("profiles").upsert(
+    { user_id: user.id, display_name: displayName },
+    { onConflict: "user_id" },
   );
+
+  const isPasswordRecovery =
+    rawType === "recovery" || new URL(nextPath, request.url).pathname === "/update-password";
+  const isEmailConfirmation =
+    !isPasswordRecovery &&
+    Boolean(user.email_confirmed_at) &&
+    (rawType === "email" ||
+      rawType === "signup" ||
+      params.get("flow") === "signup");
+
+  if (isEmailConfirmation) {
+    const successUrl = new URL("/dashboard", request.url);
+    successUrl.searchParams.set("notice", "confirmed");
+    if (nextPath !== "/dashboard") {
+      successUrl.searchParams.set("continue", nextPath);
+    }
+    return NextResponse.redirect(successUrl);
+  }
+
+  return NextResponse.redirect(new URL(nextPath, request.url));
 }
