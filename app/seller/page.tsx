@@ -265,7 +265,18 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
                   <article className="account-overview-card"><span>Seller proceeds</span><strong>USD {sellerNet.toFixed(2)}</strong></article>
                 </div>
               </>
-            ) : <p className="organization-empty">No completed sales have been recorded yet. Your 12% commission and seller proceeds will be calculated when a completed sale is recorded.</p>}
+            ) : (
+              <>
+                <SalesPieChart counts={{}} />
+                <div className="account-overview">
+                  <article className="account-overview-card"><span>Recorded sales</span><strong>0</strong></article>
+                  <article className="account-overview-card"><span>Gross sales</span><strong>USD 0.00</strong></article>
+                  <article className="account-overview-card"><span>12% commission</span><strong>USD 0.00</strong></article>
+                  <article className="account-overview-card"><span>Seller proceeds</span><strong>USD 0.00</strong></article>
+                </div>
+                <p className="organization-empty">No completed sales have been recorded yet. These totals will update from verified paid orders; no sample sales are included.</p>
+              </>
+            )}
           </section>
         )}
 
