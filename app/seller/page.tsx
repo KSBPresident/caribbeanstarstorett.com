@@ -134,6 +134,7 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
         {params.notice === "coupon-updated" && <p className="identity-message" role="status">Coupon deactivated.</p>}
         {params.error === "away" && <p className="identity-message identity-error" role="alert">Availability could not be updated. Publish a store profile first, then try again.</p>}
         {params.error === "coupon" && <p className="identity-message identity-error" role="alert">Coupon could not be saved. Check its code, discount amount, expiry date, and whether the code is already in use.</p>}
+        {params.error === "coupon-profile" && <p className="identity-message identity-error" role="alert">Publish this store profile before creating customer-visible coupon codes.</p>}
         {applicationError && (
           <p className="identity-message identity-error" role="alert">
             We couldn’t load your seller applications. Refresh the page to try again.
