@@ -178,11 +178,11 @@ export default async function SellerWorkspacePage() {
           <section className="identity-panel">
             <span className="identity-eyebrow">SALES & PAYOUTS</span>
             <h2>Your sales progress</h2>
+            <p>Caribbean Star Store charges a fixed 12% commission on every completed sale; the remaining 88% is seller proceeds.</p>
             {salesResult.error ? (
               <p className="identity-message identity-error" role="alert">Sales figures could not be loaded. Refresh to try again.</p>
             ) : paidSales.length ? (
               <>
-                <p>Every recorded sale includes a fixed 12% platform commission. The remaining 88% is shown as seller proceeds; payment settlement is handled when checkout is connected.</p>
                 <div className="account-overview">
                   <article className="account-overview-card"><span>Recorded sales</span><strong>{paidSales.length}</strong></article>
                   <article className="account-overview-card"><span>Gross sales</span><strong>USD {grossSales.toFixed(2)}</strong></article>
@@ -190,7 +190,7 @@ export default async function SellerWorkspacePage() {
                   <article className="account-overview-card"><span>Seller proceeds</span><strong>USD {sellerNet.toFixed(2)}</strong></article>
                 </div>
               </>
-            ) : <p className="organization-empty">No paid sales have been recorded yet. Sales and commission totals will appear here after checkout records a completed payment.</p>}
+            ) : <p className="organization-empty">No completed sales have been recorded yet. Your 12% commission and seller proceeds will be calculated when a completed sale is recorded.</p>}
           </section>
         )}
 
