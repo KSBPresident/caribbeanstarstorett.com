@@ -8,6 +8,7 @@ import { isSupabaseConfigured } from "../../../lib/supabase/configured";
 import { categories, money } from "../../../lib/store-data";
 import { signInUrl } from "../../../lib/auth/return-path";
 import { ProductCategoryField } from "../../../components/product-category-field";
+import { DirectProductImageUpload } from "../../../components/direct-product-image-upload";
 
 export const metadata: Metadata = {
   title: "Seller inventory",
@@ -76,7 +77,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
   const notice = params.notice === "created" ? "Product draft or listing saved."
     : params.notice === "updated" ? "Product listing updated."
     : null;
-  const errorMessage = params.error === "image" ? "Choose a valid JPEG, PNG, or WebP image smaller than 10 MB."
+  const errorMessage = params.error === "image" ? "Choose a valid JPEG, PNG, or WebP image no larger than 45 MB."
     : params.error === "invalid" ? "Check the product details, image address, and inventory quantity."
     : params.error === "save" ? "We couldn’t save the product. Confirm that you have management access to an approved seller workspace."
     : null;
@@ -128,7 +129,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                             <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" defaultValue={item.price} required /></label>
                             <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue={item.quantity_available} required /></label>
                           </div>
-                          <label>Upload product photo (JPEG, PNG, or WebP, max 10 MB)<input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp" /></label><label>Or use an HTTPS image URL<input name="imageUrl" type="url" defaultValue={item.image_url} maxLength={2048} /><small>Uploading a new photo replaces the current image. Leave the file blank to keep or edit the image URL.</small></label>
+                          <DirectProductImageUpload organizationId={item.organization_id} /><label>Or use an HTTPS image URL<input name="imageUrl" type="url" defaultValue={item.image_url} maxLength={2048} /><small>Uploading a new photo replaces the current image. Leave the file blank to keep or edit the image URL.</small></label>
                           <label>Listing status<select name="status" defaultValue={item.status}><option value="draft">Save as draft</option><option value="published">Publish listing</option><option value="archived">Archive listing</option></select></label>
                           <button className="identity-submit" type="submit">Save product listing</button>
                         </form> : <p>Your assigned workspace role allows you to view this product, but not change it.</p>}
@@ -153,7 +154,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                     <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" required /></label>
                     <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue="0" required /></label>
                   </div>
-                  <label>Upload product photo (JPEG, PNG, or WebP, max 10 MB)<input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp" /></label><label>Or use an HTTPS image URL<input name="imageUrl" type="url" placeholder="https://…" maxLength={2048} /><small>Choose a photo or enter an image address.</small></label>
+                  <DirectProductImageUpload organizationId={item.organization_id} /><label>Or use an HTTPS image URL<input name="imageUrl" type="url" placeholder="https://…" maxLength={2048} /><small>Choose a photo or enter an image address.</small></label>
                   <label>Listing status<select name="status" defaultValue="draft"><option value="draft">Save as draft</option><option value="published">Publish listing</option></select></label>
                   <button className="identity-submit" type="submit">Save product listing</button>
                 </form>
