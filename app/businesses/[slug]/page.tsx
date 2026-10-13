@@ -20,7 +20,7 @@ const getPublicBusinessProfile = cache(async (slug: string) => {
   const supabase = await createClient();
   return supabase
     .from("organization_public_profiles")
-    .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url")
+    .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url, seller_is_away, seller_away_message")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
@@ -119,7 +119,7 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
         <p className="workspace-back"><Link href="/businesses">← Business directory</Link></p>
         <section className="directory-detail-hero">
           <div className="directory-card-mark directory-detail-mark" aria-hidden="true">{profile.display_name.slice(0, 1).toUpperCase()}</div>
-          <div><span className="identity-eyebrow">{categoryLabels[profile.category_key] || "Business"} · {profile.region}</span><h1>{profile.display_name}</h1><p>{profile.summary}</p></div>
+          <div><span className="identity-eyebrow">{categoryLabels[profile.category_key] || "Business"} · {profile.region}</span><h1>{profile.display_name}</h1><p>{profile.summary}</p>{profile.seller_is_away && <p className="seller-away-notice"><strong>Seller is away.</strong>{profile.seller_away_message ? ` ${profile.seller_away_message}` : " Responses may take longer than usual."}</p>}</div>
         </section>
         <div className="directory-contact-layout">
           <section className="identity-panel">
