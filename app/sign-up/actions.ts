@@ -15,6 +15,7 @@ async function confirmationRedirectUrl(nextPath: string) {
 
   const callback = new URL("/auth/callback", origin);
   callback.searchParams.set("next", nextPath);
+  callback.searchParams.set("flow", "signup");
   return callback.toString();
 }
 
