@@ -5,6 +5,8 @@ import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
 import { signInUrl } from "../../lib/auth/return-path";
+import { createSellerCoupon, deactivateSellerCoupon, setSellerAwayStatus } from "./actions";
+import { SalesPieChart } from "../../components/sales-pie-chart";
 
 export const metadata: Metadata = {
   title: "Your Store Owner Space",
@@ -19,9 +21,10 @@ const statusCopy: Record<string, string> = {
   declined: "Needs an update",
 };
 
-export default async function SellerWorkspacePage() {
+export default async function SellerWorkspacePage({ searchParams }: { searchParams: Promise<{ notice?: string; error?: string }> }) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
 
+  const params = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(signInUrl("/seller"));
@@ -78,9 +81,30 @@ export default async function SellerWorkspacePage() {
         .in("id", activeOrganizationIds)
     : { data: [], error: null };
 
+  const [sellerProfilesResult, couponsResult] = activeOrganizationIds.length
+    ? await Promise.all([
+        supabase.from("organization_public_profiles")
+          .select("organization_id, seller_is_away, seller_away_message, is_published")
+          .in("organization_id", activeOrganizationIds),
+        supabase.from("seller_coupons")
+          .select("id, organization_id, code, discount_type, discount_value, currency, is_active, expires_at, created_at")
+          .in("organization_id", activeOrganizationIds)
+          .order("created_at", { ascending: false }).limit(100),
+      ])
+    : [{ data: [], error: null }, { data: [], error: null }];
+
   const organizationById = new Map(
     (organizationsResult.data || []).map((organization) => [organization.id, organization]),
   );
+  const profileByOrganizationId = new Map(
+    (sellerProfilesResult.data || []).map((profile) => [profile.organization_id, profile]),
+  );
+  const couponsByOrganizationId = new Map<string, typeof couponsResult.data>();
+  for (const coupon of couponsResult.data || []) {
+    const items = couponsByOrganizationId.get(coupon.organization_id) || [];
+    items.push(coupon);
+    couponsByOrganizationId.set(coupon.organization_id, items);
+  }
   const approvedWorkspaces = approvedApplications.flatMap((application) => {
     const organization = application.organization_id
       ? organizationById.get(application.organization_id)
@@ -88,7 +112,7 @@ export default async function SellerWorkspacePage() {
     return organization ? [{ application, organization }] : [];
   });
   const applicationError = Boolean(applicationsResult.error);
-  const accessError = Boolean(membershipResult.error || organizationsResult.error);
+  const accessError = Boolean(membershipResult.error || organizationsResult.error || sellerProfilesResult.error);
   const hasApprovedApplication = approvedApplications.length > 0;
   const pendingApplications = applications.filter((application) => application.status !== "approved");
 
@@ -105,6 +129,12 @@ export default async function SellerWorkspacePage() {
           <Link className="identity-secondary" href="/dashboard">Back to My Account</Link>
         </header>
 
+        {params.notice === "away-updated" && <p className="identity-message" role="status">Your store availability was updated.</p>}
+        {params.notice === "coupon-created" && <p className="identity-message" role="status">Coupon created and published to shoppers.</p>}
+        {params.notice === "coupon-updated" && <p className="identity-message" role="status">Coupon deactivated.</p>}
+        {params.error === "away" && <p className="identity-message identity-error" role="alert">Availability could not be updated. Publish a store profile first, then try again.</p>}
+        {params.error === "coupon" && <p className="identity-message identity-error" role="alert">Coupon could not be saved. Check its code, discount amount, expiry date, and whether the code is already in use.</p>}
+        {params.error === "coupon-profile" && <p className="identity-message identity-error" role="alert">Publish this store profile before creating customer-visible coupon codes.</p>}
         {applicationError && (
           <p className="identity-message identity-error" role="alert">
             We couldn’t load your seller applications. Refresh the page to try again.
@@ -176,6 +206,47 @@ export default async function SellerWorkspacePage() {
 
         {approvedWorkspaces.length > 0 && (
           <section className="identity-panel">
+            <span className="identity-eyebrow">STORE AVAILABILITY & COUPONS</span>
+            <h2>Manage each store</h2>
+            <p>Set an away notice for shoppers and publish discount codes. Coupon codes are visible to customers; checkout redemption will be enabled when online checkout is connected.</p>
+            <div className="seller-app-list">
+              {approvedWorkspaces.map(({ application, organization }) => {
+                const profile = profileByOrganizationId.get(organization.id);
+                const coupons = couponsByOrganizationId.get(organization.id) || [];
+                return (
+                  <article className="seller-app-card" key={organization.id}>
+                    <h3>{organization.name}</h3>
+                    {profile ? (
+                      <form action={setSellerAwayStatus} className="identity-form">
+                        <input type="hidden" name="organizationId" value={organization.id} />
+                        <label><span>Store is away</span><input type="checkbox" name="isAway" value="true" defaultChecked={profile.seller_is_away} /></label>
+                        <label>Message to shoppers<textarea name="awayMessage" rows={2} maxLength={240} defaultValue={profile.seller_away_message || ""} placeholder="Optional: tell shoppers when you expect to return" /></label>
+                        <button className="identity-submit" type="submit">Save availability</button>
+                      </form>
+                    ) : <p className="organization-empty">Publish your business profile before setting an away notice.</p>}
+                    {profile?.is_published ? <form action={createSellerCoupon} className="identity-form">
+                      <input type="hidden" name="organizationId" value={organization.id} />
+                      <label>Coupon code<input name="code" minLength={3} maxLength={40} pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,39}" required placeholder="WELCOME10" /></label>
+                      <div className="seller-form-row">
+                        <label>Discount<select name="discountType" defaultValue="percentage"><option value="percentage">Percentage</option><option value="fixed">Fixed USD amount</option></select></label>
+                        <label>Value<input name="discountValue" type="number" min="0.01" max="100000" step="0.01" required /></label>
+                      </div>
+                      <label>Expiry date (optional)<input name="expiresAt" type="date" /></label>
+                      <button className="identity-submit" type="submit">Publish coupon</button>
+                    </form> : <p className="organization-empty">Publish your store profile before creating coupons customers can see.</p>}
+                    {coupons.length ? <div className="account-activity-list">{coupons.map((coupon) => (
+                      <article key={coupon.id}><div><strong>{coupon.code} · {coupon.discount_type === "percentage" ? `${coupon.discount_value}% off` : `${coupon.currency} ${Number(coupon.discount_value).toFixed(2)} off`}</strong><span>{coupon.is_active ? "Active" : "Inactive"}{coupon.expires_at ? ` · Expires ${new Date(coupon.expires_at).toLocaleDateString()}` : ""}</span></div>{coupon.is_active && <form action={deactivateSellerCoupon}><input type="hidden" name="organizationId" value={organization.id} /><input type="hidden" name="couponId" value={coupon.id} /><button className="identity-secondary" type="submit">Deactivate</button></form>}</article>
+                    ))}</div> : <p className="organization-empty">No coupons created for this store yet.</p>}
+                  </article>
+                );
+              })}
+            </div>
+            <Link className="directory-card-link" href="/coupons">View shopper coupon page →</Link>
+          </section>
+        )}
+
+        {approvedWorkspaces.length > 0 && (
+          <section className="identity-panel">
             <span className="identity-eyebrow">SALES & PAYOUTS</span>
             <h2>Your sales progress</h2>
             <p>Caribbean Star Store charges a fixed 12% commission on every completed sale; the remaining 88% is seller proceeds.</p>
@@ -183,6 +254,10 @@ export default async function SellerWorkspacePage() {
               <p className="identity-message identity-error" role="alert">Sales figures could not be loaded. Refresh to try again.</p>
             ) : paidSales.length ? (
               <>
+                <SalesPieChart counts={paidSales.reduce<Record<string, number>>((counts, sale) => {
+                  counts[sale.category_key] = (counts[sale.category_key] || 0) + 1;
+                  return counts;
+                }, {})} />
                 <div className="account-overview">
                   <article className="account-overview-card"><span>Recorded sales</span><strong>{paidSales.length}</strong></article>
                   <article className="account-overview-card"><span>Gross sales</span><strong>USD {grossSales.toFixed(2)}</strong></article>

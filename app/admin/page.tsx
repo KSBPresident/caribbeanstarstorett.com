@@ -53,14 +53,18 @@ export default async function Admin({ searchParams }: PageProps) {
     ? "Seller application status updated and recorded in the audit log."
     : params.notice === "request-updated"
       ? "Build-A-Buy request status updated and recorded in the audit log."
-      : null;
+      : params.notice === "broadcast-created"
+        ? "Your update was sent to approved sellers."
+        : null;
   const errorMessage = params.error === "access"
     ? "Your platform administrator access is no longer active."
     : params.error === "seller"
       ? "The seller application could not be updated. It may already have been reviewed."
       : params.error === "request"
         ? "The request could not be updated. Check its current status and allowed next step."
-        : null;
+        : params.error === "broadcast"
+          ? "The seller announcement could not be sent. Check the subject and message, then try again."
+          : null;
 
   const metrics = [
     ["Accounts", profileCount.count],

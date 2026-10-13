@@ -68,7 +68,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
   const supabase = await createClient();
   let directoryQuery = supabase
     .from("organization_public_profiles")
-    .select("slug, display_name, summary, category_key, region, updated_at", { count: "exact" })
+    .select("slug, display_name, summary, category_key, region, updated_at, seller_is_away", { count: "exact" })
     .eq("is_published", true);
   if (category) directoryQuery = directoryQuery.eq("category_key", category);
   if (query) directoryQuery = directoryQuery.or(marketplaceSearchFilter(query, ["display_name", "summary", "category_key", "region"]));
@@ -156,6 +156,7 @@ export default async function BusinessesDirectory({ searchParams }: { searchPara
                 <article className="directory-card" key={profile.slug}>
                   <div className="directory-card-mark" aria-hidden="true">{profile.display_name.slice(0, 1).toUpperCase()}</div>
                   <div className="directory-card-meta"><span>{categoryLabels[profile.category_key] || "Business"}</span><span>{profile.region}</span></div>
+                  {profile.seller_is_away && <p className="seller-away-badge">Seller is away · replies may be delayed</p>}
                   <h3><Link href={`/businesses/${profile.slug}`}>{profile.display_name}</Link></h3>
                   <p>{profile.summary}</p>
                   <Link className="directory-card-link" href={`/businesses/${profile.slug}`}>View business profile →</Link>

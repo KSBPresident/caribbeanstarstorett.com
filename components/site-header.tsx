@@ -59,6 +59,7 @@ export async function SiteHeader() {
       <nav className="store-nav" aria-label="Main navigation">
         <Link href="/marketplace">Products</Link>
         <Link href="/auctions">Auctions</Link>
+        <Link href="/coupons">Coupons</Link>
         <Link href="/businesses?category=professional">Services</Link>
         <Link href="/businesses">Businesses</Link>
         <Link href="/opportunities?type=jobs">Jobs</Link>
