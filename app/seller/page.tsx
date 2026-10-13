@@ -84,7 +84,7 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
   const [sellerProfilesResult, couponsResult] = activeOrganizationIds.length
     ? await Promise.all([
         supabase.from("organization_public_profiles")
-          .select("organization_id, seller_is_away, seller_away_message")
+          .select("organization_id, seller_is_away, seller_away_message, is_published")
           .in("organization_id", activeOrganizationIds),
         supabase.from("seller_coupons")
           .select("id, organization_id, code, discount_type, discount_value, currency, is_active, expires_at, created_at")
@@ -223,7 +223,7 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
                         <button className="identity-submit" type="submit">Save availability</button>
                       </form>
                     ) : <p className="organization-empty">Publish your business profile before setting an away notice.</p>}
-                    <form action={createSellerCoupon} className="identity-form">
+                    {profile?.is_published ? <form action={createSellerCoupon} className="identity-form">
                       <input type="hidden" name="organizationId" value={organization.id} />
                       <label>Coupon code<input name="code" minLength={3} maxLength={40} pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,39}" required placeholder="WELCOME10" /></label>
                       <div className="seller-form-row">
@@ -232,7 +232,7 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
                       </div>
                       <label>Expiry date (optional)<input name="expiresAt" type="date" /></label>
                       <button className="identity-submit" type="submit">Publish coupon</button>
-                    </form>
+                    </form> : <p className="organization-empty">Publish your store profile before creating coupons customers can see.</p>}
                     {coupons.length ? <div className="account-activity-list">{coupons.map((coupon) => (
                       <article key={coupon.id}><div><strong>{coupon.code} · {coupon.discount_type === "percentage" ? `${coupon.discount_value}% off` : `${coupon.currency} ${Number(coupon.discount_value).toFixed(2)} off`}</strong><span>{coupon.is_active ? "Active" : "Inactive"}{coupon.expires_at ? ` · Expires ${new Date(coupon.expires_at).toLocaleDateString()}` : ""}</span></div>{coupon.is_active && <form action={deactivateSellerCoupon}><input type="hidden" name="organizationId" value={organization.id} /><input type="hidden" name="couponId" value={coupon.id} /><button className="identity-secondary" type="submit">Deactivate</button></form>}</article>
                     ))}</div> : <p className="organization-empty">No coupons created for this store yet.</p>}
