@@ -15,6 +15,14 @@ export const metadata: Metadata = {
 
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string }> };
 
+type MessageRow = {
+  id: string;
+  conversation_id: string;
+  sender_user_id: string;
+  body: string;
+  created_at: string;
+};
+
 export default async function MessagesPage({ searchParams }: PageProps) {
   if (!isSupabaseConfigured()) redirect("/sign-in?notice=setup");
   const supabase = await createClient();
@@ -37,8 +45,9 @@ export default async function MessagesPage({ searchParams }: PageProps) {
       .select("id, name").in("id", [...new Set(threads.map((thread) => thread.seller_organization_id))])
       : Promise.resolve({ data: [], error: null }),
   ]);
-  const messagesByThread = new Map<string, NonNullable<typeof messageResult.data>>();
-  for (const message of messageResult.data || []) {
+  const messagesByThread = new Map<string, MessageRow[]>();
+  const conversationMessages = (messageResult.data || []) as MessageRow[];
+  for (const message of conversationMessages) {
     const current = messagesByThread.get(message.conversation_id) || [];
     current.push(message);
     messagesByThread.set(message.conversation_id, current);
