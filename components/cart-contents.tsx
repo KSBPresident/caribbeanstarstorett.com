@@ -39,6 +39,8 @@ export function CartContents() {
     );
   }
 
+  const shippedItemCount = items.reduce((count, line) => count + line.quantity, 0);
+  const cssShippingCharge = shippedItemCount * 5;
   const subtotals = new Map<string, { amount: number; minorUnit: number }>();
   for (const line of items) {
     const key = line.product.currency;
@@ -83,6 +85,11 @@ export function CartContents() {
             <strong>{money(total.amount, currency, total.minorUnit)}</strong>
           </div>
         ))}
+        <div className="shopping-cart-total-row">
+          <span>Estimated CSS shipping charge ($5 × {shippedItemCount} shipped {shippedItemCount === 1 ? "item" : "items"})</span>
+          <strong>{money(cssShippingCharge, "USD", 2)}</strong>
+        </div>
+        <p className="catalog-meta">Any seller-set shipping charge is additional. The final shipping amount will be confirmed before payment.</p>
         <button className="identity-submit" type="button" disabled>Online checkout is not available yet</button>
         <p className="catalog-meta">Prices and availability will be confirmed again when checkout is connected.</p>
       </aside>
