@@ -21,6 +21,9 @@ export default function CheckoutPage() {
             delivery estimates, and order tracking are not active yet.
           </p>
           <p className="identity-note">
+            For shipped orders, Caribbean Star Store adds $5 per item, plus any seller-set shipping charge. The final amount will be shown before payment when checkout is enabled.
+          </p>
+          <p className="identity-note">
             Your cart stays saved in this browser. Caribbean Star Store will not
             ask you for payment details or place an order until checkout is enabled.
           </p>
