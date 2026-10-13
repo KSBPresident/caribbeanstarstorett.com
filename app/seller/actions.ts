@@ -47,6 +47,12 @@ export async function createSellerCoupon(formData: FormData) {
   ) redirect("/seller?error=coupon");
 
   const supabase = await getSellerClient();
+  const { data: profile, error: profileError } = await supabase.from("organization_public_profiles")
+    .select("organization_id")
+    .eq("organization_id", organizationId)
+    .eq("is_published", true)
+    .maybeSingle();
+  if (profileError || !profile) redirect("/seller?error=coupon-profile");
   const { error } = await supabase.from("seller_coupons").insert({
     organization_id: organizationId,
     code,
