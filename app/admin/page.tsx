@@ -22,27 +22,7 @@ export default async function Admin({ searchParams }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(signInUrl("/admin"));
 
-  if (user.app_metadata?.platform_role !== "admin") {
-    return (
-      <>
-        <SiteHeader />
-        <main id="main-content" tabIndex={-1} className="identity-page">
-          <header className="identity-heading">
-            <div><span className="identity-eyebrow">ADMINISTRATION</span><h1>Platform administration</h1><p>Caribbean Star Store</p></div>
-          </header>
-          <section className="identity-panel exec-setup-panel">
-            <span className="exec-setup-icon" aria-hidden="true">✦</span>
-            <h2>Platform administrator access is not enabled</h2>
-            <p>Executive controls use a separate, trusted platform role. Organization owners and workspace roles do not grant site-wide access. A project owner can provision the first administrator after an account is registered.</p>
-            <div className="cart-empty-actions">
-              <Link className="identity-submit" href="/dashboard">Account settings</Link>
-              <Link className="identity-secondary" href="/business">Open workspaces</Link>
-            </div>
-          </section>
-        </main>
-      </>
-    );
-  }
+  if (user.app_metadata?.platform_role !== "admin") redirect("/dashboard");
 
   const [params, profileCount, organizationCount, memberCount, sellerCount, requestCount, businessCount, opportunityCount, sellers, requests, audit, broadcastsResult] = await Promise.all([
     searchParams,
