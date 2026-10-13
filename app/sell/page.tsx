@@ -65,6 +65,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               <section className="seller-note seller-commission-note" aria-label="Seller commission">
                 <strong>Seller commission</strong>
                 <p>Caribbean Star Store charges a 12% commission on every completed sale. Sellers receive the remaining 88% as seller proceeds.</p>
+                <p>For shipped orders, Caribbean Star Store adds a $5 shipping charge for each item. Any seller-set shipping charge is additional and will be shown before payment.</p>
               </section>
               {!accountServicesReady && <p className="identity-message" role="status">Seller information is available now. Account registration and applications will open after account services are configured.</p>}
               <div className="directory-hero-actions">
@@ -147,6 +148,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <section className="seller-note seller-commission-note" aria-label="Seller commission">
               <strong>Seller commission</strong>
               <p>Caribbean Star Store charges a 12% commission on every completed sale. Sellers receive the remaining 88% as seller proceeds.</p>
+                <p>For shipped orders, Caribbean Star Store adds a $5 shipping charge for each item. Any seller-set shipping charge is additional and will be shown before payment.</p>
             </section>
           </div>
           <div className="seller-steps" aria-label="Seller onboarding steps">
