@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
-import { reviewSellerApplication, updatePurchaseRequestStatus } from "./actions";
+import { createSellerBroadcast, reviewSellerApplication, updatePurchaseRequestStatus } from "./actions";
 import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string }> };
@@ -44,7 +44,7 @@ export default async function Admin({ searchParams }: PageProps) {
     );
   }
 
-  const [params, profileCount, organizationCount, memberCount, sellerCount, requestCount, businessCount, opportunityCount, sellers, requests, audit] = await Promise.all([
+  const [params, profileCount, organizationCount, memberCount, sellerCount, requestCount, businessCount, opportunityCount, sellers, requests, audit, broadcastsResult] = await Promise.all([
     searchParams,
     supabase.from("profiles").select("user_id", { count: "exact", head: true }),
     supabase.from("organizations").select("id", { count: "exact", head: true }),
@@ -54,7 +54,7 @@ export default async function Admin({ searchParams }: PageProps) {
     supabase.from("organization_public_profiles").select("organization_id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("organization_marketplace_listings").select("id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("seller_applications")
-      .select("id, seller_name, seller_type, category_key, contact_email, phone, website_url, description, status, created_at")
+      .select("id, seller_name, contact_person_name, seller_type, category_key, contact_email, phone, website_url, description, status, created_at")
       .in("status", ["submitted", "reviewing"]).order("created_at", { ascending: false }).limit(20),
     supabase.from("purchase_requests")
       .select("id, title, details, category_key, budget_amount, currency, status, created_at")
@@ -62,10 +62,13 @@ export default async function Admin({ searchParams }: PageProps) {
     supabase.from("audit_log")
       .select("id, action, resource_type, resource_id, metadata, created_at")
       .order("created_at", { ascending: false }).limit(20),
+    supabase.from("seller_broadcasts")
+      .select("id, subject, body, created_at")
+      .order("created_at", { ascending: false }).limit(20),
   ]);
 
   const queryError = profileCount.error || organizationCount.error || memberCount.error || sellerCount.error ||
-    requestCount.error || businessCount.error || opportunityCount.error || sellers.error || requests.error || audit.error;
+    requestCount.error || businessCount.error || opportunityCount.error || sellers.error || requests.error || audit.error || broadcastsResult.error;
   const notice = params.notice === "seller-reviewed"
     ? "Seller application status updated and recorded in the audit log."
     : params.notice === "request-updated"
@@ -100,6 +103,20 @@ export default async function Admin({ searchParams }: PageProps) {
         {notice && <p className="identity-message" role="status">{notice}</p>}
         {errorMessage && <p className="identity-message identity-error" role="alert">{errorMessage}</p>}
         {queryError && <p className="identity-message identity-error" role="alert">Some platform data could not be loaded. Refresh to try again.</p>}
+        <section className="identity-panel identity-wide">
+          <span className="identity-eyebrow">SELLER COMMUNICATIONS</span>
+          <h2>Broadcast an update</h2>
+          <p>Announcements are visible to approved sellers in their seller workspace.</p>
+          <form action={createSellerBroadcast} className="identity-form">
+            <label>Subject<input name="subject" minLength={2} maxLength={120} required /></label>
+            <label>Message<textarea name="body" minLength={2} maxLength={4000} rows={4} required /></label>
+            <button className="identity-submit" type="submit">Send to all approved sellers</button>
+          </form>
+          <h3>Recent broadcasts</h3>
+          {((broadcastsResult.data || []) as Array<{ id: string; subject: string; body: string; created_at: string }>).length ? <div className="account-activity-list">
+            {((broadcastsResult.data || []) as Array<{ id: string; subject: string; body: string; created_at: string }>).map((item) => <article key={item.id}><div><strong>{item.subject}</strong><span>{dateLabel(item.created_at)} · {item.body}</span></div></article>)}
+          </div> : <p className="organization-empty">No seller updates have been sent yet.</p>}
+        </section>
 
         <section className="account-overview" aria-label="Platform activity">
           {metrics.map(([label, value]) => <article className="account-overview-card" key={label}><span>{label}</span><strong>{value ?? "—"}</strong></article>)}
@@ -115,7 +132,7 @@ export default async function Admin({ searchParams }: PageProps) {
                     <div className="seller-app-heading"><strong>{application.seller_name}</strong><span className={`seller-status seller-status-${application.status}`}>{application.status}</span></div>
                     <p>{application.seller_type} · {application.category_key.replaceAll("-", " ")} · Received {dateLabel(application.created_at)}</p>
                     <p>{application.description}</p>
-                    <div className="admin-contact-details"><a href={`mailto:${application.contact_email}`}>{application.contact_email}</a>{application.phone && <a href={`tel:${application.phone}`}>{application.phone}</a>}{application.website_url && <a href={application.website_url} target="_blank" rel="noopener noreferrer">Website ↗</a>}</div>
+                    <div className="admin-contact-details"><span>Contact: {application.contact_person_name || "Not provided"}</span><a href={`mailto:${application.contact_email}`}>{application.contact_email}</a>{application.phone && <a href={`tel:${application.phone}`}>{application.phone}</a>}{application.website_url && <a href={application.website_url} target="_blank" rel="noopener noreferrer">Website ↗</a>}</div>
                     <form action={reviewSellerApplication} className="identity-form">
                       <input type="hidden" name="applicationId" value={application.id} />
                       <label>Review status<select name="status" defaultValue={application.status}><option value="reviewing">Under review</option><option value="approved">Approve</option><option value="declined">Needs an update</option></select></label>

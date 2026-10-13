@@ -159,6 +159,7 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
             <PrivacyStatusNote submittedData="This form sends your store details, contact information, and description to account services for seller review." />
             <form action={submitSellerApplication} className="identity-form seller-form">
               <label>Store or seller name<input name="sellerName" autoComplete="organization" minLength={2} maxLength={100} required /></label>
+              <label>Contact person full name<input name="contactName" autoComplete="name" minLength={2} maxLength={100} required /></label>
               <label>Seller type<select name="sellerType" defaultValue="individual" required><option value="individual">Individual seller</option><option value="business">Registered business</option><option value="nonprofit">Nonprofit</option><option value="community">Community group</option></select></label>
               <SellerOfferIntake defaultCategory={initialOfferCategory} />
               <label>Contact email<input name="email" type="email" autoComplete="email" defaultValue={user.email || ""} maxLength={254} required /></label>

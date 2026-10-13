@@ -44,3 +44,22 @@ export async function updatePurchaseRequestStatus(formData: FormData) {
   });
   redirect(error || data !== true ? "/admin?error=request" : "/admin?notice=request-updated");
 }
+
+
+export async function createSellerBroadcast(formData: FormData) {
+  const subject = String(formData.get("subject") || "").trim();
+  const body = String(formData.get("body") || "").trim();
+  if (subject.length < 2 || subject.length > 120 || body.length < 2 || body.length > 4000) {
+    redirect("/admin?error=broadcast");
+  }
+
+  const supabase = await getPlatformAdminClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in?notice=signin");
+  const { error } = await supabase.from("seller_broadcasts").insert({
+    subject,
+    body,
+    created_by: user.id,
+  });
+  redirect(error ? "/admin?error=broadcast" : "/admin?notice=broadcast-created");
+}

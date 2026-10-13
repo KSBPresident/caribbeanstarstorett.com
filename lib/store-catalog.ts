@@ -31,7 +31,7 @@ export async function getStoreProducts(options: {
 
     let request = supabase
       .from("inventory_items")
-      .select("id, slug, name, category_key, price, currency, quantity_available, image_url, description", { count: "exact" })
+      .select("id, organization_id, slug, name, category_key, price, currency, quantity_available, image_url, description", { count: "exact" })
       .eq("status", "published")
       .order("updated_at", { ascending: false });
 
@@ -58,7 +58,7 @@ export async function getStoreProductBySlug(slug: string) {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("inventory_items")
-      .select("id, slug, name, category_key, price, currency, quantity_available, image_url, description")
+      .select("id, organization_id, slug, name, category_key, price, currency, quantity_available, image_url, description")
       .eq("slug", slug)
       .eq("status", "published")
       .maybeSingle();

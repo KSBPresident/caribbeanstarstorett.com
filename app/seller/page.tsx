@@ -33,6 +33,10 @@ export default async function SellerWorkspacePage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const broadcastsResult = await supabase.from("seller_broadcasts")
+    .select("id, subject, body, created_at")
+    .order("created_at", { ascending: false }).limit(20);
+
   const applications = applicationsResult.data || [];
   const approvedApplications = applications.filter(
     (application) => application.status === "approved" && Boolean(application.organization_id),
@@ -55,6 +59,18 @@ export default async function SellerWorkspacePage() {
   const activeOrganizationIds = [...new Set(
     (membershipResult.data || []).map((membership) => membership.organization_id),
   )];
+
+  const salesResult = activeOrganizationIds.length
+    ? await supabase.from("seller_sales")
+        .select("amount, commission_amount, seller_net_amount, status, currency, category_key, created_at")
+        .in("organization_id", activeOrganizationIds)
+        .order("created_at", { ascending: false })
+        .limit(100)
+    : { data: [], error: null };
+  const paidSales = (salesResult.data || []).filter((sale) => sale.status === "paid");
+  const grossSales = paidSales.reduce((sum, sale) => sum + Number(sale.amount), 0);
+  const commissionTotal = paidSales.reduce((sum, sale) => sum + Number(sale.commission_amount), 0);
+  const sellerNet = paidSales.reduce((sum, sale) => sum + Number(sale.seller_net_amount), 0);
   const organizationsResult = activeOrganizationIds.length
     ? await supabase
         .from("organizations")
@@ -94,6 +110,25 @@ export default async function SellerWorkspacePage() {
             We couldn’t load your seller applications. Refresh the page to try again.
           </p>
         )}
+        {approvedApplications.length > 0 && (
+          <section className="identity-panel">
+            <span className="identity-eyebrow">SELLER UPDATES</span>
+            <h2>Announcements from Caribbean Star Store</h2>
+            {broadcastsResult.error ? (
+              <p className="identity-message identity-error" role="alert">Seller announcements could not be loaded.</p>
+            ) : broadcastsResult.data?.length ? (
+              <div className="seller-app-list">
+                {broadcastsResult.data.map((item) => (
+                  <article className="seller-app-card" key={item.id}>
+                    <div className="seller-app-heading"><strong>{item.subject}</strong><span className="seller-status">{new Date(item.created_at).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span></div>
+                    <p>{item.body}</p>
+                  </article>
+                ))}
+              </div>
+            ) : <p className="organization-empty">No new seller announcements.</p>}
+          </section>
+        )}
+
         {accessError && (
           <p className="identity-message identity-error" role="alert">
             We couldn’t confirm workspace access. Refresh the page to try again.
@@ -136,6 +171,26 @@ export default async function SellerWorkspacePage() {
                 </article>
               ))}
             </div>
+          </section>
+        )}
+
+        {approvedWorkspaces.length > 0 && (
+          <section className="identity-panel">
+            <span className="identity-eyebrow">SALES & PAYOUTS</span>
+            <h2>Your sales progress</h2>
+            {salesResult.error ? (
+              <p className="identity-message identity-error" role="alert">Sales figures could not be loaded. Refresh to try again.</p>
+            ) : paidSales.length ? (
+              <>
+                <p>Every recorded sale includes a fixed 12% platform commission. The remaining 88% is shown as seller proceeds; payment settlement is handled when checkout is connected.</p>
+                <div className="account-overview">
+                  <article className="account-overview-card"><span>Recorded sales</span><strong>{paidSales.length}</strong></article>
+                  <article className="account-overview-card"><span>Gross sales</span><strong>USD {grossSales.toFixed(2)}</strong></article>
+                  <article className="account-overview-card"><span>12% commission</span><strong>USD {commissionTotal.toFixed(2)}</strong></article>
+                  <article className="account-overview-card"><span>Seller proceeds</span><strong>USD {sellerNet.toFixed(2)}</strong></article>
+                </div>
+              </>
+            ) : <p className="organization-empty">No paid sales have been recorded yet. Sales and commission totals will appear here after checkout records a completed payment.</p>}
           </section>
         )}
 
