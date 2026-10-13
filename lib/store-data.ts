@@ -1,5 +1,6 @@
 export type Product = {
   id: string | number;
+  organizationId?: string;
   slug: string;
   name: string;
   category: string;
