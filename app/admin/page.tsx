@@ -86,7 +86,7 @@ export default async function Admin({ searchParams }: PageProps) {
       <main id="main-content" tabIndex={-1} className="identity-page">
         <header className="identity-heading account-heading">
           <div><span className="identity-eyebrow">ADMINISTRATION</span><h1>Platform administration</h1><p>Platform activity, seller onboarding, and marketplace requests.</p></div>
-          <span className="organization-role">Platform administrator</span>
+          <div className="cart-empty-actions"><Link className="identity-submit" href="/messages">Review all messages →</Link><span className="organization-role">Platform administrator</span></div>
         </header>
         {notice && <p className="identity-message" role="status">{notice}</p>}
         {errorMessage && <p className="identity-message identity-error" role="alert">{errorMessage}</p>}
