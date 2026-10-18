@@ -106,7 +106,7 @@ export async function POST(request: Request) {
     currency: "USD",
     environment,
     fee_structure: feeStructure,
-    method: "credit_card_co",
+    method: "credit_card",
     order_id: reference,
     origin: "CaribbeanStarStore",
     response_url: callback.toString(),
@@ -123,8 +123,8 @@ export async function POST(request: Request) {
   try {
     const response = await fetch(`${base}/plugins/payments/request`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(paymentRequest),
+      headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+      body: new URLSearchParams(Object.entries(paymentRequest).map(([key, value]) => [key, String(value)] as [string, string])),
       cache: "no-store",
       signal: AbortSignal.timeout(15000),
     });
