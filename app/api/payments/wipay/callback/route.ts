@@ -31,13 +31,13 @@ export async function GET(request: NextRequest) {
   if (status === "success") {
     const apiKey = process.env.WIPAY_API_KEY;
     const suppliedHash = params.get("hash") || "";
-    if (!apiKey || !/^[a-f0-9]{32}$/i.test(suppliedHash)) return redirectStatus(request, "failed");
+    if (!apiKey || !/^[a-f0-9]{32}$/i.test(suppliedHash)) return redirectStatus(request, "pending");
     const expectedHash = createHash("md5")
       .update(transactionId + Number(order.total).toFixed(2) + apiKey, "utf8")
       .digest();
     const supplied = Buffer.from(suppliedHash, "hex");
     if (supplied.length !== expectedHash.length || !timingSafeEqual(supplied, expectedHash)) {
-      return redirectStatus(request, "failed");
+      return redirectStatus(request, "pending");
     }
     const { data: completed, error: completeError } = await admin.rpc("complete_checkout_order", {
       p_order_id: order.id,
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       : redirectStatus(request, order.status === "paid" ? "success" : "pending");
   }
 
-  if (status === "failed" && order.status === "pending_payment") {
+  if ((status === "failed" || status === "error") && order.status === "pending_payment") {
     await admin.rpc("release_checkout_order", { p_order_id: order.id, p_failed: true });
     return redirectStatus(request, "failed");
   }
