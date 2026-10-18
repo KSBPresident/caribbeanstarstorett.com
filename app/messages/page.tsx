@@ -90,7 +90,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
             <div className="seller-app-list">
               {threads.map((thread) => (
                 <section className="identity-panel" key={thread.id}>
-                  <span className="identity-eyebrow">{thread.buyer_user_id === user.id ? "YOUR SELLER INQUIRY" : isPlatformAdmin ? "CUSTOMER INQUIRY" : "CUSTOMER INQUIRY"}</span>
+                  <span className="identity-eyebrow">{isPlatformAdmin ? "CUSTOMER INQUIRY" : thread.buyer_user_id === user.id ? "YOUR SELLER INQUIRY" : "CUSTOMER INQUIRY"}</span>
                   <h2>{organizationNames.get(thread.seller_organization_id) || "Seller"}</h2>
                   {thread.inventory_item_id && <p>Product listing reference: {thread.inventory_item_id}</p>}
                   <div className="account-activity-list">
@@ -114,7 +114,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
             </nav>}
           </>
         ) : (
-          <section className="identity-panel"><h2>No conversations yet</h2><p>{isPlatformAdmin ? "No customer and seller conversations have been started." : "Open a product listing and use “Message seller” to ask a question."}{messageResult.data?.length === 0 && !isPlatformAdmin ? "" : ""}</p>{!isPlatformAdmin && <Link className="identity-submit" href="/marketplace">Browse the marketplace</Link>}</section>
+          <section className="identity-panel"><h2>No conversations yet</h2><p>{isPlatformAdmin ? "No customer and seller conversations have been started." : "Open a product listing and use “Message seller” to ask a question."}</p>{!isPlatformAdmin && <Link className="identity-submit" href="/marketplace">Browse the marketplace</Link>}</section>
         )}
       </main>
     </>
