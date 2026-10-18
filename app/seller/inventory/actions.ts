@@ -32,6 +32,45 @@ async function getSignedInClient() {
   return supabase;
 }
 
+async function ensurePublishedStorefront(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  organizationId: string,
+  categoryKey: string,
+) {
+  const { data: currentProfile, error: profileReadError } = await supabase
+    .from("organization_public_profiles")
+    .select("organization_id, is_published")
+    .eq("organization_id", organizationId)
+    .maybeSingle();
+  if (profileReadError) return false;
+  if (currentProfile?.is_published) return true;
+
+  const { data: organization, error: organizationError } = await supabase
+    .from("organizations")
+    .select("name, slug")
+    .eq("id", organizationId)
+    .maybeSingle();
+  if (organizationError || !organization || organization.name.trim().length < 2) return false;
+
+  const summary = `Explore products from ${organization.name} on Caribbean Star Store. Message this seller through the marketplace to ask about products, availability, and delivery options.`;
+  const profileCategory = new Set(["home", "retail", "professional", "transport", "beauty", "community", "other"]).has(categoryKey)
+    ? categoryKey
+    : "retail";
+  const profile = {
+    organization_id: organizationId,
+    slug: organization.slug,
+    display_name: organization.name,
+    summary,
+    category_key: profileCategory,
+    region: "Not specified",
+    is_published: true,
+  };
+  const { error } = currentProfile
+    ? await supabase.from("organization_public_profiles").update({ ...profile, updated_at: new Date().toISOString() }).eq("organization_id", organizationId)
+    : await supabase.from("organization_public_profiles").insert(profile);
+  return !error;
+}
+
 export async function createInventoryItem(formData: FormData) {
   const organizationId = String(formData.get("organizationId") || "");
   const name = String(formData.get("name") || "").trim();
@@ -65,6 +104,10 @@ export async function createInventoryItem(formData: FormData) {
       }
     : null;
   const resolvedImageUrl = uploadedImage?.url || imageUrl;
+  if (status === "published" && !(await ensurePublishedStorefront(supabase, organizationId, categoryKey))) {
+    if (uploadedImage?.path) await supabase.storage.from("product-images").remove([uploadedImage.path]);
+    redirect("/seller/inventory?error=storefront");
+  }
   const slugBase = name.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80) || "product";
   const slug = slugBase + "-" + crypto.randomUUID().replace(/-/g, "").slice(0, 8);
@@ -119,6 +162,10 @@ export async function updateInventoryItem(formData: FormData) {
       }
     : null;
   const resolvedImageUrl = uploadedImage?.url || imageUrl;
+  if (status === "published" && !(await ensurePublishedStorefront(supabase, organizationId, categoryKey))) {
+    if (uploadedImage?.path) await supabase.storage.from("product-images").remove([uploadedImage.path]);
+    redirect("/seller/inventory?error=storefront");
+  }
   const { data, error } = await supabase.from("inventory_items")
     .update({
       name,
