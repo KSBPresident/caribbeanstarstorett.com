@@ -34,7 +34,7 @@ export default async function Admin({ searchParams }: PageProps) {
     supabase.from("organization_public_profiles").select("organization_id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("organization_marketplace_listings").select("id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("seller_applications")
-      .select("id, seller_name, contact_person_name, seller_type, category_key, contact_email, phone, website_url, description, status, created_at")
+      .select("id, seller_name, contact_person_name, seller_type, business_registration_number, category_key, contact_email, phone, website_url, description, status, created_at")
       .in("status", ["submitted", "reviewing"]).order("created_at", { ascending: false }).limit(20),
     supabase.from("purchase_requests")
       .select("id, title, details, category_key, budget_amount, currency, status, created_at")
@@ -115,6 +115,7 @@ export default async function Admin({ searchParams }: PageProps) {
                   <article className="seller-app-card" key={application.id}>
                     <div className="seller-app-heading"><strong>{application.seller_name}</strong><span className={`seller-status seller-status-${application.status}`}>{application.status}</span></div>
                     <p>{application.seller_type} · {application.category_key.replaceAll("-", " ")} · Received {dateLabel(application.created_at)}</p>
+                    {application.seller_type === "business" && <p><strong>Business registration number:</strong> {application.business_registration_number || "Not provided"}</p>}
                     <p>{application.description}</p>
                     <div className="admin-contact-details"><span>Contact: {application.contact_person_name || "Not provided"}</span><a href={`mailto:${application.contact_email}`}>{application.contact_email}</a>{application.phone && <a href={`tel:${application.phone}`}>{application.phone}</a>}{application.website_url && <a href={application.website_url} target="_blank" rel="noopener noreferrer">Website ↗</a>}</div>
                     <form action={reviewSellerApplication} className="identity-form">
