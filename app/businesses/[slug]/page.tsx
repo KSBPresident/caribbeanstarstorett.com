@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "../../../components/site-header";
 import { createClient } from "../../../lib/supabase/server";
 import { getSafeExternalWebsite } from "../../../lib/external-website";
+import { ProductCard } from "../../../components/product-card";
+import { inventoryRowToProduct, type InventoryProductRow } from "../../../lib/store-product";
+import { startSellerConversation } from "../../messages/actions";
 
 const categoryLabels: Record<string, string> = {
   home: "Home & living",
@@ -20,7 +23,7 @@ const getPublicBusinessProfile = cache(async (slug: string) => {
   const supabase = await createClient();
   return supabase
     .from("organization_public_profiles")
-    .select("slug, display_name, summary, category_key, region, contact_email, phone, website_url, seller_is_away, seller_away_message")
+    .select("organization_id, slug, display_name, summary, category_key, region, contact_email, phone, website_url, seller_is_away, seller_away_message")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
@@ -75,6 +78,15 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
   if (!profile) notFound();
 
   const businessWebsite = getSafeExternalWebsite(profile.website_url);
+  const supabase = await createClient();
+  const { data: inventoryRows, error: inventoryError } = await supabase
+    .from("inventory_items")
+    .select("id, organization_id, slug, name, category_key, price, currency, quantity_available, image_url, description")
+    .eq("organization_id", profile.organization_id)
+    .eq("status", "published")
+    .order("updated_at", { ascending: false })
+    .limit(48);
+  const products = (inventoryRows || []).map((row) => inventoryRowToProduct(row as InventoryProductRow));
   const siteUrl = "https://www.caribbeanstarstorett.com";
   const pageUrl = siteUrl + "/businesses/" + encodeURIComponent(profile.slug);
   const structuredData = [
@@ -134,9 +146,21 @@ export default async function BusinessProfilePage({ params }: { params: Promise<
             {profile.phone && <a href={`tel:${profile.phone}`}>Call {profile.phone}</a>}
             {profile.contact_email && <a href={`mailto:${profile.contact_email}`}>Email {profile.contact_email}</a>}
             {businessWebsite && <a href={businessWebsite.href} target="_blank" rel="noopener noreferrer">Visit {businessWebsite.hostname} ↗</a>}
-            <p>Confirm availability and terms directly with the business.</p>
+            <form action={startSellerConversation} className="identity-form">
+              <input type="hidden" name="organizationId" value={profile.organization_id} />
+              <label>Message this store<textarea name="body" rows={3} minLength={1} maxLength={4000} required placeholder={`Contact ${profile.display_name}`} /></label>
+              <button className="identity-submit" type="submit">Message this store</button>
+            </form>
+            <p>Contact details are shared by the business. Messages stay in your Caribbean Star Store account.</p>
           </aside>
         </div>
+        <section className="identity-panel">
+          <span className="identity-eyebrow">SHOP THIS STORE</span>
+          <h2>Products from {profile.display_name}</h2>
+          {inventoryError ? <p className="identity-message identity-error" role="alert">This store’s products are temporarily unavailable.</p>
+            : products.length ? <div className="product-grid listing-grid">{products.map((product) => <ProductCard key={product.slug} product={{ ...product, sellerName: profile.display_name, sellerSlug: profile.slug }} />)}</div>
+            : <p className="organization-empty">This store has not published any products yet.</p>}
+        </section>
       </main>
     </>
   );
