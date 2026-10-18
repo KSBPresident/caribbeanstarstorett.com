@@ -42,8 +42,20 @@ export async function getStoreProducts(options: {
     const { data, count, error } = await request.range((page - 1) * perPage, page * perPage - 1);
     if (error) throw error;
     const totalProducts = count || 0;
+    const products = (data || []).map((row) => inventoryRowToProduct(row as InventoryRow));
+    const organizationIds = [...new Set(products.map((product) => product.organizationId).filter((id): id is string => Boolean(id)))];
+    const { data: sellerProfiles } = organizationIds.length
+      ? await supabase.from("organization_public_profiles")
+          .select("organization_id, slug, display_name")
+          .eq("is_published", true)
+          .in("organization_id", organizationIds)
+      : { data: [] };
+    const sellerByOrganization = new Map((sellerProfiles || []).map((profile) => [profile.organization_id, profile]));
     return {
-      products: (data || []).map((row) => inventoryRowToProduct(row as InventoryRow)),
+      products: products.map((product) => {
+        const seller = product.organizationId ? sellerByOrganization.get(product.organizationId) : null;
+        return { ...product, sellerName: seller?.display_name, sellerSlug: seller?.slug };
+      }),
       status: "available" as CatalogStatus,
       totalProducts,
       totalPages: Math.max(1, Math.ceil(totalProducts / perPage)),
@@ -63,11 +75,19 @@ export async function getStoreProductBySlug(slug: string) {
       .eq("status", "published")
       .maybeSingle();
     if (error) throw error;
+    if (!data) return { product: null as Product | null, sellerProfile: null, status: "not-found" as CatalogStatus };
+    const product = inventoryRowToProduct(data as InventoryRow);
+    const { data: sellerProfile } = await supabase.from("organization_public_profiles")
+      .select("organization_id, slug, display_name, summary, category_key, region, contact_email, phone, website_url, seller_is_away, seller_away_message")
+      .eq("organization_id", data.organization_id)
+      .eq("is_published", true)
+      .maybeSingle();
     return {
-      product: data ? inventoryRowToProduct(data as InventoryRow) : null,
-      status: data ? "available" as CatalogStatus : "not-found" as CatalogStatus,
+      product: { ...product, sellerName: sellerProfile?.display_name, sellerSlug: sellerProfile?.slug },
+      sellerProfile,
+      status: "available" as CatalogStatus,
     };
   } catch {
-    return { product: null as Product | null, status: "unavailable" as CatalogStatus };
+    return { product: null as Product | null, sellerProfile: null, status: "unavailable" as CatalogStatus };
   }
 }
