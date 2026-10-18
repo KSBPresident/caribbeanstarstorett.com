@@ -2,15 +2,17 @@ ALTER TABLE public.checkout_order_items
   ADD COLUMN coupon_discount numeric(12,2) NOT NULL DEFAULT 0
     CHECK (coupon_discount >= 0),
   ADD COLUMN discounted_subtotal numeric(12,2)
-    GENERATED ALWAYS AS (line_subtotal - coupon_discount) STORED;
+    GENERATED ALWAYS AS (unit_price * quantity - coupon_discount) STORED;
 
 ALTER TABLE public.checkout_order_items
   DROP COLUMN commission_amount,
-  DROP COLUMN seller_net_amount,
+  DROP COLUMN seller_net_amount;
+
+ALTER TABLE public.checkout_order_items
   ADD COLUMN commission_amount numeric(12,2)
-    GENERATED ALWAYS AS (round(discounted_subtotal * commission_rate, 2)) STORED,
+    GENERATED ALWAYS AS (round((unit_price * quantity - coupon_discount) * commission_rate, 2)) STORED,
   ADD COLUMN seller_net_amount numeric(12,2)
-    GENERATED ALWAYS AS (discounted_subtotal - round(discounted_subtotal * commission_rate, 2)) STORED;
+    GENERATED ALWAYS AS ((unit_price * quantity - coupon_discount) - round((unit_price * quantity - coupon_discount) * commission_rate, 2)) STORED;
 
 ALTER TABLE public.checkout_orders
   ADD COLUMN coupon_code text,
@@ -27,7 +29,9 @@ ALTER TABLE public.checkout_orders
     );
 
 ALTER TABLE public.checkout_orders
-  DROP COLUMN total,
+  DROP COLUMN total;
+
+ALTER TABLE public.checkout_orders
   ADD COLUMN total numeric(12,2)
     GENERATED ALWAYS AS (item_subtotal + seller_shipping_total + platform_shipping_total - coupon_discount_total) STORED;
 
