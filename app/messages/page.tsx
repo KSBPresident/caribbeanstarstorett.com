@@ -63,6 +63,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
           <Link className="identity-secondary" href="/marketplace">Browse products</Link>
         </header>
         {params.notice === "sent" && <p className="identity-message" role="status">Your message was sent.</p>}
+        {params.notice === "offer-sent" && <p className="identity-message" role="status">Your offer was sent to the seller. Check this conversation for their reply.</p>}
         {params.error && <p className="identity-message identity-error" role="alert">We couldn’t send that message. Refresh and try again.</p>}
         {threadResult.error || messageResult.error ? (
           <p className="identity-message identity-error" role="alert">Your conversations could not be loaded.</p>
@@ -75,7 +76,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
                 {thread.inventory_item_id && <p>Product listing reference: {thread.inventory_item_id}</p>}
                 <div className="account-activity-list">
                   {(messagesByThread.get(thread.id) || []).map((message) => (
-                    <article key={message.id}><div><strong>{message.sender_user_id === user.id ? "You" : "Other participant"}</strong><span>{new Date(message.created_at).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}</span><p>{message.body}</p></div></article>
+                    <article key={message.id}><div><strong>{message.sender_user_id === user.id ? "You" : "Other participant"}</strong><span>{new Date(message.created_at).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}</span><p style={{ whiteSpace: "pre-wrap" }}>{message.body}</p></div></article>
                   ))}
                 </div>
                 <form action={replyToSellerConversation} className="identity-form">

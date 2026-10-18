@@ -43,8 +43,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function ProductDetail({ params, searchParams }: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
   const result = await getStoreProductBySlug(slug);
   const product = result.product;
   const seller = result.sellerProfile;
@@ -115,13 +118,26 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
                   </>}
                   <small>Online ordering and payment are not available yet.</small>
                 </div>
-                {seller && <form action={startSellerConversation} className="identity-form seller-message-form">
-                  <input type="hidden" name="organizationId" value={seller.organization_id} />
+                {query.error === "offer" && <p className="identity-message identity-error" role="alert">Enter a valid offer amount greater than zero and an optional note up to 1,000 characters.</p>}
+                <form action={startSellerConversation} className="identity-form seller-message-form">
+                  <input type="hidden" name="organizationId" value={product.organizationId} />
                   <input type="hidden" name="productId" value={product.id} />
-                  <label>Message the seller<textarea name="body" rows={3} minLength={1} maxLength={4000} required placeholder={`Ask ${seller.display_name} about this item`} /></label>
+                  <label>Offer amount ({product.currency.toUpperCase()})
+                    <input name="offerAmount" type="number" inputMode="decimal" min="0.01" step="0.01" required />
+                  </label>
+                  <label>Note to the seller (optional)
+                    <textarea name="offerNote" rows={2} maxLength={1000} placeholder="Add a short message about your offer" />
+                  </label>
+                  <button className="identity-submit" type="submit">Make an offer</button>
+                  <small>This sends a non-binding offer message to the seller. It does not place an order or payment.</small>
+                </form>
+                <form action={startSellerConversation} className="identity-form seller-message-form">
+                  <input type="hidden" name="organizationId" value={product.organizationId} />
+                  <input type="hidden" name="productId" value={product.id} />
+                  <label>Message the seller<textarea name="body" rows={3} minLength={1} maxLength={4000} required placeholder={`Ask ${seller?.display_name || "the seller"} about this item`} /></label>
                   <button className="identity-submit" type="submit">Message seller</button>
                   <small>Send a private message and continue the conversation in your account.</small>
-                </form>}
+                </form>
                 <p className="catalog-meta">Delivery, warranty, and return details are not available on this listing yet.</p>
                 <AddToCartButton product={product} className="buy-now" />
                 <p className="catalog-meta">This item can stay in your saved cart, but you can’t place an order or pay here yet.</p>
