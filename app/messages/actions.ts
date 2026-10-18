@@ -36,13 +36,30 @@ export async function startSellerConversation(formData: FormData) {
     if (storeError || !store) redirect("/businesses?error=message");
   }
 
-  const { data: conversation, error } = await supabase.from("seller_conversations")
-    .insert({ buyer_user_id: user.id, seller_organization_id: organizationId, inventory_item_id: productId || null })
-    .select("id").single();
-  if (error || !conversation) redirect("/marketplace?error=message");
+  const baseConversationQuery = supabase.from("seller_conversations")
+    .select("id")
+    .eq("buyer_user_id", user.id)
+    .eq("seller_organization_id", organizationId);
+  const conversationQuery = productId
+    ? baseConversationQuery.eq("inventory_item_id", productId)
+    : baseConversationQuery.is("inventory_item_id", null);
+  const { data: existingConversation, error: lookupError } = await conversationQuery
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (lookupError) redirect("/marketplace?error=message");
+
+  let conversationId = existingConversation?.id;
+  if (!conversationId) {
+    const { data: conversation, error } = await supabase.from("seller_conversations")
+      .insert({ buyer_user_id: user.id, seller_organization_id: organizationId, inventory_item_id: productId || null })
+      .select("id").single();
+    if (error || !conversation) redirect("/marketplace?error=message");
+    conversationId = conversation.id;
+  }
 
   const { error: messageError } = await supabase.from("seller_messages")
-    .insert({ conversation_id: conversation.id, sender_user_id: user.id, body });
+    .insert({ conversation_id: conversationId, sender_user_id: user.id, body });
   redirect(messageError ? "/messages?error=send" : "/messages?notice=sent");
 }
 
