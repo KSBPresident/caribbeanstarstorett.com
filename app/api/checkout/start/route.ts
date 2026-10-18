@@ -75,8 +75,8 @@ export async function POST(request: Request) {
     return checkoutError("Your cart contains duplicate items. Refresh it and try again.", 400);
   }
 
+  items.sort((a, b) => a.product_id.localeCompare(b.product_id));
   const admin = createAdminClient();
-  await admin.rpc("expire_checkout_orders");
   const { data: created, error: createError } = await admin.rpc("create_checkout_order", {
     p_buyer_user_id: user.id,
     p_buyer_email: user.email,
@@ -107,9 +107,8 @@ export async function POST(request: Request) {
     name: address.recipient.slice(0, 60),
     addr1: address.addressLine1.slice(0, 50),
     city: address.city.slice(0, 30),
-    state: address.parishOrCounty.slice(0, 30),
     country,
-    phone: address.phone,
+    ...( /^\\+[1-9]\\d{1,14}$/.test(address.phone.replace(/[^+\\d]/g, "")) ? { phone: address.phone.replace(/[^+\\d]/g, "") } : {}),
     data: JSON.stringify({ orderId: order.order_id }),
   };
 
