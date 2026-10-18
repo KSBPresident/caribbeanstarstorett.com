@@ -126,7 +126,7 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
             <h1>Your seller workspaces</h1>
             <p>Store-owner tools are separate from your personal shopping account. Workspace access and controls follow your assigned role.</p>
           </div>
-          <Link className="identity-secondary" href="/dashboard">Back to My Account</Link>
+          <div className="cart-empty-actions"><Link className="identity-submit" href="/messages">Customer messages →</Link><Link className="identity-secondary" href="/dashboard">Back to My Account</Link></div>
         </header>
 
         {params.notice === "away-updated" && <p className="identity-message" role="status">Your store availability was updated.</p>}
