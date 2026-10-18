@@ -23,10 +23,13 @@ export default async function CouponsPage() {
     : { data: [], error: null };
   const couponRows = couponsResult.data || [];
   const organizationIds = [...new Set(couponRows.map((coupon) => coupon.organization_id))];
-  const organizationsResult = supabase && organizationIds.length
-    ? await supabase.from("organizations").select("id, name").in("id", organizationIds)
+  const sellerProfilesResult = supabase && organizationIds.length
+    ? await supabase.from("organization_public_profiles")
+        .select("organization_id, display_name")
+        .eq("is_published", true)
+        .in("organization_id", organizationIds)
     : { data: [], error: null };
-  const names = new Map((organizationsResult.data || []).map((organization) => [organization.id, organization.name]));
+  const names = new Map((sellerProfilesResult.data || []).map((profile) => [profile.organization_id, profile.display_name]));
 
   return (
     <>
@@ -43,7 +46,7 @@ export default async function CouponsPage() {
         <p className="identity-note">Online checkout is not available yet. These codes are published for shoppers to discover and will be redeemable when checkout is enabled.</p>
         {!configured ? (
           <section className="identity-panel"><h2>Offers are being prepared</h2><p>Seller coupons will appear here once account services are available.</p></section>
-        ) : couponsResult.error || organizationsResult.error ? (
+        ) : couponsResult.error || sellerProfilesResult.error ? (
           <section className="identity-panel" role="alert"><h2>Coupons are temporarily unavailable</h2><p>Please refresh the page later.</p></section>
         ) : couponRows.length ? (
           <section className="seller-app-list" aria-label="Active seller coupons">
