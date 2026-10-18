@@ -1,38 +1,31 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
+import { CheckoutForm } from "../../components/checkout-form";
+import { createClient } from "../../lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Checkout",
-  description: "Checkout is being prepared for Caribbean Star Store.",
+  title: "Secure checkout",
+  description: "Review your Caribbean Star Store order and pay securely by card.",
   robots: { index: false, follow: false },
 };
 
-export default function CheckoutPage() {
+type PageProps = { searchParams: Promise<{ payment?: string }> };
+
+export default async function CheckoutPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const paymentStatus = ["success", "failed", "pending"].includes(params.payment || "") ? params.payment : undefined;
+  if (!paymentStatus) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect("/sign-in?notice=signin&next=%2Fcheckout");
+  }
+
   return (
     <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page">
-        <section className="identity-panel" aria-labelledby="checkout-status-title">
-          <span className="identity-eyebrow">CARIBBEAN STAR STORE · CHECKOUT</span>
-          <h1 id="checkout-status-title">Checkout is being prepared</h1>
-          <p>
-            You can review items saved in your cart, but order placement, payment,
-            delivery estimates, and order tracking are not active yet.
-          </p>
-          <p className="identity-note">
-            For shipped orders, Caribbean Star Store adds $5 per item, plus any seller-set shipping charge. The final amount will be shown before payment when checkout is enabled.
-          </p>
-          <p className="identity-note">
-            Your cart stays saved in this browser. Caribbean Star Store will not
-            ask you for payment details or place an order until checkout is enabled.
-          </p>
-          <div className="cart-empty-actions">
-            <Link className="identity-submit" href="/cart">Return to your cart</Link>
-            <Link className="identity-secondary" href="/marketplace">Explore the marketplace</Link>
-            <Link className="identity-secondary" href="/help">Read help &amp; information</Link>
-          </div>
-        </section>
+        <CheckoutForm paymentStatus={paymentStatus} />
       </main>
     </>
   );
