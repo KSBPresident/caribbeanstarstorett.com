@@ -20,6 +20,7 @@ export async function submitSellerApplication(formData: FormData) {
   const sellerName = String(formData.get("sellerName") || "").trim();
   const contactName = String(formData.get("contactName") || "").trim();
   const sellerType = String(formData.get("sellerType") || "");
+  const businessRegistrationNumber = String(formData.get("businessRegistrationNumber") || "").trim();
   const category = String(formData.get("category") || "");
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const phone = String(formData.get("phone") || "").trim();
@@ -30,6 +31,8 @@ export async function submitSellerApplication(formData: FormData) {
   if (
     sellerName.length < 2 || sellerName.length > 100 ||
     contactName.length < 2 || contactName.length > 100 ||
+    (sellerType === "business" && (businessRegistrationNumber.length < 2 || businessRegistrationNumber.length > 120)) ||
+    (sellerType !== "business" && businessRegistrationNumber.length > 120) ||
     !sellerTypes.has(sellerType) || !categories.has(category) ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 ||
     phone.length > 40 || description.length < 30 || description.length > 2000 ||
@@ -45,6 +48,7 @@ export async function submitSellerApplication(formData: FormData) {
     seller_name: sellerName,
     contact_person_name: contactName,
     seller_type: sellerType,
+    business_registration_number: sellerType === "business" ? businessRegistrationNumber : null,
     category_key: category,
     contact_email: email,
     phone: phone || null,
