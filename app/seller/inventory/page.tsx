@@ -80,6 +80,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
   const errorMessage = params.error === "image" ? "Choose a valid JPEG, PNG, or WebP image no larger than 45 MB."
     : params.error === "invalid" ? "Check the product details, per-item seller shipping fee, image address, and inventory quantity."
     : params.error === "save" ? "We couldn’t save the product. Confirm that you have management access to an approved seller workspace."
+    : params.error === "storefront" ? "We couldn’t publish the seller storefront for this listing. Check that the seller workspace is active and try again."
     : null;
 
   return (
