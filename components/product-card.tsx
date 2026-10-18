@@ -15,7 +15,9 @@ export function ProductCard({ product }: { product: Product }) {
         <Link href={`/product/${product.slug}`}><h3>{product.name}</h3></Link>
         {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <div className="catalog-meta">No reviews yet</div>}
         <strong className="price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
-        <p className="seller">Listed on Caribbean Star Store</p>
+        <p className="seller">{product.sellerSlug && product.sellerName
+          ? <>Sold by <Link href={`/businesses/${encodeURIComponent(product.sellerSlug)}`} className="seller-store-link">{product.sellerName}</Link></>
+          : "Listed on Caribbean Star Store"}</p>
         <AddToCartButton product={product} />
       </div>
     </article>

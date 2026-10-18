@@ -1,6 +1,8 @@
 export type Product = {
   id: string | number;
   organizationId?: string;
+  sellerName?: string;
+  sellerSlug?: string;
   slug: string;
   name: string;
   category: string;
