@@ -41,13 +41,21 @@ export default async function MessagesPage({ searchParams }: PageProps) {
     .order("updated_at", { ascending: false }).range(start, start + PAGE_SIZE - 1);
   const threads = threadResult.data || [];
   const ids = threads.map((thread) => thread.id);
-  const [messageResult, organizationResult] = await Promise.all([
+  const sellerOrganizationIds = [...new Set(threads.map((thread) => thread.seller_organization_id))];
+  const productIds = [...new Set(threads.map((thread) => thread.inventory_item_id).filter((id): id is string => Boolean(id)))];
+  const [messageResult, profileResult, organizationResult, listingResult] = await Promise.all([
     ids.length ? supabase.from("seller_messages")
       .select("id, conversation_id, sender_user_id, body, created_at")
       .in("conversation_id", ids).order("created_at", { ascending: true }).limit(1000)
       : Promise.resolve({ data: [], error: null }),
-    threads.length ? supabase.from("organizations")
-      .select("id, name").in("id", [...new Set(threads.map((thread) => thread.seller_organization_id))])
+    sellerOrganizationIds.length ? supabase.from("organization_public_profiles")
+      .select("organization_id, display_name").in("organization_id", sellerOrganizationIds)
+      : Promise.resolve({ data: [], error: null }),
+    isPlatformAdmin && sellerOrganizationIds.length ? supabase.from("organizations")
+      .select("id, name").in("id", sellerOrganizationIds)
+      : Promise.resolve({ data: [], error: null }),
+    productIds.length ? supabase.from("inventory_items")
+      .select("id, name, slug").in("id", productIds)
       : Promise.resolve({ data: [], error: null }),
   ]);
   const messagesByThread = new Map<string, MessageRow[]>();
@@ -57,7 +65,11 @@ export default async function MessagesPage({ searchParams }: PageProps) {
     current.push(message);
     messagesByThread.set(message.conversation_id, current);
   }
-  const organizationNames = new Map((organizationResult.data || []).map((org) => [org.id, org.name]));
+  const organizationNames = new Map((profileResult.data || []).map((profile) => [profile.organization_id, profile.display_name]));
+  for (const organization of organizationResult.data || []) {
+    if (!organizationNames.has(organization.id)) organizationNames.set(organization.id, organization.name);
+  }
+  const listingById = new Map((listingResult.data || []).map((listing) => [listing.id, listing]));
   const totalPages = Math.max(1, Math.ceil((threadResult.count || 0) / PAGE_SIZE));
 
   return (
@@ -77,7 +89,7 @@ export default async function MessagesPage({ searchParams }: PageProps) {
         {params.notice === "sent" && <p className="identity-message" role="status">Your message was sent.</p>}
         {params.notice === "offer-sent" && <p className="identity-message" role="status">Your offer was sent to the seller. Check this conversation for their reply.</p>}
         {params.error && <p className="identity-message identity-error" role="alert">We couldn’t send that message. Refresh and try again.</p>}
-        {threadResult.error || messageResult.error || organizationResult.error ? (
+        {threadResult.error || messageResult.error || profileResult.error || organizationResult.error || listingResult.error ? (
           <p className="identity-message identity-error" role="alert">{isPlatformAdmin ? "Messages could not be loaded. Confirm administrator access and refresh." : "Your conversations could not be loaded."}</p>
         ) : threads.length ? (
           <>
@@ -92,7 +104,9 @@ export default async function MessagesPage({ searchParams }: PageProps) {
                 <section className="identity-panel" key={thread.id}>
                   <span className="identity-eyebrow">{isPlatformAdmin ? "CUSTOMER INQUIRY" : thread.buyer_user_id === user.id ? "YOUR SELLER INQUIRY" : "CUSTOMER INQUIRY"}</span>
                   <h2>{organizationNames.get(thread.seller_organization_id) || "Seller"}</h2>
-                  {thread.inventory_item_id && <p>Product listing reference: {thread.inventory_item_id}</p>}
+                  {thread.inventory_item_id && <p>About: {listingById.has(thread.inventory_item_id)
+                    ? <Link href={`/product/${encodeURIComponent(listingById.get(thread.inventory_item_id)!.slug)}`}>{listingById.get(thread.inventory_item_id)!.name}</Link>
+                    : "Product listing"}</p>}
                   <div className="account-activity-list">
                     {(messagesByThread.get(thread.id) || []).map((message) => (
                       <article key={message.id}><div><strong>{message.sender_user_id === thread.buyer_user_id ? "Customer" : "Seller"}</strong><span>{new Date(message.created_at).toLocaleString("en", { dateStyle: "medium", timeStyle: "short" })}</span><p style={{ whiteSpace: "pre-wrap" }}>{message.body}</p></div></article>
