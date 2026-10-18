@@ -104,7 +104,7 @@ export default async function ProductDetail({ params, searchParams }: {
                 <h1>{product.name}</h1>
                 {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <p className="catalog-meta">No customer reviews yet</p>}
                 <strong className="detail-price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
-                <p className="catalog-meta">Shipping per item: {money(product.sellerShippingFee || 0, product.currency, product.currencyMinorUnit)} seller charge + {money(5, "USD", 2)} Caribbean Star Store charge</p>
+                <p className="catalog-meta">Local or international delivery per item: seller-chosen {money(product.sellerShippingFee || 0, product.currency, product.currencyMinorUnit)} + {money(5, "USD", 2)} Caribbean Star Store shipping</p>
                 <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available" : "Check availability"}</p>
                 <div className="seller-box">
                   {seller ? <>
