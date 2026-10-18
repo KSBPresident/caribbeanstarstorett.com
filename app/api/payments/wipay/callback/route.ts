@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   const transactionId = params.get("transaction_id") || "";
   const status = (params.get("status") || "").toLowerCase();
   if (!/^CSS[A-Za-z0-9_-]{10,13}$/.test(reference) || !transactionId || transactionId.length > 120) {
-    return redirectStatus(request, "failed");
+    return redirectStatus(request, "pending");
   }
 
   const admin = createAdminClient();
@@ -53,5 +53,5 @@ export async function GET(request: NextRequest) {
     await admin.rpc("release_checkout_order", { p_order_id: order.id, p_failed: true });
     return redirectStatus(request, "failed");
   }
-  return redirectStatus(request, status === "pending" ? "pending" : "failed");
+  return redirectStatus(request, "pending");
 }
