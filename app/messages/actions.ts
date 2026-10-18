@@ -19,6 +19,23 @@ export async function startSellerConversation(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect(signInUrl("/marketplace"));
+  if (productId) {
+    const { data: listing, error: listingError } = await supabase.from("inventory_items")
+      .select("id, organization_id")
+      .eq("id", productId)
+      .eq("organization_id", organizationId)
+      .eq("status", "published")
+      .maybeSingle();
+    if (listingError || !listing) redirect("/marketplace?error=message");
+  } else {
+    const { data: store, error: storeError } = await supabase.from("organization_public_profiles")
+      .select("organization_id")
+      .eq("organization_id", organizationId)
+      .eq("is_published", true)
+      .maybeSingle();
+    if (storeError || !store) redirect("/businesses?error=message");
+  }
+
   const { data: conversation, error } = await supabase.from("seller_conversations")
     .insert({ buyer_user_id: user.id, seller_organization_id: organizationId, inventory_item_id: productId || null })
     .select("id").single();
