@@ -5,6 +5,8 @@ import { SiteHeader } from "../../../components/site-header";
 import { money } from "../../../lib/store-data";
 import { getStoreProductBySlug } from "../../../lib/store-catalog";
 import { AddToCartButton } from "../../../components/add-to-cart-button";
+import { startSellerConversation } from "../../messages/actions";
+import { getSafeExternalWebsite } from "../../../lib/external-website";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -45,6 +47,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const result = await getStoreProductBySlug(slug);
   const product = result.product;
+  const seller = result.sellerProfile;
+  const sellerWebsite = seller ? getSafeExternalWebsite(seller.website_url) : null;
   if (!product && result.status === "not-found") notFound();
 
   return (
@@ -98,7 +102,26 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
                 {product.reviews > 0 ? <div className="rating">★ <b>{product.rating.toFixed(1)}</b> <span>({product.reviews} reviews)</span></div> : <p className="catalog-meta">No customer reviews yet</p>}
                 <strong className="detail-price">{money(product.price, product.currency, product.currencyMinorUnit)}</strong>
                 <p className={product.inStock ? "stock" : "catalog-meta"}>{product.inStock ? "Available" : "Check availability"}</p>
-                <div className="seller-box"><b>Caribbean Star Store product listing</b><small>This published listing shows seller-provided product details. Online ordering and payment are not available yet.</small></div>
+                <div className="seller-box">
+                  {seller ? <>
+                    <b>Sold by <Link href={`/businesses/${encodeURIComponent(seller.slug)}`}>{seller.display_name}</Link></b>
+                    <small>{seller.category_key.replaceAll("-", " ")} · {seller.region}</small>
+                    {seller.summary && <small>{seller.summary}</small>}
+                    {seller.seller_is_away && <small className="seller-away-notice"><strong>Seller is away.</strong>{seller.seller_away_message ? ` ${seller.seller_away_message}` : " Replies may take longer."}</small>}
+                    <div className="cart-empty-actions"><Link className="identity-secondary" href={`/businesses/${encodeURIComponent(seller.slug)}`}>Visit this store</Link>{seller.phone && <a className="identity-secondary" href={`tel:${seller.phone}`}>Call seller</a>}{seller.contact_email && <a className="identity-secondary" href={`mailto:${seller.contact_email}`}>Email seller</a>}{sellerWebsite && <a className="identity-secondary" href={sellerWebsite.href} target="_blank" rel="noopener noreferrer">Business website ↗</a>}</div>
+                  </> : <>
+                    <b>Caribbean Star Store product listing</b>
+                    <small>This listing does not have a published seller storefront yet.</small>
+                  </>}
+                  <small>Online ordering and payment are not available yet.</small>
+                </div>
+                {seller && <form action={startSellerConversation} className="identity-form seller-message-form">
+                  <input type="hidden" name="organizationId" value={seller.organization_id} />
+                  <input type="hidden" name="productId" value={product.id} />
+                  <label>Message the seller<textarea name="body" rows={3} minLength={1} maxLength={4000} required placeholder={`Ask ${seller.display_name} about this item`} /></label>
+                  <button className="identity-submit" type="submit">Message seller</button>
+                  <small>Send a private message and continue the conversation in your account.</small>
+                </form>}
                 <p className="catalog-meta">Delivery, warranty, and return details are not available on this listing yet.</p>
                 <AddToCartButton product={product} className="buy-now" />
                 <p className="catalog-meta">This item can stay in your saved cart, but you can’t place an order or pay here yet.</p>
