@@ -98,6 +98,7 @@ export async function updateInventoryItem(formData: FormData) {
   const uploadedImagePath = String(formData.get("uploadedImagePath") || "").trim();
   const price = Number(formData.get("price"));
   const sellerShippingFee = Number(formData.get("sellerShippingFee"));
+  const sellerInternationalShippingFee = Number(formData.get("sellerInternationalShippingFee"));
   const quantity = Number(formData.get("quantity"));
   const status = String(formData.get("status") || "");
   if (
@@ -110,6 +111,7 @@ export async function updateInventoryItem(formData: FormData) {
       : !safeImageUrl(imageUrl)) ||
     !Number.isFinite(price) || price <= 0 || price > 9999999999 ||
     !Number.isFinite(sellerShippingFee) || sellerShippingFee < 0 || sellerShippingFee > 9999999999 ||
+    !Number.isFinite(sellerInternationalShippingFee) || sellerInternationalShippingFee < 0 || sellerInternationalShippingFee > 9999999999 ||
     !Number.isInteger(quantity) || quantity < 0 || quantity > 1000000 ||
     !validStatuses.has(status)
   ) redirect("/seller/inventory?error=invalid");
