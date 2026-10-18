@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import { money } from "../lib/store-data";
 import { useCart } from "./cart-provider";
 
@@ -34,7 +35,7 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
     return sum + fee * line.quantity;
   }, 0), [country, items]);
 
-  async function startPayment(event: React.FormEvent<HTMLFormElement>) {
+  async function startPayment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError("");
