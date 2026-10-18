@@ -2,6 +2,10 @@ ALTER TABLE public.inventory_items
   ADD COLUMN seller_international_shipping_fee numeric(12,2) NOT NULL DEFAULT 0.00
   CHECK (seller_international_shipping_fee >= 0);
 
+-- Keep existing listings' current shipping price when the international rate is first introduced.
+UPDATE public.inventory_items
+   SET seller_international_shipping_fee = seller_shipping_fee;
+
 CREATE TABLE public.checkout_orders (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   payment_reference text NOT NULL UNIQUE
