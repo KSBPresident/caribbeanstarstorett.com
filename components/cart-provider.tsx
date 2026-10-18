@@ -47,6 +47,7 @@ function isProduct(value: unknown): value is Product {
     typeof product.name === "string" &&
     typeof product.category === "string" &&
     typeof product.price === "number" && Number.isFinite(product.price) && product.price >= 0 &&
+    (product.sellerShippingFee === undefined || (typeof product.sellerShippingFee === "number" && Number.isFinite(product.sellerShippingFee) && product.sellerShippingFee >= 0)) &&
     typeof product.currency === "string" && /^[A-Z]{3}$/.test(product.currency) &&
     typeof product.currencyMinorUnit === "number" && Number.isInteger(product.currencyMinorUnit) && product.currencyMinorUnit >= 0 && product.currencyMinorUnit <= 4 &&
     typeof product.rating === "number" && typeof product.reviews === "number" &&
@@ -158,7 +159,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (productIds.length) {
         const { data, error } = await supabase
           .from("inventory_items")
-          .select("id, slug, name, category_key, price, currency, quantity_available, image_url, description")
+          .select("id, organization_id, slug, name, category_key, price, seller_shipping_fee, currency, quantity_available, image_url, description")
           .in("id", productIds)
           .eq("status", "published");
         if (!active || run !== hydrationRun.current) return;
@@ -272,7 +273,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const limit = Math.min(MAX_QUANTITY, product.quantityAvailable ?? MAX_QUANTITY);
         if (existing && existing.quantity >= limit) return current;
         if (existing) return current.map((line) => line.product.slug === product.slug
-          ? { ...line, quantity: Math.min(limit, line.quantity + 1) }
+          ? { ...line, product, quantity: Math.min(limit, line.quantity + 1) }
           : line);
         return [...current, { product, quantity: 1 }];
       });
