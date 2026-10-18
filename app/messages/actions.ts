@@ -44,7 +44,7 @@ export async function startSellerConversation(formData: FormData) {
 
   let messageBody = body;
   if (isOffer) {
-    const validAmount = /^\\d{1,9}(?:\\.\\d{1,2})?$/.test(offerAmountRaw);
+    const validAmount = /^\d{1,9}(?:\.\d{1,2})?$/.test(offerAmountRaw);
     const amount = Number(offerAmountRaw);
     const currency = listing?.currency.toUpperCase() || "";
     if (!listing || !validAmount || !Number.isFinite(amount) || amount <= 0 || offerNote.length > 1000 || !/^[A-Z]{3}$/.test(currency)) {
