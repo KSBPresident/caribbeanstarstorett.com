@@ -4,9 +4,12 @@ import { createAdminClient } from "../../../../../lib/supabase/admin";
 
 export const runtime = "nodejs";
 
-function redirectStatus(request: NextRequest, status: "success" | "failed" | "pending") {
+function redirectStatus(request: NextRequest, status: "success" | "failed" | "pending", reference?: string) {
   const target = new URL("/checkout", request.url);
   target.searchParams.set("payment", status);
+  if (reference && /^CSS[A-Za-z0-9_-]{10,13}$/.test(reference)) {
+    target.searchParams.set("order", reference);
+  }
   return NextResponse.redirect(target, 303);
 }
 
@@ -25,19 +28,19 @@ export async function GET(request: NextRequest) {
     .eq("payment_reference", reference)
     .maybeSingle();
   if (error || !order || order.wipay_transaction_id !== transactionId) {
-    return redirectStatus(request, "failed");
+    return redirectStatus(request, "failed", reference);
   }
 
   if (status === "success") {
     const apiKey = process.env.WIPAY_API_KEY;
     const suppliedHash = params.get("hash") || "";
-    if (!apiKey || !/^[a-f0-9]{32}$/i.test(suppliedHash)) return redirectStatus(request, "pending");
+    if (!apiKey || !/^[a-f0-9]{32}$/i.test(suppliedHash)) return redirectStatus(request, "pending", reference);
     const expectedHash = createHash("md5")
       .update(transactionId + Number(order.total).toFixed(2) + apiKey, "utf8")
       .digest();
     const supplied = Buffer.from(suppliedHash, "hex");
     if (supplied.length !== expectedHash.length || !timingSafeEqual(supplied, expectedHash)) {
-      return redirectStatus(request, "pending");
+      return redirectStatus(request, "pending", reference);
     }
     const { data: completed, error: completeError } = await admin.rpc("complete_checkout_order", {
       p_order_id: order.id,
@@ -45,13 +48,13 @@ export async function GET(request: NextRequest) {
       p_verified_total: Number(order.total),
     });
     return !completeError && completed === true
-      ? redirectStatus(request, "success")
-      : redirectStatus(request, order.status === "paid" ? "success" : "pending");
+      ? redirectStatus(request, "success", reference)
+      : redirectStatus(request, order.status === "paid" ? "success" : "pending", reference);
   }
 
   if ((status === "failed" || status === "error") && order.status === "pending_payment") {
     await admin.rpc("release_checkout_order", { p_order_id: order.id, p_failed: true });
-    return redirectStatus(request, "failed");
+    return redirectStatus(request, "failed", reference);
   }
-  return redirectStatus(request, "pending");
+  return redirectStatus(request, "pending", reference);
 }
