@@ -25,11 +25,11 @@ export default async function CouponsPage() {
   const organizationIds = [...new Set(couponRows.map((coupon) => coupon.organization_id))];
   const sellerProfilesResult = supabase && organizationIds.length
     ? await supabase.from("organization_public_profiles")
-        .select("organization_id, display_name")
+        .select("organization_id, display_name, slug")
         .eq("is_published", true)
         .in("organization_id", organizationIds)
     : { data: [], error: null };
-  const names = new Map((sellerProfilesResult.data || []).map((profile) => [profile.organization_id, profile.display_name]));
+  const sellers = new Map((sellerProfilesResult.data || []).map((profile) => [profile.organization_id, profile]));
 
   return (
     <>
@@ -52,7 +52,9 @@ export default async function CouponsPage() {
           <section className="seller-app-list" aria-label="Active seller coupons">
             {couponRows.map((coupon) => (
               <article className="identity-panel coupon-card" key={coupon.id}>
-                <span className="identity-eyebrow">{names.get(coupon.organization_id) || "Caribbean Star Store seller"}</span>
+                <span className="identity-eyebrow">{sellers.get(coupon.organization_id)
+                  ? <Link href={`/businesses/${encodeURIComponent(sellers.get(coupon.organization_id)!.slug)}`}>{sellers.get(coupon.organization_id)!.display_name}</Link>
+                  : "Caribbean Star Store seller"}</span>
                 <h2>{coupon.discount_type === "percentage" ? `${Number(coupon.discount_value)}% off` : `${coupon.currency} ${Number(coupon.discount_value).toFixed(2)} off`}</h2>
                 <p>{coupon.expires_at ? `Offer ends ${new Date(coupon.expires_at).toLocaleDateString("en", { dateStyle: "medium" })}.` : "No expiry date listed."}</p>
                 <CouponCode code={coupon.code} />
