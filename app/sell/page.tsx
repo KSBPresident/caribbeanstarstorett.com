@@ -171,6 +171,8 @@ export default async function SellPage({ searchParams }: { searchParams: SearchP
               <label>Store or seller name<input name="sellerName" autoComplete="organization" minLength={2} maxLength={100} required /></label>
               <label>Contact person full name<input name="contactName" autoComplete="name" minLength={2} maxLength={100} required /></label>
               <label>Seller type<select name="sellerType" defaultValue="individual" required><option value="individual">Individual seller</option><option value="business">Registered business</option><option value="nonprofit">Nonprofit</option><option value="community">Community group</option></select></label>
+              <label>Business registration number <span>(required for registered businesses)</span><input name="businessRegistrationNumber" autoComplete="off" minLength={2} maxLength={120} placeholder="Enter the registered business number" /></label>
+              <p className="catalog-meta">Individual sellers do not need to provide a business registration number. Registered business applications must include one for admin review.</p>
               <SellerOfferIntake defaultCategory={initialOfferCategory} />
               <label>Contact email<input name="email" type="email" autoComplete="email" defaultValue={user.email || ""} maxLength={254} required /></label>
               <div className="seller-form-row">
