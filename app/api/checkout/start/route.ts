@@ -34,13 +34,18 @@ export async function POST(request: Request) {
     return checkoutError("Card checkout is not configured yet. Please try again later.", 503);
   }
 
-  let body: { country?: unknown; address?: unknown; items?: unknown };
+  let body: { country?: unknown; address?: unknown; items?: unknown; couponCode?: unknown };
   try {
     body = await request.json();
   } catch {
     return checkoutError("Please review your delivery details and try again.", 400);
   }
   const country = text(body.country, 2).toUpperCase();
+  const couponCode = text(body.couponCode, 40).toUpperCase();
+  if (couponCode && !/^[A-Z0-9][A-Z0-9_-]{2,39}$/.test(couponCode)) {
+    return checkoutError("Enter a valid seller coupon code.", 400);
+  }
+  if (user.email.length > 50) return checkoutError("Your account email is too long for WiPay checkout. Update it and try again.", 400);
   const rawAddress = body.address && typeof body.address === "object" && !Array.isArray(body.address)
     ? body.address as Record<string, unknown>
     : {};
@@ -83,10 +88,13 @@ export async function POST(request: Request) {
     p_destination_country: country,
     p_shipping_address: address,
     p_items: items,
+    p_coupon_code: couponCode || null,
   });
   const order = Array.isArray(created) ? created[0] : null;
   if (createError || !order?.order_id || !order?.payment_reference || !Number.isFinite(Number(order?.order_total))) {
-    return checkoutError("We could not reserve your items. Refresh your cart and try again.", 409);
+    return checkoutError(couponCode
+      ? "We could not reserve your items or apply that coupon. Check the code, seller eligibility, and stock, then try again."
+      : "We could not reserve your items. Refresh your cart and try again.", 409);
   }
 
   const reference = String(order.payment_reference);
@@ -103,7 +111,7 @@ export async function POST(request: Request) {
     origin: "CaribbeanStarStore",
     response_url: callback.toString(),
     total: Number(order.order_total),
-    email: user.email.slice(0, 50),
+    email: user.email,
     name: address.recipient.slice(0, 60),
     addr1: address.addressLine1.slice(0, 50),
     city: address.city.slice(0, 30),
