@@ -7,6 +7,7 @@ export type Product = {
   name: string;
   category: string;
   price: number;
+  sellerShippingFee?: number;
   currency: string;
   currencyMinorUnit: number;
   rating: number;

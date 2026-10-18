@@ -68,7 +68,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
   }));
   const { data: items, error: itemsError } = activeIds.length
     ? await supabase.from("inventory_items")
-        .select("id, organization_id, slug, name, category_key, description, price, currency, quantity_available, image_url, status, created_at, updated_at")
+        .select("id, organization_id, slug, name, category_key, description, price, seller_shipping_fee, currency, quantity_available, image_url, status, created_at, updated_at")
         .in("organization_id", activeIds)
         .order("updated_at", { ascending: false })
         .limit(100)
@@ -78,7 +78,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
     : params.notice === "updated" ? "Product listing updated."
     : null;
   const errorMessage = params.error === "image" ? "Choose a valid JPEG, PNG, or WebP image no larger than 45 MB."
-    : params.error === "invalid" ? "Check the product details, image address, and inventory quantity."
+    : params.error === "invalid" ? "Check the product details, per-item seller shipping fee, image address, and inventory quantity."
     : params.error === "save" ? "We couldn’t save the product. Confirm that you have management access to an approved seller workspace."
     : null;
 
@@ -118,7 +118,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                     return (
                       <article className="seller-app-card" key={item.id}>
                         <div className="seller-app-heading"><strong>{item.name}</strong><span className={item.status === "published" ? "seller-status seller-status-approved" : "seller-status"}>{item.status}</span></div>
-                        <p>{organization?.name || "Store"} · {category} · {money(Number(item.price), item.currency)}</p>
+                        <p>{organization?.name || "Store"} · {category} · {money(Number(item.price), item.currency)} · Seller shipping {money(Number(item.seller_shipping_fee || 0), item.currency)} per item</p>
                         {organization?.canManage ? <form action={updateInventoryItem} className="identity-form seller-form">
                           <input type="hidden" name="itemId" value={item.id} />
                           <input type="hidden" name="organizationId" value={item.organization_id} />
@@ -127,6 +127,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                           <label>Description<textarea name="description" defaultValue={item.description} placeholder="Describe the item, condition, what is included, and the details prompted above." minLength={30} maxLength={3000} rows={3} required /></label>
                           <div className="seller-form-row">
                             <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" defaultValue={item.price} required /></label>
+                            <label>Seller shipping (USD per item)<input name="sellerShippingFee" type="number" min="0" max="9999999999" step="0.01" defaultValue={item.seller_shipping_fee || 0} required /><small>Caribbean Star Store adds $5 per shipped item.</small></label>
                             <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue={item.quantity_available} required /></label>
                           </div>
                           <DirectProductImageUpload organizationId={item.organization_id} /><label>Or use an HTTPS image URL<input name="imageUrl" type="url" defaultValue={item.image_url} maxLength={2048} /><small>Uploading a new photo replaces the current image. Leave the file blank to keep or edit the image URL.</small></label>
@@ -152,6 +153,7 @@ export default async function SellerInventoryPage({ searchParams }: PageProps) {
                   <label>Description<textarea name="description" placeholder="Describe the item, condition, what is included, and the details prompted above." minLength={30} maxLength={3000} rows={5} required /></label>
                   <div className="seller-form-row">
                     <label>Price (USD)<input name="price" type="number" min="0.01" max="9999999999" step="0.01" required /></label>
+                    <label>Seller shipping (USD per item)<input name="sellerShippingFee" type="number" min="0" max="9999999999" step="0.01" defaultValue="0" required /><small>Caribbean Star Store adds $5 per shipped item.</small></label>
                     <label>Quantity available<input name="quantity" type="number" min="0" max="1000000" step="1" defaultValue="0" required /></label>
                   </div>
                   <DirectProductImageUpload organizationSelect /><label>Or use an HTTPS image URL<input name="imageUrl" type="url" placeholder="https://…" maxLength={2048} /><small>Choose a photo or enter an image address.</small></label>
