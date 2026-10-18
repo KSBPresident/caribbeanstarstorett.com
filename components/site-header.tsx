@@ -62,6 +62,7 @@ export async function SiteHeader() {
         <Link href="/coupons">Coupons</Link>
         <Link href="/businesses?category=professional">Services</Link>
         <Link href="/businesses">Businesses</Link>
+        {user && <Link href="/messages">Messages</Link>}
         <Link href="/opportunities?type=jobs">Jobs</Link>
         <Link href="/opportunities?type=real-estate">Real Estate</Link>
         <Link href="/build-a-buy">Build-A-Buy</Link>
