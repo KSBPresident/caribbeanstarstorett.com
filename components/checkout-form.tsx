@@ -44,6 +44,7 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
       country,
       address: {
         recipient: data.get("recipient"),
+        couponCode: String(data.get("couponCode") || "").trim().toUpperCase(),
         phone: data.get("phone"),
         addressLine1: data.get("addressLine1"),
         addressLine2: data.get("addressLine2"),
@@ -102,11 +103,13 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
       <label>Postal code (optional)<input name="postalCode" autoComplete="postal-code" maxLength={24} /></label>
       <section className="checkout-order-summary" aria-label="Order total">
         <h2>Order summary</h2>
+        <label>Seller coupon code (optional)<input name="couponCode" maxLength={40} pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,39}" autoCapitalize="characters" placeholder="WELCOME10" /></label>
+        <p className="catalog-meta">Each seller code discounts eligible items from that seller only. Shipping is unchanged. <Link href="/coupons">Browse seller offers</Link></p>
         <div className="shopping-cart-total-row"><span>Products</span><strong>{money(subtotal)}</strong></div>
         <div className="shopping-cart-total-row"><span>Seller shipping</span><strong>{money(sellerShipping)}</strong></div>
         <div className="shopping-cart-total-row"><span>Caribbean Star Store shipping ($5 × {items.reduce((sum, line) => sum + line.quantity, 0)} items)</span><strong>{money(platformShipping)}</strong></div>
-        <div className="shopping-cart-total-row"><span>Estimated total (USD)</span><strong>{money(subtotal + sellerShipping + platformShipping)}</strong></div>
-        <p className="catalog-meta">Final amount and any WiPay card-processing fee are shown on WiPay before you confirm payment.</p>
+        <div className="shopping-cart-total-row"><span>Estimated total before coupon (USD)</span><strong>{money(subtotal + sellerShipping + platformShipping)}</strong></div>
+        <p className="catalog-meta">Any eligible coupon is applied before payment. WiPay shows the discounted order total and any card-processing fee before you confirm.</p>
       </section>
       <button className="identity-submit" type="submit" disabled={busy}>{busy ? "Connecting to secure card checkout…" : "Continue to card payment"}</button>
       <Link className="identity-secondary" href="/cart">Return to cart</Link>
