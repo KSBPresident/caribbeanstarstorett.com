@@ -23,11 +23,34 @@ export async function reviewSellerApplication(formData: FormData) {
   }
 
   const supabase = await getPlatformAdminClient();
+  if (status === "approved") {
+    const { data: application, error: verificationError } = await supabase.from("seller_applications")
+      .select("identity_verification_status")
+      .eq("id", applicationId)
+      .maybeSingle();
+    if (verificationError || !application) redirect("/admin?error=seller");
+    if (application.identity_verification_status !== "verified") redirect("/admin?error=verification");
+  }
   const { data, error } = await supabase.rpc("platform_review_seller_application", {
     p_application_id: applicationId,
     p_status: status,
   });
   redirect(error || data !== true ? "/admin?error=seller" : "/admin?notice=seller-reviewed");
+}
+
+export async function setSellerVerificationStatus(formData: FormData) {
+  const applicationId = String(formData.get("applicationId") || "");
+  const status = String(formData.get("status") || "");
+  if (!uuidPattern.test(applicationId) || !["not_started", "pending", "verified", "rejected"].includes(status)) {
+    redirect("/admin?error=verification");
+  }
+
+  const supabase = await getPlatformAdminClient();
+  const { data, error } = await supabase.rpc("platform_set_seller_verification", {
+    p_application_id: applicationId,
+    p_status: status,
+  });
+  redirect(error || data !== true ? "/admin?error=verification" : "/admin?notice=verification-updated");
 }
 
 export async function updatePurchaseRequestStatus(formData: FormData) {

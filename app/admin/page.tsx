@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { SiteHeader } from "../../components/site-header";
 import { createClient } from "../../lib/supabase/server";
 import { isSupabaseConfigured } from "../../lib/supabase/configured";
-import { createSellerBroadcast, reviewSellerApplication, updatePurchaseRequestStatus } from "./actions";
+import { createSellerBroadcast, reviewSellerApplication, setSellerVerificationStatus, updatePurchaseRequestStatus } from "./actions";
 import { signInUrl } from "../../lib/auth/return-path";
 
 type PageProps = { searchParams: Promise<{ error?: string; notice?: string }> };
@@ -34,7 +34,7 @@ export default async function Admin({ searchParams }: PageProps) {
     supabase.from("organization_public_profiles").select("organization_id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("organization_marketplace_listings").select("id", { count: "exact", head: true }).eq("is_published", true),
     supabase.from("seller_applications")
-      .select("id, seller_name, contact_person_name, seller_type, business_registration_number, category_key, contact_email, phone, website_url, description, status, created_at")
+      .select("id, seller_name, contact_person_name, seller_type, business_registration_number, identity_verification_status, category_key, contact_email, phone, website_url, description, status, created_at")
       .in("status", ["submitted", "reviewing"]).order("created_at", { ascending: false }).limit(20),
     supabase.from("purchase_requests")
       .select("id, title, details, category_key, budget_amount, currency, status, created_at")
@@ -49,15 +49,19 @@ export default async function Admin({ searchParams }: PageProps) {
 
   const queryError = profileCount.error || organizationCount.error || memberCount.error || sellerCount.error ||
     requestCount.error || businessCount.error || opportunityCount.error || sellers.error || requests.error || audit.error || broadcastsResult.error;
-  const notice = params.notice === "seller-reviewed"
-    ? "Seller application status updated and recorded in the audit log."
+  const notice = params.notice === "verification-updated"
+    ? "Seller verification result saved and recorded in the audit log."
+    : params.notice === "seller-reviewed"
+      ? "Seller application status updated and recorded in the audit log."
     : params.notice === "request-updated"
       ? "Build-A-Buy request status updated and recorded in the audit log."
       : params.notice === "broadcast-created"
         ? "Your update was sent to approved sellers."
         : null;
-  const errorMessage = params.error === "access"
-    ? "Your platform administrator access is no longer active."
+  const errorMessage = params.error === "verification"
+    ? "Verification status could not be saved, or the seller must be verified before approval."
+    : params.error === "access"
+      ? "Your platform administrator access is no longer active."
     : params.error === "seller"
       ? "The seller application could not be updated. It may already have been reviewed."
       : params.error === "request"
@@ -118,6 +122,20 @@ export default async function Admin({ searchParams }: PageProps) {
                     {application.seller_type === "business" && <p><strong>Business registration number:</strong> {application.business_registration_number || "Not provided"}</p>}
                     <p>{application.description}</p>
                     <div className="admin-contact-details"><span>Contact: {application.contact_person_name || "Not provided"}</span><a href={`mailto:${application.contact_email}`}>{application.contact_email}</a>{application.phone && <a href={`tel:${application.phone}`}>{application.phone}</a>}{application.website_url && <a href={application.website_url} target="_blank" rel="noopener noreferrer">Website ↗</a>}</div>
+                    <div className="seller-verification-review">
+                      <p><strong>Seller identity check:</strong> {application.identity_verification_status.replaceAll("_", " ")}</p>
+                      <p className="catalog-meta">Check the result with your identity verification provider. This site stores the status only; ID documents and selfies stay with the provider.</p>
+                      <form action={setSellerVerificationStatus} className="identity-form">
+                        <input type="hidden" name="applicationId" value={application.id} />
+                        <label>Provider result<select name="status" defaultValue={application.identity_verification_status}>
+                          <option value="not_started">Not started</option>
+                          <option value="pending">Pending</option>
+                          <option value="verified">Verified</option>
+                          <option value="rejected">Rejected</option>
+                        </select></label>
+                        <button className="identity-secondary" type="submit">Save verification result</button>
+                      </form>
+                    </div>
                     <form action={reviewSellerApplication} className="identity-form">
                       <input type="hidden" name="applicationId" value={application.id} />
                       <label>Review status<select name="status" defaultValue={application.status}><option value="reviewing">Under review</option><option value="approved">Approve</option><option value="declined">Needs an update</option></select></label>
