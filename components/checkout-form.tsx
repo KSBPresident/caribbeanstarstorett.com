@@ -42,9 +42,9 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
     const data = new FormData(event.currentTarget);
     const payload = {
       country,
+      couponCode: String(data.get("couponCode") || "").trim().toUpperCase(),
       address: {
         recipient: data.get("recipient"),
-        couponCode: String(data.get("couponCode") || "").trim().toUpperCase(),
         phone: data.get("phone"),
         addressLine1: data.get("addressLine1"),
         addressLine2: data.get("addressLine2"),
