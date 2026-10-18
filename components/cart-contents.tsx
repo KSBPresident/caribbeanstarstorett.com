@@ -1,12 +1,47 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { money } from "../lib/store-data";
 import { useCart } from "./cart-provider";
 
+const DESTINATION_STORAGE_KEY = "caribbean-star-store-delivery-country-v1";
+const countryCodes = "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW".split(" ");
+const countryNames = new Intl.DisplayNames(["en"], { type: "region" });
+const countries = countryCodes
+  .map((code) => ({ code, name: countryNames.of(code) || code }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
 export function CartContents() {
   const { items, ready, syncStatus, setQuantity, removeItem } = useCart();
+  const [destinationCountry, setDestinationCountry] = useState("TT");
   const cartBusy = syncStatus === "syncing";
+  const isLocalDelivery = destinationCountry === "TT";
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(DESTINATION_STORAGE_KEY);
+      if (stored && countryCodes.includes(stored)) setDestinationCountry(stored);
+    } catch {
+      // Keep Trinidad & Tobago as the default when browser storage is unavailable.
+    }
+  }, []);
+
+  function updateDestination(countryCode: string) {
+    setDestinationCountry(countryCode);
+    try {
+      window.localStorage.setItem(DESTINATION_STORAGE_KEY, countryCode);
+    } catch {
+      // The selected destination still applies for this visit.
+    }
+  }
+
+  const countryLabel = useMemo(
+    () => countries.find((country) => country.code === destinationCountry)?.name || "Trinidad & Tobago",
+    [destinationCountry],
+  );
+  const deliveryType = isLocalDelivery ? "Local delivery" : "International delivery";
+
   const syncNotice = syncStatus === "syncing"
     ? "Syncing your signed-in cart…"
     : syncStatus === "synced"
@@ -58,6 +93,19 @@ export function CartContents() {
   return (
     <>
     {syncNoticeElement}
+    <section className="identity-panel cart-shipping-section" aria-labelledby="delivery-heading">
+      <span className="identity-eyebrow">SHIPPING & DELIVERY</span>
+      <h2 id="delivery-heading">Choose your delivery destination</h2>
+      <p>Delivery is local in Trinidad & Tobago. Every other country is treated as an international delivery destination.</p>
+      <label htmlFor="delivery-country">Country of delivery</label>
+      <select id="delivery-country" name="deliveryCountry" value={destinationCountry} onChange={(event) => updateDestination(event.target.value)}>
+        <option value="TT">Trinidad & Tobago</option>
+        {countries.filter((country) => country.code !== "TT").map((country) => (
+          <option key={country.code} value={country.code}>{country.name}</option>
+        ))}
+      </select>
+      <p className="catalog-meta" role="status">Selected: {deliveryType} to {countryLabel}.</p>
+    </section>
     <div className="shopping-cart-layout">
       <section className="identity-panel" aria-label="Items in your cart">
         <ul className="shopping-cart-list">
@@ -70,7 +118,7 @@ export function CartContents() {
                 <Link href={`/product/${product.slug}`}><strong>{product.name}</strong></Link>
                 <span>{product.category}</span>
                 <small>{money(product.price, product.currency, product.currencyMinorUnit)} each</small>
-                <small>Shipping per item: {money(product.sellerShippingFee || 0, product.currency, product.currencyMinorUnit)} seller charge + {money(5, "USD", 2)} Caribbean Star Store charge</small>
+                <small>{deliveryType} shipping per item: seller-chosen {money(product.sellerShippingFee || 0, product.currency, product.currencyMinorUnit)} + Caribbean Star Store {money(5, "USD", 2)}</small>
                 <div className="shopping-cart-controls" aria-label={`Quantity for ${product.name}`}>
                   <button type="button" disabled={cartBusy} aria-label={`Decrease ${product.name} quantity`} onClick={() => setQuantity(product.slug, quantity - 1)}>−</button>
                   <span>{quantity}</span>
@@ -85,6 +133,7 @@ export function CartContents() {
       </section>
       <aside className="identity-panel shopping-cart-summary">
         <h2>Order summary</h2>
+        <p className="catalog-meta">{deliveryType} to {countryLabel}</p>
         {[...subtotals.entries()].map(([currency, total]) => (
           <div key={currency}>
             <div className="shopping-cart-total-row">
@@ -92,7 +141,7 @@ export function CartContents() {
               <strong>{money(total.amount, currency, total.minorUnit)}</strong>
             </div>
             <div className="shopping-cart-total-row">
-              <span>Seller shipping ({currency})</span>
+              <span>Seller-chosen delivery ({currency})</span>
               <strong>{money(total.sellerShipping, currency, total.minorUnit)}</strong>
             </div>
           </div>
@@ -105,7 +154,9 @@ export function CartContents() {
           <span>Estimated total (USD)</span>
           <strong>{money(estimatedTotalUsd, "USD", 2)}</strong>
         </div>}
-        <p className="catalog-meta">Shipping is charged per shipped item. Final shipping and availability will be confirmed before payment.</p>
+        <p className="catalog-meta">{isLocalDelivery
+          ? "The seller-entered delivery fee plus the $5 Caribbean Star Store charge is shown per shipped item."
+          : "The seller-entered international delivery fee plus the $5 Caribbean Star Store charge is shown per shipped item. Final international delivery cost and availability must be confirmed before payment."}</p>
         <button className="identity-submit" type="button" disabled>Online checkout is not available yet</button>
         <p className="catalog-meta">Prices and availability will be confirmed again when checkout is connected.</p>
       </aside>
