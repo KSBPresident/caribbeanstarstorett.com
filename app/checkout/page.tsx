@@ -27,6 +27,12 @@ export default function CheckoutPage() {
             Your cart stays saved in this browser. Caribbean Star Store will not
             ask you for payment details or place an order until checkout is enabled.
           </p>
+          <p className="identity-note">
+            You can save and manage your delivery addresses in your account so they are ready when checkout opens.
+          </p>
+          <div className="cart-empty-actions">
+            <Link className="identity-submit" href="/addresses">Manage delivery addresses</Link>
+          </div>
           <div className="cart-empty-actions">
             <Link className="identity-submit" href="/cart">Return to your cart</Link>
             <Link className="identity-secondary" href="/marketplace">Explore the marketplace</Link>
