@@ -16,7 +16,7 @@ function getRemaining(now: number) {
 }
 
 export function BetaCountdown() {
-  const [remaining, setRemaining] = useState<ReturnType<typeof getRemaining> | null>(null);
+  const [remaining, setRemaining] = useState(() => getRemaining(Date.now()));
 
   useEffect(() => {
     const update = () => setRemaining(getRemaining(Date.now()));
@@ -28,17 +28,15 @@ export function BetaCountdown() {
   return (
     <div className="beta-countdown" aria-label="Beta period countdown">
       <span className="beta-countdown-label">Beta ends in</span>
-      <time dateTime="2026-11-01T00:00:00-04:00" aria-live="off">
-        {remaining ? (
-          remaining.totalSeconds > 0 ? (
-            <span className="beta-countdown-values">
-              <span><strong>{remaining.days}</strong><small>d</small></span>
-              <span><strong>{String(remaining.hours).padStart(2, "0")}</strong><small>h</small></span>
-              <span><strong>{String(remaining.minutes).padStart(2, "0")}</strong><small>m</small></span>
-              <span><strong>{String(remaining.seconds).padStart(2, "0")}</strong><small>s</small></span>
-            </span>
-          ) : "Beta period ended"
-        ) : "Loading…"}
+      <time dateTime="2026-11-01T00:00:00-04:00" aria-live="off" suppressHydrationWarning>
+        {remaining.totalSeconds > 0 ? (
+          <span className="beta-countdown-values">
+            <span><strong>{remaining.days}</strong><small>d</small></span>
+            <span><strong>{String(remaining.hours).padStart(2, "0")}</strong><small>h</small></span>
+            <span><strong>{String(remaining.minutes).padStart(2, "0")}</strong><small>m</small></span>
+            <span><strong>{String(remaining.seconds).padStart(2, "0")}</strong><small>s</small></span>
+          </span>
+        ) : "Beta period ended"}
       </time>
       <span className="beta-countdown-deadline">November 1, 2026 · 12:00 AM AST</span>
     </div>
