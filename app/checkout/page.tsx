@@ -14,6 +14,12 @@ type PageProps = { searchParams: Promise<{ payment?: string; order?: string }> }
 
 const paymentReferencePattern = /^CSS[A-Za-z0-9_-]{10,13}$/;
 
+const cardCheckoutConfigured =
+  /^\\d{6,20}$/.test(process.env.WIPAY_ACCOUNT_NUMBER || "") &&
+  Boolean(process.env.WIPAY_API_KEY?.trim()) &&
+  process.env.WIPAY_ENVIRONMENT === "live" &&
+  process.env.WIPAY_FEE_STRUCTURE === "customer_pay";
+
 export default async function CheckoutPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const requestedStatus = ["success", "failed", "pending"].includes(params.payment || "")
@@ -47,7 +53,7 @@ export default async function CheckoutPage({ searchParams }: PageProps) {
       <>
         <SiteHeader />
         <main id="main-content" tabIndex={-1} className="identity-page">
-          <CheckoutForm paymentStatus={paymentStatus} />
+          <CheckoutForm paymentStatus={paymentStatus} checkoutConfigured={cardCheckoutConfigured} />
         </main>
       </>
     );
@@ -59,7 +65,7 @@ export default async function CheckoutPage({ searchParams }: PageProps) {
     <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="identity-page">
-        <CheckoutForm />
+        <CheckoutForm checkoutConfigured={cardCheckoutConfigured} />
       </main>
     </>
   );

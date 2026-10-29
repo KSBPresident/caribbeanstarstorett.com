@@ -43,7 +43,7 @@ const emptyAddress = (countryCode = "TT"): AddressDraft => ({
 });
 
 
-export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
+export function CheckoutForm({ paymentStatus, checkoutConfigured = false }: { paymentStatus?: string; checkoutConfigured?: boolean }) {
   const { items, ready, clearCart } = useCart();
   const [country, setCountry] = useState("TT");
   const [address, setAddress] = useState<AddressDraft>(() => emptyAddress());
@@ -223,6 +223,7 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
       <h1>Review and pay</h1>
       <p>Pay securely by card on WiPay’s hosted checkout. Your card details never pass through this site.</p>
       {error && <p className="identity-message identity-error" role="alert">{error}</p>}
+      {!checkoutConfigured && <p className="identity-message" role="status">Card checkout is being set up. Your card will only be charged through WiPay after checkout is ready.</p>}
       <section className="checkout-saved-addresses" aria-labelledby="delivery-address-heading">
         <div className="account-panel-title"><div><span className="identity-eyebrow">DELIVERY ADDRESS</span><h2 id="delivery-address-heading">Where should we send your order?</h2></div></div>
         {addressesLoaded && savedAddresses.length > 0 && <label>Choose a saved address<select value={selectedAddressId} onChange={(event) => chooseAddress(event.target.value)}>
@@ -261,7 +262,7 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
         <div className="shopping-cart-total-row"><span>Estimated total before coupon (USD)</span><strong>{money(subtotal + sellerShipping + platformShipping)}</strong></div>
         <p className="catalog-meta">Any eligible coupon is applied before payment. WiPay shows the discounted order total and any card-processing fee before you confirm.</p>
       </section>
-      <button className="identity-submit" type="submit" disabled={busy}>{busy ? "Connecting to secure card checkout…" : "Continue to card payment"}</button>
+      <button className="identity-submit" type="submit" disabled={busy || !checkoutConfigured}>{!checkoutConfigured ? "Card checkout is being set up" : busy ? "Connecting to secure card checkout…" : "Continue to card payment"}</button>
       <Link className="identity-secondary" href="/cart">Return to cart</Link>
     </form>
   );
