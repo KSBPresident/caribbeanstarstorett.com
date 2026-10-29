@@ -122,6 +122,11 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Purchases and order history</h2><p>Online order placement is not active yet. Your order history will appear here once checkout is enabled.</p></div>
             <Link className="identity-submit" href="/cart">View your cart →</Link>
           </section>
+
+          <section className="identity-panel identity-wide account-workspace-link">
+            <div><span className="identity-eyebrow">DELIVERY</span><h2>Shipping addresses</h2><p>Save your delivery details for faster future orders. Add a recipient, phone, country, parish or region, and a nearby landmark.</p></div>
+            <Link className="identity-submit" href="/addresses">Manage delivery addresses →</Link>
+          </section>
         </div>
       </main>
     </>
