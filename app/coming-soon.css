@@ -2,21 +2,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   padding: 10px 20px;
   background: #fff4d6;
   border-bottom: 1px solid #ead18a;
   color: #34302a;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.45;
 }
 .coming-soon-banner p {
   margin: 0;
 }
-.coming-soon-label {
+.beta-live-label {
   flex: none;
-  color: #714d00;
+  color: #176b3a;
   font-size: 11px;
   font-weight: 900;
   letter-spacing: .09em;
@@ -32,13 +33,59 @@
   font-weight: 900;
   letter-spacing: .08em;
 }
-@media (max-width: 600px) {
+.beta-countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px 9px;
+  padding-left: 10px;
+  border-left: 1px solid #d8c68f;
+  font-variant-numeric: tabular-nums;
+}
+.beta-countdown-label {
+  color: #5a4a21;
+  font-size: 11px;
+  font-weight: 700;
+}
+.beta-countdown time {
+  color: #17324d;
+  font-size: 12px;
+  font-weight: 800;
+}
+.beta-countdown-values {
+  display: inline-flex;
+  gap: 5px;
+}
+.beta-countdown-values>span {
+  display: inline-flex;
+  gap: 2px;
+}
+.beta-countdown-values small {
+  color: #667085;
+  font-size: 9px;
+  align-self: center;
+}
+.beta-countdown-deadline {
+  color: #5f6c7d;
+  font-size: 10px;
+}
+@media (max-width: 700px) {
   .coming-soon-banner {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 3px;
+    justify-content: flex-start;
+    gap: 6px 9px;
     padding: 9px 16px;
     text-align: left;
     font-size: 12px;
+  }
+  .coming-soon-banner p {
+    flex: 1 1 100%;
+  }
+  .beta-countdown {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    padding: 7px 0 0;
+    border-left: 0;
+    border-top: 1px solid #d8c68f;
   }
 }
