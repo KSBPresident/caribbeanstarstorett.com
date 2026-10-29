@@ -21,6 +21,17 @@
   font-weight: 900;
   letter-spacing: .09em;
 }
+.beta-mode-label {
+  flex: none;
+  padding: 3px 8px;
+  border: 1px solid #caa548;
+  border-radius: 999px;
+  background: #fffaf0;
+  color: #714d00;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
 @media (max-width: 600px) {
   .coming-soon-banner {
     align-items: flex-start;
