@@ -8,6 +8,7 @@ export type Product = {
   category: string;
   price: number;
   sellerShippingFee?: number;
+  sellerInternationalShippingFee?: number;
   currency: string;
   currencyMinorUnit: number;
   rating: number;
@@ -36,3 +37,4 @@ export const money = (amount: number, currency = "USD", minorUnit = 2) => {
     maximumFractionDigits: digits,
   }).format(amount);
 };
+

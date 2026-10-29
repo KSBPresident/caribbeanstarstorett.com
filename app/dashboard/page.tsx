@@ -119,8 +119,8 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           </section>
 
           <section className="identity-panel identity-wide account-workspace-link">
-            <div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Purchases and order history</h2><p>Online order placement is not active yet. Your order history will appear here once checkout is enabled.</p></div>
-            <Link className="identity-submit" href="/cart">View your cart →</Link>
+            <div><span className="identity-eyebrow">YOUR ACTIVITY</span><h2>Purchases and order history</h2><p>Review payment status and recent items from your completed or pending purchases.</p></div>
+            <div className="cart-empty-actions"><Link className="identity-submit" href="/orders">View your orders →</Link><Link className="identity-secondary" href="/cart">View your cart →</Link></div>
           </section>
 
           <section className="identity-panel identity-wide account-workspace-link">

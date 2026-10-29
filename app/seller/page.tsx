@@ -208,7 +208,7 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
           <section className="identity-panel">
             <span className="identity-eyebrow">STORE AVAILABILITY & COUPONS</span>
             <h2>Manage each store</h2>
-            <p>Set an away notice for shoppers and publish discount codes. Coupon codes are visible to customers; checkout redemption will be enabled when online checkout is connected.</p>
+            <p>Set an away notice for shoppers and publish discount codes. Customers can enter an active code at checkout; it applies only to eligible items from your store, and shipping is not discounted.</p>
             <div className="seller-app-list">
               {approvedWorkspaces.map(({ application, organization }) => {
                 const profile = profileByOrganizationId.get(organization.id);
@@ -308,3 +308,4 @@ export default async function SellerWorkspacePage({ searchParams }: { searchPara
     </>
   );
 }
+

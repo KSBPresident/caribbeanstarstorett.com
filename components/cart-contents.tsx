@@ -81,7 +81,8 @@ export function CartContents() {
     const key = line.product.currency;
     const current = subtotals.get(key) || { amount: 0, sellerShipping: 0, minorUnit: line.product.currencyMinorUnit };
     current.amount += line.product.price * line.quantity;
-    current.sellerShipping += (line.product.sellerShippingFee || 0) * line.quantity;
+    const sellerFee = isLocalDelivery ? (line.product.sellerShippingFee || 0) : (line.product.sellerInternationalShippingFee ?? line.product.sellerShippingFee ?? 0);
+    current.sellerShipping += sellerFee * line.quantity;
     current.minorUnit = Math.max(current.minorUnit, line.product.currencyMinorUnit);
     subtotals.set(key, current);
   }
@@ -118,7 +119,7 @@ export function CartContents() {
                 <Link href={`/product/${product.slug}`}><strong>{product.name}</strong></Link>
                 <span>{product.category}</span>
                 <small>{money(product.price, product.currency, product.currencyMinorUnit)} each</small>
-                <small>{deliveryType} shipping per item: seller-chosen {money(product.sellerShippingFee || 0, product.currency, product.currencyMinorUnit)} + Caribbean Star Store {money(5, "USD", 2)}</small>
+                <small>{deliveryType} shipping per item: seller-chosen {money(isLocalDelivery ? product.sellerShippingFee || 0 : product.sellerInternationalShippingFee ?? product.sellerShippingFee ?? 0, product.currency, product.currencyMinorUnit)} + Caribbean Star Store {money(5, "USD", 2)}</small>
                 <div className="shopping-cart-controls" aria-label={`Quantity for ${product.name}`}>
                   <button type="button" disabled={cartBusy} aria-label={`Decrease ${product.name} quantity`} onClick={() => setQuantity(product.slug, quantity - 1)}>−</button>
                   <span>{quantity}</span>
@@ -157,10 +158,11 @@ export function CartContents() {
         <p className="catalog-meta">{isLocalDelivery
           ? "The seller-entered delivery fee plus the $5 Caribbean Star Store charge is shown per shipped item."
           : "The seller-entered international delivery fee plus the $5 Caribbean Star Store charge is shown per shipped item. Final international delivery cost and availability must be confirmed before payment."}</p>
-        <button className="identity-submit" type="button" disabled>Online checkout is not available yet</button>
-        <p className="catalog-meta">Prices and availability will be confirmed again when checkout is connected.</p>
+        {allPricesUsd ? <Link className="identity-submit" href="/checkout">Continue to card checkout</Link> : <p className="identity-message">Online card checkout currently supports USD listings.</p>}
+        <p className="catalog-meta">Your stock, prices, and delivery charges are checked again before payment. Card details are entered on WiPay’s secure checkout page.</p>
       </aside>
     </div>
     </>
   );
 }
+

@@ -80,6 +80,7 @@ export async function createInventoryItem(formData: FormData) {
   const uploadedImagePath = String(formData.get("uploadedImagePath") || "").trim();
   const price = Number(formData.get("price"));
   const sellerShippingFee = Number(formData.get("sellerShippingFee"));
+  const sellerInternationalShippingFee = Number(formData.get("sellerInternationalShippingFee"));
   const quantity = Number(formData.get("quantity"));
   const status = String(formData.get("status") || "draft");
   if (
@@ -92,6 +93,7 @@ export async function createInventoryItem(formData: FormData) {
       : !safeImageUrl(imageUrl)) ||
     !Number.isFinite(price) || price <= 0 || price > 9999999999 ||
     !Number.isFinite(sellerShippingFee) || sellerShippingFee < 0 || sellerShippingFee > 9999999999 ||
+    !Number.isFinite(sellerInternationalShippingFee) || sellerInternationalShippingFee < 0 || sellerInternationalShippingFee > 9999999999 ||
     !Number.isInteger(quantity) || quantity < 0 || quantity > 1000000 ||
     !validStatuses.has(status)
   ) redirect("/seller/inventory?error=invalid");
@@ -119,6 +121,7 @@ export async function createInventoryItem(formData: FormData) {
     description,
     price,
     seller_shipping_fee: sellerShippingFee,
+    seller_international_shipping_fee: sellerInternationalShippingFee,
     currency: "USD",
     quantity_available: quantity,
     image_url: resolvedImageUrl,
@@ -138,6 +141,7 @@ export async function updateInventoryItem(formData: FormData) {
   const uploadedImagePath = String(formData.get("uploadedImagePath") || "").trim();
   const price = Number(formData.get("price"));
   const sellerShippingFee = Number(formData.get("sellerShippingFee"));
+  const sellerInternationalShippingFee = Number(formData.get("sellerInternationalShippingFee"));
   const quantity = Number(formData.get("quantity"));
   const status = String(formData.get("status") || "");
   if (
@@ -150,6 +154,7 @@ export async function updateInventoryItem(formData: FormData) {
       : !safeImageUrl(imageUrl)) ||
     !Number.isFinite(price) || price <= 0 || price > 9999999999 ||
     !Number.isFinite(sellerShippingFee) || sellerShippingFee < 0 || sellerShippingFee > 9999999999 ||
+    !Number.isFinite(sellerInternationalShippingFee) || sellerInternationalShippingFee < 0 || sellerInternationalShippingFee > 9999999999 ||
     !Number.isInteger(quantity) || quantity < 0 || quantity > 1000000 ||
     !validStatuses.has(status)
   ) redirect("/seller/inventory?error=invalid");
@@ -173,6 +178,7 @@ export async function updateInventoryItem(formData: FormData) {
       description,
       price,
       seller_shipping_fee: sellerShippingFee,
+      seller_international_shipping_fee: sellerInternationalShippingFee,
       quantity_available: quantity,
       image_url: resolvedImageUrl,
       status,
@@ -184,3 +190,4 @@ export async function updateInventoryItem(formData: FormData) {
   if ((error || !data) && uploadedImage?.path) await supabase.storage.from("product-images").remove([uploadedImage.path]);
   redirect(error || !data ? "/seller/inventory?error=save" : "/seller/inventory?notice=updated");
 }
+

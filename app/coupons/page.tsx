@@ -43,7 +43,7 @@ export default async function CouponsPage() {
           </div>
           <Link className="identity-secondary" href="/marketplace">Shop products</Link>
         </header>
-        <p className="identity-note">Online checkout is not available yet. These codes are published for shoppers to discover and will be redeemable when checkout is enabled.</p>
+        <p className="identity-note">Enter a seller’s code at checkout. It applies only to eligible products from that seller; shipping is unchanged. WiPay shows your discounted total before you confirm payment.</p>
         {!configured ? (
           <section className="identity-panel"><h2>Offers are being prepared</h2><p>Seller coupons will appear here once account services are available.</p></section>
         ) : couponsResult.error || sellerProfilesResult.error ? (
