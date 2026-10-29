@@ -15,6 +15,7 @@ type CartContextValue = {
   addItem: (product: Product) => void;
   setQuantity: (slug: string, quantity: number) => void;
   removeItem: (slug: string) => void;
+  clearCart: () => void;
 };
 
 const STORAGE_KEY = "caribbean-star-store-cart-v1";
@@ -159,7 +160,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (productIds.length) {
         const { data, error } = await supabase
           .from("inventory_items")
-          .select("id, organization_id, slug, name, category_key, price, seller_shipping_fee, currency, quantity_available, image_url, description")
+          .select("id, organization_id, slug, name, category_key, price, seller_shipping_fee, seller_international_shipping_fee, currency, quantity_available, image_url, description")
           .in("id", productIds)
           .eq("status", "published");
         if (!active || run !== hydrationRun.current) return;
@@ -291,6 +292,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (!ready || syncStatus === "syncing") return;
       setItems((current) => current.filter((line) => line.product.slug !== slug));
     },
+    clearCart() {
+      setItems([]);
+    },
   }), [items, ready, syncStatus]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
@@ -301,3 +305,4 @@ export function useCart() {
   if (!context) throw new Error("useCart must be used inside CartProvider");
   return context;
 }
+

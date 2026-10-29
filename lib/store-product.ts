@@ -9,6 +9,7 @@ export type InventoryProductRow = {
   category_key: string;
   price: number | string;
   seller_shipping_fee?: number | string;
+  seller_international_shipping_fee?: number | string;
   currency: string;
   quantity_available: number;
   image_url: string;
@@ -24,6 +25,7 @@ export function inventoryRowToProduct(row: InventoryProductRow): Product {
     category: categories.find((category) => category.key === row.category_key)?.name || "Marketplace",
     price: Number(row.price),
     sellerShippingFee: Number(row.seller_shipping_fee || 0),
+    sellerInternationalShippingFee: Number(row.seller_international_shipping_fee ?? row.seller_shipping_fee ?? 0),
     currency: row.currency,
     currencyMinorUnit: 2,
     rating: 0,
@@ -34,3 +36,4 @@ export function inventoryRowToProduct(row: InventoryProductRow): Product {
     description: row.description,
   };
 }
+
