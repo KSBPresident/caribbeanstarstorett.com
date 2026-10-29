@@ -11,16 +11,77 @@ const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
 const countries = countryCodes.map((code) => ({ code, name: displayNames.of(code) || code })).sort((a, b) => a.name.localeCompare(b.name));
 const countryStorageKey = "caribbean-star-store-delivery-country-v1";
 
+type SavedAddress = {
+  id: string;
+  label: string;
+  recipient: string;
+  phone: string;
+  country_code: string;
+  address_line1: string;
+  address_line2: string | null;
+  city: string;
+  parish_or_county: string;
+  landmarks: string | null;
+  postal_code: string | null;
+  is_default: boolean;
+};
+
+type AddressDraft = Omit<SavedAddress, "id" | "is_default"> & { is_default: boolean };
+
+const emptyAddress = (countryCode = "TT"): AddressDraft => ({
+  label: "Home",
+  recipient: "",
+  phone: "",
+  country_code: countryCode,
+  address_line1: "",
+  address_line2: "",
+  city: "",
+  parish_or_county: "",
+  landmarks: "",
+  postal_code: "",
+  is_default: false,
+});
+
+
 export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
   const { items, ready, clearCart } = useCart();
   const [country, setCountry] = useState("TT");
+  const [address, setAddress] = useState<AddressDraft>(() => emptyAddress());
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [addressesLoaded, setAddressesLoaded] = useState(false);
+  const [addressBusy, setAddressBusy] = useState(false);
+  const [addressMessage, setAddressMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(countryStorageKey);
-      if (saved && countryCodes.includes(saved)) setCountry(saved);
+      const savedCountry = localStorage.getItem(countryStorageKey);
+      if (savedCountry && countryCodes.includes(savedCountry)) {
+        setCountry(savedCountry);
+        setAddress((current) => ({ ...current, country_code: savedCountry }));
+      }
     } catch {}
+    let active = true;
+    fetch("/api/account/addresses", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) return [];
+        const result = await response.json();
+        return Array.isArray(result.addresses) ? result.addresses as SavedAddress[] : [];
+      })
+      .then((rows: SavedAddress[]) => {
+        if (!active) return;
+        setSavedAddresses(rows);
+        const preferred = rows.find((row) => row.is_default) || rows[0];
+        if (preferred) {
+          setSelectedAddressId(preferred.id);
+          setAddress({ ...preferred, address_line2: preferred.address_line2 || "", landmarks: preferred.landmarks || "", postal_code: preferred.postal_code || "" });
+          setCountry(preferred.country_code);
+        }
+      })
+      .catch(() => {})
+      .finally(() => { if (active) setAddressesLoaded(true); });
+    return () => { active = false; };
   }, []);
   useEffect(() => {
     if (paymentStatus === "success") clearCart();
@@ -35,6 +96,79 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
     return sum + fee * line.quantity;
   }, 0), [country, items]);
 
+  function chooseAddress(id: string) {
+    setSelectedAddressId(id);
+    setAddressMessage("");
+    if (!id) {
+      setAddress(emptyAddress(country));
+      return;
+    }
+    const selected = savedAddresses.find((item) => item.id === id);
+    if (!selected) return;
+    setAddress({
+      ...selected,
+      address_line2: selected.address_line2 || "",
+      landmarks: selected.landmarks || "",
+      postal_code: selected.postal_code || "",
+    });
+    setCountry(selected.country_code);
+  }
+
+  function updateAddress<K extends keyof AddressDraft>(key: K, value: AddressDraft[K]) {
+    setAddress((current) => ({ ...current, [key]: value }));
+    if (key === "country_code" && typeof value === "string") {
+      setCountry(value);
+      try { localStorage.setItem(countryStorageKey, value); } catch {}
+    }
+  }
+
+  async function saveAddress(asNew: boolean) {
+    setAddressBusy(true);
+    setAddressMessage("");
+    try {
+      const response = await fetch("/api/account/addresses", {
+        method: asNew || !selectedAddressId ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...address, ...(!asNew && selectedAddressId ? { id: selectedAddressId } : {}) }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.address) throw new Error(result.error || "We could not save that address.");
+      const saved = result.address as SavedAddress;
+      setSavedAddresses((current) => [
+        saved,
+        ...current.filter((item) => item.id !== saved.id).map((item) => saved.is_default ? { ...item, is_default: false } : item),
+      ]);
+      setSelectedAddressId(saved.id);
+      setAddress({ ...saved, address_line2: saved.address_line2 || "", landmarks: saved.landmarks || "", postal_code: saved.postal_code || "" });
+      setCountry(saved.country_code);
+      setAddressMessage(asNew ? "Address saved to your account." : "Address updated.");
+    } catch (cause) {
+      setAddressMessage(cause instanceof Error ? cause.message : "We could not save that address.");
+    } finally {
+      setAddressBusy(false);
+    }
+  }
+
+  async function removeAddress() {
+    if (!selectedAddressId) return;
+    setAddressBusy(true);
+    setAddressMessage("");
+    try {
+      const response = await fetch(`/api/account/addresses?id=${encodeURIComponent(selectedAddressId)}`, { method: "DELETE" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "We could not remove that address.");
+      const remaining = savedAddresses.filter((item) => item.id !== selectedAddressId);
+      setSavedAddresses(remaining);
+      const preferred = remaining.find((item) => item.is_default) || remaining[0];
+      chooseAddress(preferred?.id || "");
+      setAddressMessage("Address removed.");
+    } catch (cause) {
+      setAddressMessage(cause instanceof Error ? cause.message : "We could not remove that address.");
+    } finally {
+      setAddressBusy(false);
+    }
+  }
+
   async function startPayment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -44,14 +178,14 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
       country,
       couponCode: String(data.get("couponCode") || "").trim().toUpperCase(),
       address: {
-        recipient: data.get("recipient"),
-        phone: data.get("phone"),
-        addressLine1: data.get("addressLine1"),
-        addressLine2: data.get("addressLine2"),
-        city: data.get("city"),
-        parishOrCounty: data.get("parishOrCounty"),
-        landmarks: data.get("landmarks"),
-        postalCode: data.get("postalCode"),
+        recipient: address.recipient,
+        phone: address.phone,
+        addressLine1: address.address_line1,
+        addressLine2: address.address_line2,
+        city: address.city,
+        parishOrCounty: address.parish_or_county,
+        landmarks: address.landmarks,
+        postalCode: address.postal_code,
       },
       items: items.map(({ product, quantity }) => ({ productId: product.id, quantity })),
     };
@@ -89,19 +223,34 @@ export function CheckoutForm({ paymentStatus }: { paymentStatus?: string }) {
       <h1>Review and pay</h1>
       <p>Pay securely by card on WiPay’s hosted checkout. Your card details never pass through this site.</p>
       {error && <p className="identity-message identity-error" role="alert">{error}</p>}
-      <label>Recipient name<input name="recipient" autoComplete="name" minLength={2} maxLength={100} required /></label>
-      <label>Phone number<input name="phone" autoComplete="tel" type="tel" maxLength={30} required /></label>
-      <label>Delivery country<select value={country} onChange={(event) => { setCountry(event.target.value); try { localStorage.setItem(countryStorageKey, event.target.value); } catch {} }} required>
-        {countries.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}
-      </select></label>
-      <label>Address line 1<input name="addressLine1" autoComplete="address-line1" maxLength={160} required /></label>
-      <label>Address line 2 (optional)<input name="addressLine2" autoComplete="address-line2" maxLength={160} /></label>
-      <div className="seller-form-row">
-        <label>City / town<input name="city" autoComplete="address-level2" maxLength={100} required /></label>
-        <label>Parish / county / region<input name="parishOrCounty" autoComplete="address-level1" maxLength={100} required /></label>
-      </div>
-      <label>Nearby landmark (optional)<input name="landmarks" maxLength={240} placeholder="A nearby landmark to help the courier" /></label>
-      <label>Postal code (optional)<input name="postalCode" autoComplete="postal-code" maxLength={24} /></label>
+      <section className="checkout-saved-addresses" aria-labelledby="delivery-address-heading">
+        <div className="account-panel-title"><div><span className="identity-eyebrow">DELIVERY ADDRESS</span><h2 id="delivery-address-heading">Where should we send your order?</h2></div></div>
+        {addressesLoaded && savedAddresses.length > 0 && <label>Choose a saved address<select value={selectedAddressId} onChange={(event) => chooseAddress(event.target.value)}>
+          <option value="">Enter a new delivery address</option>
+          {savedAddresses.map((item) => <option key={item.id} value={item.id}>{item.label}{item.is_default ? " · Default" : ""} — {item.address_line1}, {item.city}, {item.country_code}</option>)}
+        </select></label>}
+        <label>Address nickname<input value={address.label} onChange={(event) => updateAddress("label", event.target.value)} maxLength={60} placeholder="Home, Work, etc." required /></label>
+        <label>Recipient name<input value={address.recipient} onChange={(event) => updateAddress("recipient", event.target.value)} autoComplete="name" minLength={2} maxLength={100} required /></label>
+        <label>Phone number<input value={address.phone} onChange={(event) => updateAddress("phone", event.target.value)} autoComplete="tel" type="tel" maxLength={30} required /></label>
+        <label>Delivery country<select value={country} onChange={(event) => updateAddress("country_code", event.target.value)} required>
+          {countries.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}
+        </select></label>
+        <label>Address line 1<input value={address.address_line1} onChange={(event) => updateAddress("address_line1", event.target.value)} autoComplete="address-line1" maxLength={160} required /></label>
+        <label>Address line 2 (optional)<input value={address.address_line2 || ""} onChange={(event) => updateAddress("address_line2", event.target.value)} autoComplete="address-line2" maxLength={160} /></label>
+        <div className="seller-form-row">
+          <label>City / town<input value={address.city} onChange={(event) => updateAddress("city", event.target.value)} autoComplete="address-level2" maxLength={100} required /></label>
+          <label>Parish / county / region<input value={address.parish_or_county} onChange={(event) => updateAddress("parish_or_county", event.target.value)} autoComplete="address-level1" maxLength={100} required /></label>
+        </div>
+        <label>Nearby landmark (optional)<input value={address.landmarks || ""} onChange={(event) => updateAddress("landmarks", event.target.value)} maxLength={240} placeholder="A nearby landmark to help the courier" /></label>
+        <label>Postal code (optional)<input value={address.postal_code || ""} onChange={(event) => updateAddress("postal_code", event.target.value)} autoComplete="postal-code" maxLength={24} /></label>
+        <label className="checkbox-label"><input type="checkbox" checked={address.is_default} onChange={(event) => updateAddress("is_default", event.target.checked)} />Make this my default delivery address</label>
+        <div className="cart-empty-actions">
+          <button className="identity-secondary" type="button" disabled={addressBusy} onClick={() => void saveAddress(!selectedAddressId)}> {addressBusy ? "Saving…" : selectedAddressId ? "Update saved address" : "Save this address"} </button>
+          {selectedAddressId && <button className="identity-secondary" type="button" disabled={addressBusy} onClick={() => void saveAddress(true)}>Save as a new address</button>}
+          {selectedAddressId && <button className="identity-secondary" type="button" disabled={addressBusy} onClick={() => void removeAddress()}>Remove address</button>}
+        </div>
+        {addressMessage && <p className="identity-message" role="status">{addressMessage}</p>}
+      </section>
       <section className="checkout-order-summary" aria-label="Order total">
         <h2>Order summary</h2>
         <label>Seller coupon code (optional)<input name="couponCode" maxLength={40} pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,39}" autoCapitalize="characters" placeholder="WELCOME10" /></label>
