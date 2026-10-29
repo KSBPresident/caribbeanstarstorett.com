@@ -416,3 +416,16 @@
 .coupon-card p{color:#5f6c7d}
 .seller-app-card .identity-form input[type=checkbox]{width:20px;height:20px;accent-color:#0670c8}
 @media(max-width:600px){.sales-chart{align-items:flex-start;flex-direction:column}.sales-donut{width:150px;height:150px}.sales-donut>span{width:90px;height:90px}.sales-chart ul{grid-template-columns:1fr}.coupon-code-row{align-items:flex-start;flex-direction:column}}
+
+
+/* Saved delivery address book layout */
+.address-book-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:16px;margin-top:18px}
+.address-book-layout>.identity-panel{min-width:0}
+.address-book-form{margin-top:0}
+.address-book-form select{width:100%;border:1px solid #cfd8e3;border-radius:7px;background:#fff;padding:12px;font:inherit;font-weight:400;outline-color:#0670c8}
+.address-book-form label:has(input[type="checkbox"]){display:flex;align-items:center;gap:10px}
+.address-book-form input[type="checkbox"]{width:18px;height:18px;flex:none;accent-color:#0670c8}
+.address-book-layout .account-activity-list article{align-items:flex-start}
+.address-book-layout .account-activity-list article>div{min-width:0;overflow-wrap:anywhere}
+.address-book-layout .account-activity-list article span{text-transform:none;line-height:1.5}
+@media(max-width:820px){.address-book-layout{grid-template-columns:1fr}}
