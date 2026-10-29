@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 
 const countryCodes = "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CL CM CN CO CR CU CV CW CY CZ DE DK DM DO DZ EC EE ES FI FJ FR GB GD GE GH GI GM GN GP GR GT GY HK HN HR HT HU ID IE IL IM IN IO IQ IS IT JM JP KE KG KH KN KR KY LC LK LR LS LT LU LV LY MA MC MD ME MF MK ML MM MN MO MR MS MT MU MW MX MY MZ NA NC NE NG NI NL NO NP NZ OM PA PE PF PG PH PK PL PM PR PT PW PY QA RO RS RW SA SC SE SG SI SK SL SM SN SR SV TC TD TF TG TH TL TN TO TR TT TV TZ UA UG US UY VC VE VG VN WS ZA ZW".split(" ");
 const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
@@ -105,7 +106,7 @@ export function AddressBook() {
     setDraft({ ...selected, address_line2: selected.address_line2 || "", landmarks: selected.landmarks || "", postal_code: selected.postal_code || "" });
   }
 
-  async function save(event: React.FormEvent<HTMLFormElement>) {
+  async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setNotice("");
